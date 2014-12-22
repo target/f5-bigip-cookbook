@@ -1,0 +1,110 @@
+{
+  "id": "test",
+  "hostname": "192.168.10.19",
+  "create": {
+    "nodes": {
+      "10.10.10.10": {"enabled": true},
+      "10.10.10.11": {"enabled": true},
+      "10.10.10.12": {"enabled": false},
+      "10.10.10.13": {"enabled": true}
+    },
+    "monitors": {
+      "mon_new": {
+        "parent": "/Common/http",
+        "interval": 10,
+        "timeout": 31,
+        "dest_addr_type": "ATYPE_EXPLICIT_ADDRESS_EXPLICIT_PORT",
+        "dest_addr_ip": "10.0.0.2",
+        "dest_addr_port": 8080,
+        "user_values": {"STYPE_SEND": "test", "STYPE_RECEIVE": "test_recv"}
+      },
+     "mon_new_defaults": {"parent": null},
+     "mon_delete": {
+       "parent": "/Common/https",
+       "interval": 20,
+       "timeout": 61,
+       "dest_addr_type": "ATYPE_STAR_ADDRESS_EXPLICIT_PORT",
+       "dest_addr_ip": "0.0.0.0",
+       "dest_addr_port": 443
+      }
+    },
+    "pools": {
+      "exists": {
+        "lb_method": "LB_METHOD_ROUND_ROBIN",
+        "monitors": ["http", "mon_new_defaults"],
+        "members": [{"address": "10.10.10.11", "port": 80, "enabled": true}]
+      },
+      "modify": {
+        "lb_method": "LB_METHOD_ROUND_ROBIN",
+        "monitors": ["http", "https"],
+        "members": [{"address": "10.10.10.11", "port": 80, "enabled": true}]
+      },
+      "bad_dns": {
+        "lb_method": "LB_METHOD_ROUND_ROBIN",
+        "monitors": ["http", "udp"],
+        "members": [{"address": "10.10.10.11", "port": 80, "enabled": true}]
+      },
+      "new": {
+        "lb_method": "LB_METHOD_ROUND_ROBIN",
+        "monitors": ["https", "udp"],
+        "members": [
+          {"address": "10.10.10.11", "port": 80, "enabled": true},
+          {"address": "10.10.10.11", "port": 8081, "enabled": true},
+          {"address": "10.10.10.10", "port": 80, "enabled": true}
+        ]
+      },
+      "delete2": {
+        "lb_method": "LB_METHOD_ROUND_ROBIN",
+        "monitors": ["https"],
+        "members": [{"address": "10.10.10.11", "port": 80, "enabled": true}]
+      }
+    },
+    "virtual_servers": {
+      "vs_new_defaults": {
+        "destination_address": "10.10.10.20",
+        "destination_port": 80, "default_pool": "new"
+      },
+      "vs_new_user_defined": {
+        "destination_address": "11.11.11.0",
+        "destination_port": 443,
+        "default_pool": "new",
+        "profiles": [
+          {"profile_context": "PROFILE_CONTEXT_TYPE_ALL", "profile_name": "/Common/tcp"},
+          {"profile_context": "PROFILE_CONTEXT_TYPE_CLIENT", "profile_name": "/Common/clientssl-insecure-compatible"},
+          {"profile_context": "PROFILE_CONTEXT_TYPE_ALL", "profile_name": "/Common/http"},
+          {"profile_context": "PROFILE_CONTEXT_TYPE_SERVER", "profile_name": "/Common/serverssl-insecure-compatible"}
+        ],
+        "vlans": ["vagrant_int"],
+        "snat_type": "SRC_TRANS_AUTOMAP",
+        "default_persistence_profile": "/Common/universal",
+        "fallback_persistence_profile": "/Common/dest_addr",
+        "rules": ["/Common/_sys_APM_ExchangeSupport_helper", "/Common/_sys_https_redirect"],
+        "enabled": false
+      },
+      "vs_new": {
+        "destination_address": "10.10.10.10",
+        "destination_port": 80,
+        "default_pool": "new",
+        "vlan_state": "STATE_ENABLED",
+        "vlans": ["vagrant_int"],
+        "enabled": true
+      },
+      "vs_modify": {
+        "destination_address": "10.10.10.11",
+        "destination_port": 444,
+        "default_pool": "new",
+        "enabled": false,
+        "profiles": [
+          {"profile_context": "PROFILE_CONTEXT_TYPE_ALL", "profile_name": "/Common/tcp"},
+          {"profile_context": "PROFILE_CONTEXT_TYPE_ALL", "profile_name": "/Common/http"}
+        ]
+      },
+      "vs_delete": {
+        "destination_address": "10.10.10.15",
+        "destination_port": 443,
+        "default_pool": "new",
+        "enabled": true
+      }
+    }
+  }
+}

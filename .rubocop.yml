@@ -1,0 +1,18 @@
+Encoding:
+  Enabled: false
+
+ClassLength:
+  Max: 300
+
+LineLength:
+  Max: 200
+
+MethodLength:
+  Max: 10
+
+HashSyntax:
+  EnforcedStyle: hash_rockets
+
+TrivialAccessors:
+  Enabled: true
+  ExactNameMatch: true
