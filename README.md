@@ -34,7 +34,7 @@ This definition is a wrapper for the [`f5_ltm_node`](#f5_ltm_node), [`f5_ltm_poo
 |    Attr   |   Default/Req?    |    Type    |       Description        |
 |-----------|-------------------|------------|--------------------------|
 | f5        | **REQUIRED**    | String     | f5 to create the node on |
-| nodes | **REQUIRED** | Array[String] | Nodes to load balance the VIP against |
+| nodes | **REQUIRED** | Array[String] | Nodes (ip addresses) to load balance the VIP against |
 | pool | **REQUIRED** | String | Name to create node with |
 | lb_method | `LB_METHOD_ROUND_ROBIN` | String | Load balancing method |
 | monitors | [] | Array[String] | Monitors to check that nodes are available |
@@ -60,6 +60,11 @@ f5_vip 'testing.test.com' do
   destination_address '192.168.1.10'
 end
 ```
+
+It will create
+* Two nodes, named after their ip addresses
+* A pool referencing the nodes as members with no monitors
+* A virtual server listening on `<destination_address>:443`
 
 A fully user defined VIP:
 ```ruby
@@ -97,16 +102,29 @@ f5_ltm_node
 
 ### Attributes
 
-|    Attr   |   Default/Req?    |    Type    |       Description        |
-|-----------|-------------------|------------|--------------------------|
-| node_name | The resource name | String     | Name to create node with |
-| f5        | **REQUIRED**    | String     | f5 to create the node on |
-| enabled   | `true`            | true/false | State node should be in  |
+|    Attr   |   Default/Req?    |    Type    |       Description              |
+|-----------|-------------------|------------|--------------------------------|
+| node_name | The resource name | String     | Name to create node with       |
+| address   | `node_name`       | String     | IP address to create node with |
+| f5        | **REQUIRED**      | String     | f5 to create the node on       |
+| enabled   | `true`            | true/false | State node should be in        |
 
-### Example
+If the `address` attribute is unset, the `node_name` (which in turn defaults to the resource's name) will be used instead.
 
+### Examples
+
+The following creates a node with name and address of `10.10.10.10`:
 ```ruby
 f5_ltm_node '10.10.10.10' do
+  f5 'f5-test.test.com'
+  enabled true
+end
+```
+
+The following creates a node named `test-node.test.com` with `10.10.10.10` as the ip address:
+```ruby
+f5_ltm_node 'test-node.test.com' do
+  address '10.10.10.10'
   f5 'f5-test.test.com'
   enabled true
 end

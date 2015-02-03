@@ -42,6 +42,14 @@ class Chef
         set_or_return(:node_name, arg, :kind_of => String, :required => true)
       end
 
+      def address(arg = nil)
+        if arg.nil? && @address.nil?
+          set_or_return(:address, @node_name, :kind_of => String, :required => true)
+        else
+          set_or_return(:address, arg, :kind_of => String, :required => true)
+        end
+      end
+
       def f5(arg = nil)
         set_or_return(:f5, arg, :kind_of => String, :required => true)
       end
