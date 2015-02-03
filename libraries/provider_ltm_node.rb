@@ -65,7 +65,7 @@ class Chef
       def create_node
         converge_by("Create #{new_resource}") do
           Chef::Log.info "Create #{new_resource}"
-          load_balancer.client['LocalLB.NodeAddressV2'].create([new_resource.node_name], [new_resource.node_name], [0])
+          load_balancer.client['LocalLB.NodeAddressV2'].create([new_resource.node_name], [new_resource.address], [0])
           current_resource.enabled(true)
 
           new_resource.updated_by_last_action(true)
