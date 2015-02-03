@@ -135,12 +135,12 @@ f5_ltm_pool 'test' do
   monitors ['http']
   members [
     {
-      'name'      => '10.10.10.10',
+      'address'   => '10.10.10.10',
       'port'      => 80,
       'enabled'   => true
     },
     {
-      'name'      => '10.10.10.11',
+      'address'   => '10.10.10.11',
       'port'      => 80,
       'enabled'   => true
     }
