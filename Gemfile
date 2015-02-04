@@ -14,6 +14,7 @@ group :unit do
   gem 'berkshelf', '~> 3.1.5'
   gem 'soap4r-spox', '~> 1.6.0'
   gem 'f5-icontrol', '11.4.1.0'
+  gem 'ohai', '< 8.0.0'
 end
 
 group :development do
