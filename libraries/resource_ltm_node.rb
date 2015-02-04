@@ -43,11 +43,10 @@ class Chef
       end
 
       def address(arg = nil)
-        if arg.nil? && @address.nil?
-          set_or_return(:address, @node_name, :kind_of => String, :required => true)
-        else
-          set_or_return(:address, arg, :kind_of => String, :required => true)
-        end
+        # Set to @node_name if not set as a 'default' for backward compatibility
+        set_or_return(:address, @node_name, :kind_of => String, :required => true) if @address.nil?
+
+        set_or_return(:address, arg, :kind_of => String, :required => true)
       end
 
       def f5(arg = nil)
