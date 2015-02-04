@@ -13,6 +13,6 @@ require 'f5-icontrol'
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'libraries'))
 
 # Require all our libraries
-Dir['libraries/*.rb'].each { |f| require File.expand_path(f) }
+Dir["#{File.join(File.dirname(__FILE__), '..', 'libraries')}/*.rb"].each { |f| require File.expand_path(f) }
 
 at_exit { ChefSpec::Coverage.report! }
