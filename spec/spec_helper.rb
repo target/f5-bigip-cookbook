@@ -13,6 +13,10 @@ require 'f5-icontrol'
 $LOAD_PATH.unshift(File.join(File.dirname(__FILE__), '..', 'libraries'))
 
 # Require all our libraries
-Dir["#{File.join(File.dirname(__FILE__), '..', 'libraries')}/*.rb"].each { |f| require File.expand_path(f) }
+require "#{File.join(File.dirname(__FILE__), '..', 'libraries')}/helpers.rb"
+require "#{File.join(File.dirname(__FILE__), '..', 'libraries')}/loader.rb"
+require "#{File.join(File.dirname(__FILE__), '..', 'libraries')}/load_balancer.rb"
+Dir["#{File.join(File.dirname(__FILE__), '..', 'libraries')}/resource_*.rb"].each { |f| require File.expand_path(f) }
+Dir["#{File.join(File.dirname(__FILE__), '..', 'libraries')}/provider_*.rb"].each { |f| require File.expand_path(f) }
 
 at_exit { ChefSpec::Coverage.report! }
