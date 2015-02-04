@@ -1,5 +1,6 @@
 f5-bigip cookbook
 =================
+[![Build Status](https://travis-ci.org/target/f5-bigip-cookbook.svg)](https://travis-ci.org/target/f5-bigip-cookbook)
 
 Control F5 load balancer config
 
@@ -234,7 +235,9 @@ bundle install --no-cache
 
 Then run the tests!
 ```
-bundle exec rake
+bundle exec foodcritic -f any -f ~FC015 -X spec .
+bundle exec rspec --color --format progress
+bundle exec rubocop
 ```
 
 Notes on Integration Testing
