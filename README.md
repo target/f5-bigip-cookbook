@@ -281,6 +281,8 @@ You'll need to modify [test/integration/data_bags/f5/creds.json](test/integratio
 
 Then you'll need to update `hostname` in [test/integration/data_bags/f5-provisioner-1/test.json](test/integration/data_bags/f5-provisioner-1/test.json) and [test/integration/data_bags/f5-provisioner-2/test.json](test/integration/data_bags/f5-provisioner-2/test.json) with the IP address of the F5 to connect to.
 
+Finally, update any IPs in the minitest files with the IP of your F5: [files/default/tests/minitest/create_test.rb](files/default/tests/minitest/create_test.rb), [files/default/tests/minitest/provisioner_test.rb](files/default/tests/minitest/provisioner_test.rb)
+
 Now you should be able to create an admin node AND run a test:
 ```
 vagrant up admin
