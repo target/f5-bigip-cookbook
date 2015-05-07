@@ -40,7 +40,8 @@ module F5
         'LocalLB.VirtualServer',
         'Management.DeviceGroup',
         'System.ConfigSync',
-        'System.Failover'
+        'System.Failover',
+        'System.Inet'
       ]
     end
 
