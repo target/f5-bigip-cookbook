@@ -32,6 +32,15 @@ module F5
       @client = client
     end
 
+    def change_partition(partition='Common')
+      if partition.include?('/')
+        partition = partition.split('/')[1]
+      else
+        partition = 'Common'
+      end
+      @client['Management.Partition'].set_active_partition(partition)
+    end
+
     #
     # LTM resources for load balancer
     #

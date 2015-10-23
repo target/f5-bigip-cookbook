@@ -37,7 +37,8 @@ class Chef
         @current_resource.node_name(@new_resource.node_name)
 
         # Check if node exists
-        node = load_balancer.ltm.nodes.find { |n| n['name'] =~ /(^|\/)#{@new_resource.node_name}$/ }
+        load_balancer.change_partition(@new_resource.node_name) 
+        node = load_balancer.ltm.nodes.find { |n| n['name'] =~ /(^|\/)#{@new_resource.node_name}$/ or n['name'] == @new_resource.node_name }
         @current_resource.exists = !node.nil?
 
         # If node exists load it's current state
