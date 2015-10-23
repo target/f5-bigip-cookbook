@@ -34,6 +34,8 @@ module F5
 
         def initialize(client)
           @client = client
+          @partitions = client['Management.Partition'].get_partition_list
+
           refresh_all
         end
 
@@ -113,12 +115,16 @@ module F5
         end
 
         def refresh_all
-          @pools = @client['LocalLB.Pool'].get_list
+          @pools = [] if @pools.nil? 
+          @partitions.each do |partition|
+            @client['Management.Partition'].set_active_partition(partition['partition_name'])
+            @pools += @client['LocalLB.Pool'].get_list
                                           .map { |p| F5::LoadBalancer::Ltm::Pools::Pool.new(p) }
-          return if @pools.empty?
-          refresh_members
-          refresh_monitors
-          refresh_lb_method
+            next if @pools.empty?
+            refresh_members
+            refresh_monitors
+            refresh_lb_method
+          end
         end
       end
     end

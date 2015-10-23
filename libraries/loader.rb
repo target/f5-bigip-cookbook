@@ -56,7 +56,8 @@ module F5
         'Management.DeviceGroup',
         'System.ConfigSync',
         'System.Failover',
-        'System.Inet'
+        'System.Inet',
+        'Management.Partition'
       ]
     end
 
