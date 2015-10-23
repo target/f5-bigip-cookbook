@@ -32,29 +32,21 @@ module F5
       end
 
       def nodes # rubocop:disable MethodLength
-        @nodes = []
-        node_list = {}
-        partitions = client['Management.Partition'].get_partition_list
-        partitions.each do |partition|
-          node_list[partition['partition_name']] = client['LocalLB.NodeAddressV2'].get_list
-          next if node_list[partition['partition_name']].empty?
+        @nodes ||= begin
+          node_list = client['LocalLB.NodeAddressV2'].get_list
 
-          addresses = client['LocalLB.NodeAddressV2'].get_address(node_list[partition['partition_name']])
-          statuses = client['LocalLB.NodeAddressV2'].get_object_status(node_list[partition['partition_name']])
+          # Check if empty
+          return [] if node_list.empty?
+
+          addresses = client['LocalLB.NodeAddressV2'].get_address(node_list)
+          statuses = client['LocalLB.NodeAddressV2'].get_object_status(node_list)
+
           states = statuses.map { |status| status['enabled_status'] != 'ENABLED_STATUS_DISABLED' }
 
-          node_list[partition['partition_name']].each_with_index.map do |node, index|
-            @nodes << { 'name' => node, 'address' => addresses[index], 'enabled' => states[index], 'partition' => partition['partition_name'] }
+          node_list.each_with_index.map do |node, index|
+            { 'name' => node, 'address' => addresses[index], 'enabled' => states[index] }
           end
         end
-        return @nodes
-      end
-
-      def partitions
-        client['Management.Partition'].get_partition_list.each do |p|
-          parts << p['partition_name']
-        end
-        @partitions ||= parts
       end
 
       def pools
