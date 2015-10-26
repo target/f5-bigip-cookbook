@@ -25,11 +25,12 @@ require 'load_balancer/ltm'
 module F5
   # The F5 device
   class LoadBalancer
-    attr_accessor :name, :client
+    attr_accessor :name, :client, :active_partition
 
     def initialize(name, client)
       @name = name
       @client = client
+      @active_partition = @client['Management.Partition'].get_active_partition
     end
 
     def change_partition(partition='Common')
@@ -38,8 +39,12 @@ module F5
       else
         partition = 'Common'
       end
+      return if @active_partition == partition
+
       Chef::Log.info "Setting #{partition} as active partition"
       @client['Management.Partition'].set_active_partition(partition)
+      @active_partition = partition
+      @ltm = nil
     end
 
     #
