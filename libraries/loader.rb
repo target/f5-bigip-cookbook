@@ -49,6 +49,7 @@ module F5
     #
     def interfaces
       [
+        'Management.Partition',
         'LocalLB.Monitor',
         'LocalLB.NodeAddressV2',
         'LocalLB.Pool',
@@ -56,8 +57,7 @@ module F5
         'Management.DeviceGroup',
         'System.ConfigSync',
         'System.Failover',
-        'System.Inet',
-        'Management.Partition'
+        'System.Inet'
       ]
     end
 
