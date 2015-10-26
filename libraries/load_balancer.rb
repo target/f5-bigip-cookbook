@@ -29,8 +29,8 @@ module F5
 
     def initialize(name, client)
       @name = name
+      @active_partition = client['Management.Partition'].get_active_partition
       @client = client
-      @active_partition = @client['Management.Partition'].get_active_partition
     end
 
     def change_partition(partition='Common')
