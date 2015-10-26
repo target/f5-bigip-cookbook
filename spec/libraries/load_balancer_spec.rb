@@ -24,6 +24,8 @@ module F5
                                         .and_return(system_failover)
       allow(client).to receive(:[]).with('System.Inet')
                                         .and_return(system_inet)
+      allow(client).to receive(:[]).with('Management.Partition')
+                                        .and_return(system_inet)
     end
 
     describe '#ltm' do
