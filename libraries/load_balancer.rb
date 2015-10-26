@@ -38,6 +38,7 @@ module F5
       else
         partition = 'Common'
       end
+      Chef::Log.info "Setting #{partition} as active partition"
       @client['Management.Partition'].set_active_partition(partition)
     end
 

@@ -32,11 +32,11 @@ class Chef
       end
 
       def load_current_resource # rubocop:disable MethodLength
+        load_balancer.change_partition(@new_resource.pool_name) 
         @current_resource = Chef::Resource::F5LtmPool.new(@new_resource.name)
         @current_resource.name(@new_resource.name)
         @current_resource.pool_name(@new_resource.pool_name)
 
-        load_balancer.change_partition(@new_resource.pool_name) 
         pool = load_balancer.ltm.pools.find { |p| p.name =~ /(^|\/)#{@new_resource.pool_name}$/ or p.name == @new_resource.pool_name }
 
         @current_resource.exists = !pool.nil?
@@ -77,6 +77,7 @@ class Chef
             { 'address' => member['address'], 'port' => member['port'] }
           end
 
+          load_balancer.change_partition(new_resource.pool_name) 
           load_balancer.client['LocalLB.Pool'].create_v2([new_resource.pool_name], [new_resource.lb_method], [members])
 
           current_resource.lb_method(new_resource.lb_method)
