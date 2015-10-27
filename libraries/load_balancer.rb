@@ -41,10 +41,10 @@ module F5
       end
       return if @active_partition == partition
 
+      @ltm = nil
       Chef::Log.info "Setting #{partition} as active partition"
       @client['Management.Partition'].set_active_partition(partition)
       @active_partition = partition
-      @ltm = nil
     end
 
     #

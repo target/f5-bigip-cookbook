@@ -24,8 +24,6 @@ module F5
                                         .and_return(system_failover)
       allow(client).to receive(:[]).with('System.Inet')
                                         .and_return(system_inet)
-      allow(client).to receive(:[]).with('Management.Partition')
-                                        .and_return(system_inet)
     end
 
     describe '#ltm' do
@@ -33,10 +31,17 @@ module F5
         load_balancer.instance_variable_set(:@ltm, 'test')
         expect(F5::LoadBalancer::Ltm).to_not receive(:new)
         expect(load_balancer.ltm).to eq('test')
+        expect(load_balancer.active_partition).to eq('Common')
       end
 
       it 'sets @ltm if not already set and then returns it' do
         expect(load_balancer.ltm).to be_a(F5::LoadBalancer::Ltm)
+      end
+    end
+
+    describe '#change_partition' do
+      it 'returns the active partition' do
+        expect(load_balancer.change_partition).to eq('Common')
       end
     end
 
