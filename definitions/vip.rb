@@ -8,6 +8,7 @@
 define :f5_vip, :member_port => 443, :monitors => [], :lb_method => nil, :vlan_state => nil, :vlans => [],
                 :destination_port => 443, :profiles => [], :snat_type => nil, :snat_pool => nil,
                 :default_persistence_profile => nil, :fallback_persistence_profile => nil,
+                :partition => '/Common',
                 :rules => [] do
 
   name = params[:name]
@@ -17,7 +18,8 @@ define :f5_vip, :member_port => 443, :monitors => [], :lb_method => nil, :vlan_s
 
   params[:nodes].each do |node|
     f5_ltm_node "#{params[:f5]}-#{node}" do
-      node_name node
+      node_name "#{params[:partition]}/#{node}"
+      address node
       f5 params[:f5]
       notifies :run, "f5_config_sync[#{params[:f5]}]", :delayed
     end
@@ -26,7 +28,7 @@ define :f5_vip, :member_port => 443, :monitors => [], :lb_method => nil, :vlan_s
   pool_members = params[:nodes].map { |n| { 'address' => n, 'port' => params[:member_port], 'enabled' => true } }
 
   f5_ltm_pool "#{params[:f5]}-#{params[:pool]}" do
-    pool_name params[:pool]
+    pool_name "#{params[:partition]}/#{params[:pool]}"
     f5 params[:f5]
     lb_method params[:lb_method] unless params[:lb_method].nil?
     monitors params[:monitors] unless params[:monitors].empty?
@@ -35,7 +37,7 @@ define :f5_vip, :member_port => 443, :monitors => [], :lb_method => nil, :vlan_s
   end
 
   f5_ltm_virtual_server "#{params[:f5]}-#{name}" do
-    vs_name name
+    vs_name "#{params[:partition]}/#{name}"
     f5 params[:f5]
     destination_address params[:destination_address]
     destination_port params[:destination_port]
