@@ -7,9 +7,9 @@ describe 'testing::default' do
     config_sync_f5 = chef_run.f5_config_sync('test-f5.test.com')
     expect(config_sync_f5).to do_nothing
     expect(chef_run).to create_f5_ltm_node('test-f5.test.com-10.10.10.10')
-      .with(:node_name => '10.10.10.10', :f5 => 'test-f5.test.com', :enabled => true)
+      .with(:node_name => '/Common/10.10.10.10', :f5 => 'test-f5.test.com', :enabled => true)
     expect(chef_run).to create_f5_ltm_node('test-f5.test.com-10.10.10.11')
-      .with(:node_name => '10.10.10.11', :f5 => 'test-f5.test.com', :enabled => true)
+      .with(:node_name => '/Common/10.10.10.11', :f5 => 'test-f5.test.com', :enabled => true)
     expect(chef_run).to create_f5_ltm_pool('test-f5.test.com-test-pool')
       .with(:pool_name => 'test-pool', :f5 => 'test-f5.test.com', :lb_method => 'LB_METHOD_ROUND_ROBIN', :monitors => [],
             :members => [{ 'address' => '10.10.10.10', 'port' => 443, 'enabled' => true },
