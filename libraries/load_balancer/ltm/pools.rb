@@ -76,7 +76,6 @@ module F5
           pools_members.each_with_index do |pool_members, idx|
             pool_members.each { |m| @pools[idx].members << F5::LoadBalancer::Ltm::Pools::Pool::Member.new(m) }
           end
-
           # Automatically update members states
           # refresh_member_status
         end

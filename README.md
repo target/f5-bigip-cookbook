@@ -50,6 +50,7 @@ This definition is a wrapper for the [`f5_ltm_node`](#f5_ltm_node), [`f5_ltm_poo
 | default_persistence_profile | '' | String | Default persistence profile to associate with virtual server |
 | fallback_persistence_profile | '' | String | Fallback persistence profile to associate with virtual server |
 | rules | [] | Array[String] | iRules to associate with virtual server |
+| partition | '' | String | Partition name where to create this VIP. It must exist. |
 
 ### Example
 The simplest VIP declartion that takes as many defaults as possible:
@@ -112,6 +113,8 @@ f5_ltm_node
 
 If the `address` attribute is unset, the `node_name` (which in turn defaults to the resource's name) will be used instead.
 
+`node_name` can be prefixed with a partition name, for example `/internal/node_name`. Default is `/Common`.
+
 ### Examples
 
 The following creates a node with name and address of `10.10.10.10`:
@@ -144,6 +147,8 @@ f5_ltm_pool
 | lb_method | `LB_METHOD_ROUND_ROBIN` | String | Load balancing method |
 | monitors | [] | Array[String] | Monitors to check that pool members are available |
 | members | [] | Array[Hash] | Members to add to the pool |
+
+`pool_name` can be prefixed with a partition name, for example `/internal/pool_name`. Default is `/Common`.
 
 ### Example
 
@@ -185,6 +190,8 @@ f5_ltm_monitor
 | dest_addr_port | 443 | Integer | Port |
 | user_values | {} | Hash | Hash of user specific values |
 
+`monitor_name` can be prefixed with a partition name, for example `/internal/monitor_name`. Default is `/Common`.
+
 ### Example
 
 ```ruby
@@ -218,6 +225,8 @@ f5_ltm_virtual_server
 | fallback_persistence_profile | '' | String | Fallback persistence profile to associate with virtual server |
 | rules | [] | Array[String] | iRules to associate with virtual server |
 | enabled | true | true/false | Enable or disable the virtual server |
+
+`vs_name` can be prefixed with a partition name, for example `/internal/vs_name`. Default is `/Common`.
 
 ### Example
 
