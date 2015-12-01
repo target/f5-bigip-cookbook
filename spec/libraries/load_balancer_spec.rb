@@ -45,8 +45,8 @@ module F5
     end
 
     describe '#change_partition' do
-      it 'returns the active partition' do
-        expect(load_balancer.change_partition).to eq('Common')
+      it 'changes the active partition' do
+        expect(load_balancer.change_partition).to eq(true)
       end
     end
 
