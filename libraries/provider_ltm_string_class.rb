@@ -37,7 +37,6 @@ class Chef
         @current_resource.sc_name(@new_resource.sc_name)
         @current_resource.records(@new_resource.records)
 
-        Chef::Log.info("Chaning partition")
         load_balancer.change_partition(@new_resource.sc_name)
         if @new_resource.sc_name.include?("/")
           @current_resource.sc_name (@new_resource.sc_name.split("/")[2])
@@ -45,7 +44,6 @@ class Chef
         sc = load_balancer.client['LocalLB.Class'].get_string_class([@new_resource.sc_name]).find { |n| n['name'] == @new_resource.sc_name }
         @current_resource.exists = !sc['members'].empty?
 
-        Chef::Log.info(@current_resource)
         return @current_resource unless @current_resource.exists
 
         string_class = [{"name" => sc['name'], "members" => sc['members']}]
