@@ -54,6 +54,7 @@ module F5
         'LocalLB.NodeAddressV2',
         'LocalLB.Pool',
         'LocalLB.VirtualServer',
+        'LocalLB.Class',
         'Management.DeviceGroup',
         'System.ConfigSync',
         'System.Failover',

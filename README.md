@@ -240,6 +240,25 @@ f5_ltm_virtual_server 'vs_new' do
 end
 ```
 
+f5_ltm_string_class
+-------------------
+`f5_ltm_string_class` - Used to create, delete or update a string data group list
+
+| Attr | Default/Req? | Type | Description |
+|------|--------------|------|-------------|
+| sc_name | resource's name | String | Name of the string class. May contain partition name. |
+| f5 | REQUIRED | String | f5 to create the node on |
+| records | **REQUIRED** | Hash|Array | { "key1" => "value1", "key2" => "value2"} |
+
+### Example
+
+entry = { "key1" => "value1", "key2" => "value2"}
+f5_ltm_string_class "/internal/test002" do
+  f5 "intmxltm001"
+  records entry
+  action :create
+end
+
 Recipes
 =======
 
