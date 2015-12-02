@@ -246,7 +246,7 @@ f5_ltm_string_class
 
 | Attr | Default/Req? | Type | Description |
 |------|--------------|------|-------------|
-| sc_name | resource's name | String | Name of the string class. May contain partition name. |
+| sc_name | resource's name | String | Name of the string class. May contain partition name. (/partition/name)|
 | f5 | REQUIRED | String | f5 to create the node on |
 | records | **REQUIRED** | Hash|Array | { "key1" => "value1", "key2" => "value2"} |
 
@@ -254,8 +254,8 @@ f5_ltm_string_class
 
 ```ruby
 entry = { "key1" => "value1", "key2" => "value2"}
-f5_ltm_string_class "/internal/test002" do
-  f5 "intmxltm001"
+f5_ltm_string_class "test002" do
+  f5 "f5-test.test.com"
   records entry
   action :create
 end
