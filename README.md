@@ -252,12 +252,14 @@ f5_ltm_string_class
 
 ### Example
 
+```ruby
 entry = { "key1" => "value1", "key2" => "value2"}
 f5_ltm_string_class "/internal/test002" do
   f5 "intmxltm001"
   records entry
   action :create
 end
+```
 
 Recipes
 =======
