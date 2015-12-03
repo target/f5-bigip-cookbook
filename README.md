@@ -261,6 +261,29 @@ f5_ltm_string_class "test002" do
 end
 ```
 
+f5_ltm_string_class
+-------------------
+`f5_ltm_irule` - Used to create, delete or update an iRule
+
+| Attr | Default/Req? | Type | Description |
+|------|--------------|------|-------------|
+| irule_name | resource's name | String | Name of the iRule. It may contain partition name. (/partition/name)|
+| f5 | REQUIRED | String | f5 to create the node on |
+| content | **REQUIRED** | String | The iRule. Please note it'll fail if the the syntax is incorrect
+| template | '' | String | Not yet implemented but it should create a iRule from template
+
+### Example
+
+```ruby
+f5_ltm_irule "irule_name" do
+  f5 "f5-test.test.com"
+  content <<END
+irule with right syntax here
+END
+  action :create
+end
+```
+
 Recipes
 =======
 
