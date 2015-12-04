@@ -36,7 +36,7 @@ class Chef
         @irule_name = name
         @template = nil
         @content = nil
-        @description = nil
+        @variables = []
       end
 
       def irule_name(arg = nil)
@@ -51,8 +51,8 @@ class Chef
         set_or_return(:content, arg, :kind_of => String, :required => false)
       end
 
-      def description(arg = nil)
-        set_or_return(:description, arg, :kind_of => String, :required => false)
+      def variables(arg = nil)
+        set_or_return(:variables, arg, :kind_of => [Array,Hash], :required => false)
       end
 
       def f5(arg = nil)
