@@ -270,7 +270,7 @@ f5_ltm_string_class
 | irule_name | resource's name | String | Name of the iRule. It may contain partition name. (/partition/name)|
 | f5 | REQUIRED | String | f5 to create the node on |
 | content | **REQUIRED** | String | The iRule. Please note it'll fail if the the syntax is incorrect
-| template | '' | String | Not yet implemented but it should create a iRule from template
+| template | '' | String | Build up rule from template instead of inline content
 
 ### Example
 
@@ -280,6 +280,15 @@ f5_ltm_irule "irule_name" do
   content <<END
 irule with right syntax here
 END
+  action :create
+end
+```
+
+```ruby
+f5_ltm_irule "irule_name" do
+  f5 "f5-test.test.com"
+  template "my_rule001.erb"
+  variables { "var1" => "value1", "var2", "value2"} 
   action :create
 end
 ```
