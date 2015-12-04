@@ -36,7 +36,7 @@ class Chef
         @current_resource.name(@new_resource.name)
         @current_resource.pool_name(@new_resource.pool_name)
 
-        load_balancer.change_partition(@new_resource.pool_name) 
+        load_balancer.change_folder(@new_resource.pool_name) 
         pool = load_balancer.ltm.pools.find { |p| p.name =~ /(^|\/)#{@new_resource.pool_name}$/ or p.name == @new_resource.pool_name }
 
         @current_resource.exists = !pool.nil?
@@ -77,7 +77,7 @@ class Chef
             { 'address' => member['address'], 'port' => member['port'] }
           end
 
-          load_balancer.change_partition(new_resource.pool_name) 
+          load_balancer.change_folder(new_resource.pool_name) 
           load_balancer.client['LocalLB.Pool'].create_v2([new_resource.pool_name], [new_resource.lb_method], [members])
 
           current_resource.lb_method(new_resource.lb_method)
@@ -175,7 +175,7 @@ class Chef
       #   monitors currently associated with pool
       #
       def current_health_monitors
-        # Strip partition (good/bad?)
+        # Strip folder (good/bad?)
         current_resource.monitors.map { |m| m.gsub('/Common/', '') }.uniq.sort
       end
 
@@ -198,7 +198,7 @@ class Chef
       def current_members
         members = current_resource.members.map { |m| slice(m.to_hash, 'address', 'port') }
 
-        # Strip off partition (good/bad?)
+        # Strip off folder (good/bad?)
         # Set port to String from Integer
         members.each do |member|
           member['address'] = member['address'].gsub('/Common/', '')
@@ -216,7 +216,7 @@ class Chef
       def new_members
         members = new_resource.members.map { |m| slice(m.to_hash, 'address', 'port') }
 
-        # Strip off partition (good/bad?)
+        # Strip off folder (good/bad?)
         members.each do |member|
           member['address'] = member['address'].gsub('/Common/', '')
           member['port'] = member['port'].to_s

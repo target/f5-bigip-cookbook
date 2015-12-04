@@ -37,7 +37,8 @@ class Chef
         @current_resource.sc_name(@new_resource.sc_name)
         @current_resource.records(@new_resource.records)
 
-        load_balancer.change_partition(@new_resource.sc_name)
+        Chef::Log.info("Changing partition to #{@new_resource.sc_name}")
+        load_balancer.change_folder(@new_resource.sc_name)
         if @new_resource.sc_name.include?("/")
           @current_resource.sc_name (@new_resource.sc_name.split("/")[2])
         end

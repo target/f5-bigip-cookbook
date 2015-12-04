@@ -25,26 +25,26 @@ require 'load_balancer/ltm'
 module F5
   # The F5 device
   class LoadBalancer
-    attr_accessor :name, :client, :active_partition
+    attr_accessor :name, :client, :active_folder
 
     def initialize(name, client)
       @name = name
-      @active_partition = client['Management.Partition'].get_active_partition
+      @active_folder = client['System.Session'].get_active_folder
       @client = client
     end
 
-    def change_partition(partition='Common')
-      if partition.include?('/')
-        partition = partition.split('/')[1]
+    def change_folder(folder='Common')
+      if folder.include?('/')
+        folder = folder.split('/')[1]
       else
-        partition = 'Common'
+        folder = 'Common'
       end
-      return true if @active_partition == partition
+      return true if @active_folder == folder
 
       @ltm = nil
-      Chef::Log.info "Setting #{partition} as active partition"
-      @client['Management.Partition'].set_active_partition(partition)
-      @active_partition = partition
+      Chef::Log.info "Setting #{folder} as active folder"
+      @client['System.Session'].set_active_folder("/#{folder}")
+      @active_folder = folder
       return true
     end
 

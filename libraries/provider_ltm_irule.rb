@@ -43,7 +43,7 @@ class Chef
           fail "Resource #{@new_resource.name} requires either 'content' or 'template'"
         end
 
-        load_balancer.change_partition(@new_resource.irule_name)
+        load_balancer.change_folder(@new_resource.irule_name)
         if not @new_resource.irule_name.include?("/")
           @new_resource.irule_name("/Common/#{@new_resource.irule_name}")
         end

@@ -38,7 +38,7 @@ class Chef
         @current_resource.default_persistence_profile_cnt = 0
 
         # Check if virtual server exists
-        load_balancer.change_partition(@new_resource.vs_name)
+        load_balancer.change_folder(@new_resource.vs_name)
         vs = load_balancer.ltm.virtual_servers.find { |v| v.name =~ /(^|\/)#{@new_resource.vs_name}$/ or v.name == @new_resource.vs_name }
 
         @current_resource.exists = !vs.nil?

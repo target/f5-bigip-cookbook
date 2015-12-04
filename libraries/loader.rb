@@ -49,7 +49,7 @@ module F5
     #
     def interfaces
       [
-        'Management.Partition',
+        'System.Session',
         'LocalLB.Monitor',
         'LocalLB.NodeAddressV2',
         'LocalLB.Pool',

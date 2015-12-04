@@ -36,7 +36,7 @@ class Chef
         @current_resource.name(@new_resource.name)
         @current_resource.monitor_name(@new_resource.monitor_name)
 
-        load_balancer.change_partition(@new_resource.monitor_name) 
+        load_balancer.change_folder(@new_resource.monitor_name) 
         monitor = load_balancer.ltm.monitors.find { |m| m.name =~ /(^|\/)#{@new_resource.monitor_name}$/ or m.name == @new_resource.monitor_name }
         @current_resource.exists = !monitor.nil?
         return @current_resource unless @current_resource.exists
@@ -314,9 +314,9 @@ class Chef
       end
 
       #
-      # Remove /Common from current_resource parent value if new_resource has no partition.
-      # This is because a partition is assumed to be /Common if not present when sent to 11.x
-      # APIs.  Also, on 10.x there are no partitions.
+      # Remove /Common from current_resource parent value if new_resource has no folder.
+      # This is because a folder is assumed to be /Common if not present when sent to 11.x
+      # APIs.  Also, on 10.x there are no folders.
       #
       def fix_parent_template_value
         return if new_resource.parent =~ %r{^/[A-Za-z0-9]+/.*}

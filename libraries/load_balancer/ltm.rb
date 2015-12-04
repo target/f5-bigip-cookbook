@@ -61,12 +61,6 @@ module F5
         @monitors ||= F5::LoadBalancer::Ltm::Monitors.new(client)
       end
 
-      def partitions
-        client['Management.Partition'].get_partition_list.each do |p|
-          parts << p['partition_name']
-        end
-        @partitions ||= parts
-      end
     end
   end
 end
