@@ -176,7 +176,7 @@ class Chef
       #
       def current_health_monitors
         # Strip folder (good/bad?)
-        current_resource.monitors.map { |m| m.gsub('/Common/', '') }.uniq.sort
+        current_resource.monitors.map { |m| m.gsub(/\/.*\//, '') }.uniq.sort
       end
 
       #
@@ -186,7 +186,7 @@ class Chef
       #   monitors defined for pool to have
       #
       def new_health_monitors
-        new_resource.monitors.map { |m| m.gsub('/Common/', '') }.uniq.sort
+        new_resource.monitors.map { |m| m.gsub(/\/.*\//, '') }.uniq.sort
       end
 
       #
@@ -201,7 +201,7 @@ class Chef
         # Strip off folder (good/bad?)
         # Set port to String from Integer
         members.each do |member|
-          member['address'] = member['address'].gsub('/Common/', '')
+          member['address'] = member['address'].gsub(/\/.*\//, '')
           member['port'] = member['port'].to_s
         end
         members
@@ -218,7 +218,7 @@ class Chef
 
         # Strip off folder (good/bad?)
         members.each do |member|
-          member['address'] = member['address'].gsub('/Common/', '')
+          member['address'] = member['address'].gsub(/\/.*\//, '')
           member['port'] = member['port'].to_s
         end
         members
@@ -231,6 +231,10 @@ class Chef
       #   defined pool members not currently associated with pool
       #
       def missing_members
+        Chef::Log.info(current_members)
+        Chef::Log.info(new_members)
+        Chef::Log.info(new_members - (current_members & new_members))
+
         new_members - (current_members & new_members)
       end
 
