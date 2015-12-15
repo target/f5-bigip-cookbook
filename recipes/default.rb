@@ -21,6 +21,7 @@ include_recipe 'chef-vault'
 
 chef_gem 'soap4r-spox' do
   version '1.6.0'
+  compile_time false
 end
 
 cookbook_file "#{Chef::Config[:file_cache_path]}/f5-icontrol.gem" do
@@ -31,4 +32,5 @@ resources(:cookbook_file => "#{Chef::Config[:file_cache_path]}/f5-icontrol.gem")
 chef_gem 'f5-icontrol' do
   source "#{Chef::Config[:file_cache_path]}/f5-icontrol.gem"
   version '11.4.1.0'
+  compile_time false
 end
