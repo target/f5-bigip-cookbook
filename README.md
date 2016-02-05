@@ -215,7 +215,7 @@ f5_ltm_virtual_server
 | f5 | REQUIRED | String | f5 to create the node on |
 | destination_address | **REQUIRED** | String | Destination IP Address |
 | destination_port | **REQUIRED** | Integer | Destination Port |
-| default_pool | **REQUIRED** | String | Pool for virtual server to use |
+| default_pool | '' | String | Pool for virtual server to use |
 | vlan_state | 'STATE_DISABLED' | String | Wether list of VLANs are disabled or enabled |
 | vlans | [] | Array[String] | List of VLANs to enabled or disable based on `vlan_state` |
 | profiles | [{<br/>'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL',<br/>'profile_name' => '/Common/tcp'<br/>}] | Array[Hash] | Profiles to associate to virtual server |
@@ -227,6 +227,9 @@ f5_ltm_virtual_server
 | enabled | true | true/false | Enable or disable the virtual server |
 
 `vs_name` can be prefixed with a partition name, for example `/internal/vs_name`. Default is `/Common`.
+
+Originally `default_pool` was required but it's actually possible to run a VS with no pools just but using an iRule. Changed option to not required.
+
 
 ### Example
 
