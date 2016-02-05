@@ -107,7 +107,7 @@ class Chef
       end
 
       def default_pool(arg = nil)
-        set_or_return(:default_pool, arg, :kind_of => String, :required => true)
+        set_or_return(:default_pool, arg, :kind_of => String, :required => false)
       end
 
       def protocol(arg = nil)
