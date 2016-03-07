@@ -55,13 +55,17 @@ class Chef
 
         set_lb_method unless current_resource.lb_method == new_resource.lb_method
 
-        set_members unless missing_members.empty?
+        add_members unless missing_members.empty?
 
         set_health_monitors unless current_health_monitors == new_health_monitors
       end
 
       def action_delete
         delete_pool if current_resource.exists
+      end
+
+      def action_clear
+        remove_members unless extra_members.empty?
       end
 
       private
@@ -102,7 +106,7 @@ class Chef
       #
       # Set pool members for pool given new_resource members parameter
       #
-      def set_members
+      def add_members
         converge_by("Update #{new_resource} with additional members") do
           Chef::Log.info "Update #{new_resource} with additional members"
           members = []
@@ -113,6 +117,26 @@ class Chef
 
           load_balancer.client['LocalLB.Pool'].add_member_v2([new_resource.pool_name], [missing_members])
           current_resource.members(new_resource.members)
+
+          new_resource.updated_by_last_action(true)
+        end
+      end
+
+      #
+      # Remove pool members for a pool given new_resource members parameter
+      #
+      def remove_members
+        converge_by("Update #{new_resource} by removing members") do
+          Chef::Log.info "Update #{new_resource} by removing members"
+          members = []
+          extra_members.each do |member|
+            members << {
+              'address' => member['address'],
+              'port' => member['port']
+            }
+          end
+          load_balancer.client['LocalLB.Pool'].remove_member_v2([new_resource.pool_name], [extra_members])
+          current_resource.members(current_members.members - new_resource.members)
 
           new_resource.updated_by_last_action(true)
         end
@@ -231,6 +255,12 @@ class Chef
       def missing_members
         new_members - (current_members & new_members)
       end
+
+      def extra_members
+        # if no members were given in the resource definition, clear the whole pool
+        new_members.empty? ? current_members : new_members & current_members
+      end
+
 
       #
       # Return new hash with subset of keys
