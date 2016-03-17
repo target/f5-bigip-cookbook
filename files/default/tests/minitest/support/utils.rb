@@ -1,7 +1,7 @@
 module Helpers
   # f5-icontrol test helper functions
   module Utils
-    def arrays_match?(arr1, arr2, sort_by = nil)
+    def arrays_match?(arr1, arr2, sort_by = nil) # rubocop:disable AbcSize
       arr1 = arr1.uniq
       arr2 = arr2.uniq
 

@@ -23,7 +23,7 @@ class Chef
     #
     # Chef Resource for F5 Virtual Server
     #
-    class  F5LtmVirtualServer < Chef::Resource
+    class F5LtmVirtualServer < Chef::Resource
       PORTS_REGEX ||= /^(6553[0-5]|655[0-2]\d|65[0-4]\d\d|6[0-4]\d{3}|[1-5]\d{4}|[1-9]\d{0,3}|0)$/
       IP_REGEX ||= /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
       # rubocop:disable LineLength
@@ -42,7 +42,7 @@ class Chef
         PROTOCOL_ICMPV6
         PROTOCOL_OSPF
         PROTOCOL_SCTP
-      )
+      ).freeze
 
       VS_TYPES ||= %w(
         RESOURCE_TYPE_POOL
@@ -52,19 +52,19 @@ class Chef
         RESOURCE_TYPE_FAST_L4
         RESOURCE_TYPE_FAST_HTTP
         RESOURCE_TYPE_STATELESS
-      )
+      ).freeze
 
       VS_VLANS_STATE ||= %w(
         STATE_ENABLED
         STATE_DISABLED
-      )
+      ).freeze
 
       VS_SNAT_TYPES ||= %w(
         SRC_TRANS_UNKNOWN
         SRC_TRANS_NONE
         SRC_TRANS_AUTOMAP
         SRC_TRANS_SNATPOOL
-      )
+      ).freeze
 
       attr_accessor :exists, :default_persistence_profile_cnt
 

@@ -1,3 +1,11 @@
+AllCops:
+  Exclude:
+    - '.kitchen/**/*'
+    - 'metadata.rb'
+    - 'Berksfile'
+    - 'test/fixtures/cookbooks/**/*'
+    - 'Vagrantfile'
+
 Encoding:
   Enabled: false
 

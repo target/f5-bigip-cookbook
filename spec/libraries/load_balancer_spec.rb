@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-# rubocop:disable Documentation
 module F5
   describe LoadBalancer do
     let(:client) { double('F5::IControl') }
@@ -18,12 +17,9 @@ module F5
     let(:load_balancer) { F5::LoadBalancer.new('test-f5', client) }
 
     before do
-      allow(client).to receive(:[]).with('Management.DeviceGroup')
-                                        .and_return(management_device_group)
-      allow(client).to receive(:[]).with('System.Failover')
-                                        .and_return(system_failover)
-      allow(client).to receive(:[]).with('System.Inet')
-                                        .and_return(system_inet)
+      allow(client).to receive(:[]).with('Management.DeviceGroup').and_return(management_device_group)
+      allow(client).to receive(:[]).with('System.Failover').and_return(system_failover)
+      allow(client).to receive(:[]).with('System.Inet').and_return(system_inet)
     end
 
     describe '#ltm' do

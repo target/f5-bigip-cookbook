@@ -23,7 +23,7 @@ class Chef
     #
     # Chef Resource for F5 LTM Pool
     #
-    class  F5LtmPool < Chef::Resource
+    class F5LtmPool < Chef::Resource
       PORTS_REGEX ||= /^(6553[0-5]|655[0-2]\d|65[0-4]\d\d|6[0-4]\d{3}|[1-5]\d{4}|[1-9]\d{0,3}|0)$/
       LB_METHODS ||= %w(
         LB_METHOD_ROUND_ROBIN
@@ -47,7 +47,7 @@ class Chef
         LB_METHOD_RATIO_SESSION
         LB_METHOD_RATIO_LEAST_CONNECTION_MEMBER
         LB_METHOD_RATIO_LEAST_CONNECTION_NODE_ADDRESS
-      )
+      ).freeze
 
       attr_accessor :exists, :monitor_type
 

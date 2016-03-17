@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-# rubocop:disable Documentation
 module F5
   describe LoadBalancer::Ltm::Monitors do
     let(:client) { double('F5::IControl') }
@@ -41,16 +40,12 @@ module F5
         { 'address_type' => 'ATYPE_STAR_ADDRESS_EXPLICIT_PORT', 'ipport' => { 'address' => '0.0.0.0', 'port' => 8081 } }
       ]
     end
-    # let(:monitors) { F5::LoadBalancer::Ltm::Monitors.new(client) }
     let(:monitors) do
-      # require 'pry'
-      # binding.pry
       F5::LoadBalancer::Ltm::Monitors.new(client)
     end
 
     before do
-      allow(client).to receive(:[]).with('LocalLB.Monitor')
-                                        .and_return(locallb_monitor)
+      allow(client).to receive(:[]).with('LocalLB.Monitor').and_return(locallb_monitor)
     end
 
     describe '#monitors' do

@@ -19,7 +19,6 @@
 require 'spec_helper'
 
 describe Chef::Resource::F5LtmNode do
-
   let(:new_resource) do
     r = Chef::Resource::F5LtmNode.new('node1.test.com')
     r.f5('test')

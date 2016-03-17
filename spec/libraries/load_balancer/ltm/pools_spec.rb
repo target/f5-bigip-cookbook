@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-# rubocop:disable Documentation
 module F5
   describe LoadBalancer::Ltm::Pools do
     let(:pools) { F5::LoadBalancer::Ltm::Pools.new(client) }
@@ -78,8 +77,7 @@ module F5
     end
 
     before do
-      allow(client).to receive(:[]).with('LocalLB.Pool')
-                                   .and_return(locallb_pool)
+      allow(client).to receive(:[]).with('LocalLB.Pool').and_return(locallb_pool)
     end
 
     describe '#pool_names' do
@@ -96,15 +94,14 @@ module F5
 
     describe '#refresh_members' do
       it 'retrieves members of pools' do
-        expect(locallb_pool).to receive(:get_member_v2)
-                                .with(pool_names)
+        expect(locallb_pool).to receive(:get_member_v2).with(pool_names)
         pools.refresh_members
       end
 
       it 'returns no pool members' do
         expect(locallb_pool).to receive(:get_member_v2)
-                                .with(pool_names)
-                                .and_return([[], []])
+          .with(pool_names)
+          .and_return([[], []])
         pool_names.each_with_index do |_p, pi|
           expect(pools.all[pi].members).to be_empty
         end
@@ -124,8 +121,7 @@ module F5
 
     describe '#refresh_lb_method' do
       it 'retrieves load balancing method' do
-        expect(locallb_pool).to receive(:get_lb_method)
-                                .with(pool_names)
+        expect(locallb_pool).to receive(:get_lb_method).with(pool_names)
         pools.refresh_lb_method
       end
 
@@ -139,8 +135,7 @@ module F5
 
     describe '#refresh_monitors' do
       it 'retrieves monitors' do
-        expect(locallb_pool).to receive(:get_monitor_association)
-                                .with(pool_names)
+        expect(locallb_pool).to receive(:get_monitor_association).with(pool_names)
         pools.refresh_monitors
       end
 

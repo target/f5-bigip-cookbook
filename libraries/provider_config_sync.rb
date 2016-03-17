@@ -46,7 +46,7 @@ class Chef
       #
       # Push config to peers
       #
-      def synchronize_to_all_groups
+      def synchronize_to_all_groups # rubocop:disable AbcSize
         Chef::Log.info "No peers for #{load_balancer.system_hostname}" if load_balancer.device_groups.empty?
         return if load_balancer.device_groups.empty?
 

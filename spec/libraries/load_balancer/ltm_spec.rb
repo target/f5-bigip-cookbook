@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-# rubocop:disable Documentation
 module F5
   describe LoadBalancer::Ltm do
     let(:client) { double('F5::IControl') }
@@ -18,28 +17,11 @@ module F5
                                       :get_address => ['10.10.10.10', '10.10.10.11'],
                                       :get_object_status => [{ 'enabled_status' => 'ENABLED_STATUS_ENABLED' }, { 'enabled_status' => 'ENABLED_STATUS_DISABLED' }]
     end
-    # let(:management_device_group) do
-    #   double 'Management.DeviceGroup', :get_list => ['/Common/test1', '/Common/device_trust_group',
-    #                                                  '/Common/test2', '/Common/gtm', '/Common/test3']
-    # end
-    # let(:system_failover) do
-    #   double 'System.Failover', :get_failover_state => 'FAILOVER_STATE_ACTIVE'
-    # end
-    # let(:system_inet) do
-    #   double 'System.Inet', :get_hostname => 'test-f5.test.com'
-    # end
 
     let(:ltm) { F5::LoadBalancer::Ltm.new(client) }
 
     before do
-      allow(client).to receive(:[]).with('LocalLB.NodeAddressV2')
-                                        .and_return(local_lb_node_address)
-      # allow(client).to receive(:[]).with('Management.DeviceGroup')
-      #                                   .and_return(management_device_group)
-      # allow(client).to receive(:[]).with('System.Failover')
-      #                                   .and_return(system_failover)
-      # allow(client).to receive(:[]).with('System.Inet')
-      #                                   .and_return(system_inet)
+      allow(client).to receive(:[]).with('LocalLB.NodeAddressV2').and_return(local_lb_node_address)
     end
 
     describe '#nodes' do

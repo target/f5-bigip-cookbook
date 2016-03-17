@@ -23,7 +23,7 @@ f5s = data_bag(node['f5-bigip']['provisioner']['databag'])
 
 f5s.each do |item|
   f5 = data_bag_item(node['f5-bigip']['provisioner']['databag'], item)
-  if f5.key? 'delete'
+  if f5.key? 'delete' # rubocop:disable Next
     # Delete virtual servers
     if f5['delete'].key? 'virtual_servers'
       f5['delete']['virtual_servers'].each do |vs|

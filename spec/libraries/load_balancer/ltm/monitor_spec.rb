@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-# rubocop:disable Documentation
 module F5
   describe LoadBalancer::Ltm::Monitors::Monitor do
     let(:monitor_hash) do

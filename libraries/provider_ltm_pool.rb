@@ -31,12 +31,12 @@ class Chef
         false
       end
 
-      def load_current_resource # rubocop:disable MethodLength
+      def load_current_resource # rubocop:disable MethodLength, AbcSize
         @current_resource = Chef::Resource::F5LtmPool.new(@new_resource.name)
         @current_resource.name(@new_resource.name)
         @current_resource.pool_name(@new_resource.pool_name)
 
-        pool = load_balancer.ltm.pools.find { |p| p.name =~ /(^|\/)#{@new_resource.pool_name}$/ }
+        pool = load_balancer.ltm.pools.find { |p| p.name =~ %r{(^|\/)#{@new_resource.pool_name}$} }
 
         @current_resource.exists = !pool.nil?
 
@@ -50,7 +50,7 @@ class Chef
         @current_resource
       end
 
-      def action_create
+      def action_create # rubocop:disable AbcSize
         create_pool unless current_resource.exists
 
         set_lb_method unless current_resource.lb_method == new_resource.lb_method
@@ -69,7 +69,7 @@ class Chef
       #
       # Create a new pool given new_resource attributes
       #
-      def create_pool
+      def create_pool # rubocop:disable MethodLength, AbcSize
         converge_by("Create #{new_resource} pool") do
           Chef::Log.info "Create #{new_resource} pool"
           members = new_resource.members.map do |member|
@@ -89,7 +89,7 @@ class Chef
       #
       # Set load balancing method given new_resource lb_method attribute
       #
-      def set_lb_method
+      def set_lb_method # rubocop:disable AbcSize
         converge_by("Update #{new_resource} pool lb method") do
           Chef::Log.info "Update #{new_resource} pool lb method"
           load_balancer.client['LocalLB.Pool'].set_lb_method([new_resource.pool_name], [new_resource.lb_method])
@@ -102,7 +102,7 @@ class Chef
       #
       # Set pool members for pool given new_resource members parameter
       #
-      def set_members
+      def set_members # rubocop:disable AbcSize, MethodLength
         converge_by("Update #{new_resource} with additional members") do
           Chef::Log.info "Update #{new_resource} with additional members"
           members = []
@@ -121,15 +121,16 @@ class Chef
       #
       # Set pool health monitors given new_resource monitors parameter
       #
-      def set_health_monitors
+      def set_health_monitors # rubocop:disable AbcSize, MethodLength
         converge_by("Update #{new_resource} monitors") do
           Chef::Log.info "Update #{new_resource} monitors"
-          load_balancer.client['LocalLB.Pool'].set_monitor_association([
-            'pool_name' => new_resource.pool_name,
-            'monitor_rule' => {
-              'type' => monitor_rule_type, 'quorum' => 0,
-              'monitor_templates' => new_resource.monitors
-            }])
+          load_balancer.client['LocalLB.Pool'].set_monitor_association(
+            [
+              'pool_name' => new_resource.pool_name,
+              'monitor_rule' => {
+                'type' => monitor_rule_type, 'quorum' => 0,
+                'monitor_templates' => new_resource.monitors
+              }])
           current_resource.monitors(new_resource.monitors)
 
           new_resource.updated_by_last_action(true)

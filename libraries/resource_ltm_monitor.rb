@@ -23,7 +23,7 @@ class Chef
     #
     # Chef Resource for F5 LTM Monitor
     #
-    class  F5LtmMonitor < Chef::Resource
+    class F5LtmMonitor < Chef::Resource
       PORTS_REGEX ||= /^(6553[0-5]|655[0-2]\d|65[0-4]\d\d|6[0-4]\d{3}|[1-5]\d{4}|[1-9]\d{0,3}|0)$/
       IP_REGEX ||= /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
       ADDR_TYPE ||= %w(
@@ -33,7 +33,7 @@ class Chef
         ATYPE_EXPLICIT_ADDRESS_EXPLICIT_PORT
         ATYPE_STAR_ADDRESS
         ATYPE_EXPLICIT_ADDRESS
-      )
+      ).freeze
 
       attr_accessor :exists
 

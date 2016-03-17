@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-# rubocop:disable Documentation
 module F5
   describe LoadBalancer::Ltm::VirtualServers do
     let(:client) { double('F5::IControl') }
@@ -95,8 +94,7 @@ module F5
     let(:virtual_servers) { F5::LoadBalancer::Ltm::VirtualServers.new(client) }
 
     before do
-      allow(client).to receive(:[]).with('LocalLB.VirtualServer')
-                                        .and_return(locallb_vs)
+      allow(client).to receive(:[]).with('LocalLB.VirtualServer').and_return(locallb_vs)
     end
 
     describe '#all' do

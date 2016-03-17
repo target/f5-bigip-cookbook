@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-# rubocop:disable Documentation
 module F5
   describe LoadBalancer::Ltm::VirtualServers::VirtualServer do
     let(:virtual_server) { F5::LoadBalancer::Ltm::VirtualServers::VirtualServer.new('/Common/test') }
