@@ -17,8 +17,8 @@
 # limitations under the License.
 #
 
-require 'load_balancer/ltm/pools/pool'
-require 'load_balancer/ltm/pools/pool/member'
+require 'load_balancer_ltm_pools_pool'
+require 'load_balancer_ltm_pools_pool_member'
 require 'forwardable'
 
 module F5

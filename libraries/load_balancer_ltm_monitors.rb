@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-require 'load_balancer/ltm/monitors/monitor'
+require 'load_balancer_ltm_monitors_monitor'
 require 'forwardable'
 
 module F5
