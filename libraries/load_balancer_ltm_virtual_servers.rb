@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-require 'load_balancer/ltm/virtual_servers/virtual_server'
+require 'load_balancer_ltm_virtual_servers_virtual_server'
 require 'forwardable'
 
 module F5
