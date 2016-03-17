@@ -7,7 +7,7 @@ addons:
     packages:
       - chefdk
 
-before_script:
+before_install:
   - eval "$(/opt/chefdk/bin/chef shell-init bash)"
 
 install: "bundle install --no-cache"
