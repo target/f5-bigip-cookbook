@@ -24,3 +24,6 @@ HashSyntax:
 TrivialAccessors:
   Enabled: true
   ExactNameMatch: true
+
+DuplicatedKey:
+  Enabled: false
