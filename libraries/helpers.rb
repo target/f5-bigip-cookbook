@@ -32,10 +32,13 @@ module F5
         Chef::Log.warn("Missing gem 'chef-vault', use recipe[chef-vault] to install it first.")
       end
 
-      if node['dev_mode']
-        Chef::DataBagItem.load(bag, item)
-      else
+      case ChefVault::Item.data_bag_item_type(bag, item)
+      when :vault
         ChefVault::Item.load(bag, item)
+      when :encrypted
+        Chef::EncryptedDataBagItem.load(bag, item)
+      when :normal
+        Chef::DataBagItem.load(bag, item)
       end
     end
 

@@ -109,12 +109,14 @@ class Chef
       def add_members
         converge_by("Update #{new_resource} with additional members") do
           Chef::Log.info "Update #{new_resource} with additional members"
+          Chef::Log.debug "Existing members: #{current_resource.members}"
           members = []
           missing_members.each do |member|
             members << { 'address' => member['address'],
                          'port' => member['port'] }
           end
 
+          Chef::Log.debug("Adding these missing nodes: #{missing_members}")
           load_balancer.client['LocalLB.Pool'].add_member_v2([new_resource.pool_name], [missing_members])
           current_resource.members(new_resource.members)
 
@@ -136,7 +138,7 @@ class Chef
             }
           end
           load_balancer.client['LocalLB.Pool'].remove_member_v2([new_resource.pool_name], [extra_members])
-          current_resource.members(current_members.members - new_resource.members)
+          current_resource.members(current_resource.members - new_resource.members)
 
           new_resource.updated_by_last_action(true)
         end
@@ -223,7 +225,7 @@ class Chef
         # Strip off partition (good/bad?)
         # Set port to String from Integer
         members.each do |member|
-          member['address'] = member['address'].gsub('/Common/', '')
+          member['address'] = member['address'].gsub(%r{\/[a-zA-Z]*\/}, '')
           member['port'] = member['port'].to_s
         end
         members
@@ -240,7 +242,7 @@ class Chef
 
         # Strip off partition (good/bad?)
         members.each do |member|
-          member['address'] = member['address'].gsub('/Common/', '')
+          member['address'] = member['address'].gsub(%r{\/[a-zA-Z]*\/}, '')
           member['port'] = member['port'].to_s
         end
         members
@@ -253,9 +255,17 @@ class Chef
       #   defined pool members not currently associated with pool
       #
       def missing_members
+        Chef::Log.debug("New members #{new_members} - (Current members #{current_members} & New members #{new_members}) = #{new_members - (current_members & new_members)}")
         new_members - (current_members & new_members)
       end
 
+      #
+      # Return pool members defined that are currently associated to the pool, or all current pool members if none
+      # were listed
+      #
+      # @return [Array]
+      #    defined pool members that are currently associated to the pull or all if none are defined
+      #
       def extra_members
         # if no members were given in the resource definition, clear the whole pool
         new_members.empty? ? current_members : new_members & current_members
