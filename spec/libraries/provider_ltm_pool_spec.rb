@@ -116,7 +116,6 @@ describe Chef::Provider::F5LtmPool do
       provider.action_create
     end
 
-    # Need to implement
     it 'removes extra pool members' do
       provider.current_resource.exists = true
       provider.current_resource.members(pool_members)
