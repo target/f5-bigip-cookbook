@@ -249,7 +249,7 @@ class Chef
       end
 
       #
-      # Return pool members defined that are not currently associated to pool
+      # Return pool members defined that are not currently associated with pool
       #
       # @return [Array]
       #   defined pool members not currently associated with pool
@@ -260,11 +260,11 @@ class Chef
       end
 
       #
-      # Return pool members defined that are currently associated to the pool, or all current pool members if none
+      # Return pool members defined that are currently associated with the pool, or all current pool members if none
       # were listed
       #
       # @return [Array]
-      #    defined pool members that are currently associated to the pull or all if none are defined
+      #    defined pool members that are currently associated with the pull or all if none are defined
       #
       def extra_members
         # if no members were given in the resource definition, clear the whole pool
