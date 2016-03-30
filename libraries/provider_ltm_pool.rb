@@ -261,10 +261,10 @@ class Chef
 
       #
       # Return pool members defined that are currently associated with the pool, or all current pool members if none
-      # were listed
+      # were listed.  Used to determine whether we're removing a specific set of pool members, or all pool members.
       #
       # @return [Array]
-      #    defined pool members that are currently associated with the pull or all if none are defined
+      #    defined pool members that are currently associated with the pool or all if none are defined
       #
       def extra_members
         # if no members were given in the resource definition, clear the whole pool
