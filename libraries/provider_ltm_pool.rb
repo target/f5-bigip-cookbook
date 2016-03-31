@@ -65,7 +65,7 @@ class Chef
       end
 
       def action_clear
-        remove_members unless extra_members.empty?
+        remove_members unless members_to_remove.empty?
       end
 
       private
@@ -131,13 +131,13 @@ class Chef
         converge_by("Update #{new_resource} by removing members") do
           Chef::Log.info "Update #{new_resource} by removing members"
           members = []
-          extra_members.each do |member|
+          members_to_remove.each do |member|
             members << {
               'address' => member['address'],
               'port' => member['port']
             }
           end
-          load_balancer.client['LocalLB.Pool'].remove_member_v2([new_resource.pool_name], [extra_members])
+          load_balancer.client['LocalLB.Pool'].remove_member_v2([new_resource.pool_name], [members_to_remove])
           current_resource.members(current_resource.members - new_resource.members)
 
           new_resource.updated_by_last_action(true)
@@ -260,17 +260,18 @@ class Chef
       end
 
       #
-      # Return pool members defined that are currently associated with the pool, or all current pool members if none
-      # were listed.  Used to determine whether we're removing a specific set of pool members, or all pool members.
+      # Return the intersection of pool members in the current resource and pool members in the new resource, or all
+      # pool members in the current resource if none are defined in the new resource.
+      # Used to determine what pool members we want to remove actually exist in the F5 pool.
       #
       # @return [Array]
-      #    defined pool members that are currently associated with the pool or all if none are defined
+      #    intersection of pool members in the current resource and new resource, or all in the current resource if
+      #    none are in the new resource
       #
-      def extra_members
+      def members_to_remove
         # if no members were given in the resource definition, clear the whole pool
         new_members.empty? ? current_members : new_members & current_members
       end
-
 
       #
       # Return new hash with subset of keys
