@@ -152,14 +152,7 @@ class Chef
         converge_by("Updating #{new_resource} translate address to #{new_resource.translate_address}") do
           Chef::Log.info("Updating #{new_resource} translate address to #{new_resource.translate_address}")
     
-          st = new_resource.translate_address.include? 'STATE_ENABLED'
-          puts "+++++++++++++++++++++\n\n\n"
-          puts "#{st}"
-          puts "#{new_resource.translate_address}"
-          puts "+++++++++++++++++++++\n\n\n"
-
           load_balancer.client['LocalLB.VirtualServer'].set_translate_address_state([new_resource.vs_name], [new_resource.translate_address])
-
           current_resource.translate_address(new_resource.translate_address.include? 'STATE_ENABLED')
 
           new_resource.updated_by_last_action(true)
