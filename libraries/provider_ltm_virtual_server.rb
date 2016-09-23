@@ -51,7 +51,12 @@ class Chef
         @current_resource.destination_wildmask(vs.destination_wildmask)
         @current_resource.type(vs.type)
         @current_resource.default_pool(vs.default_pool.gsub('/Common/', ''))
+        @current_resource.description(vs.description)
         @current_resource.vlan_state(vs.vlans['state'])
+
+        @current_resource.translate_address(vs.translate_address)
+        @current_resource.translate_port(vs.translate_port)
+
         @current_resource.vlans(vs.vlans['vlans'].map { |v| v.gsub('/Common/', '') })
         @current_resource.enabled(vs.enabled)
         @current_resource.profiles(vs.profiles)
@@ -75,6 +80,8 @@ class Chef
 
         set_default_pool unless current_resource.default_pool == new_resource.default_pool
 
+        set_description unless current_resource.description == new_resource.description
+
         set_destination_wildmask unless current_resource.destination_wildmask == new_resource.destination_wildmask
         set_destination_address_port unless current_resource.destination_address == new_resource.destination_address
         set_destination_address_port unless current_resource.destination_port == new_resource.destination_port
@@ -83,6 +90,9 @@ class Chef
         remove_profiles unless match?('profiles')
 
         set_enabled_state unless current_resource.enabled == new_resource.enabled
+
+        set_translate_address unless current_resource.translate_address == new_resource.translate_address
+        set_translate_port unless current_resource.translate_port == new_resource.translate_port
 
         update_vlans unless current_resource.vlans == new_resource.vlans
         update_vlans unless current_resource.vlan_state == new_resource.vlan_state
@@ -126,13 +136,58 @@ class Chef
                        .create new_virtual_server_defenition, [new_resource.destination_wildmask],
                                new_virtual_server_resource, [new_resource.profiles]
           update_current_resource(%w(destination_address destination_port protocol
-                                     destination_wildmask type default_pool profiles))
+                                     destination_wildmask type default_pool profiles description
+                                     translate_port translate_address))
           current_resource.default_persistence_profile_cnt = 0
           current_resource.enabled(true)
 
           new_resource.updated_by_last_action(true)
         end
       end
+
+      #
+      # Set translate address state
+      #
+      def set_translate_address
+        converge_by("Updating #{new_resource} translate address to #{new_resource.translate_address}") do
+          Chef::Log.info("Updating #{new_resource} translate address to #{new_resource.translate_address}")
+    
+          load_balancer.client['LocalLB.VirtualServer'].set_translate_address_state([new_resource.vs_name], [new_resource.translate_address])
+          current_resource.translate_address(new_resource.translate_address.include? 'STATE_ENABLED')
+
+          new_resource.updated_by_last_action(true)
+        end
+      end
+
+
+      #
+      # Set translate port state
+      #
+      def set_translate_port
+        converge_by("Updating #{new_resource} translate port to #{new_resource.translate_port}") do
+          Chef::Log.info("Updating #{new_resource} translate port to #{new_resource.translate_port}")
+    
+          load_balancer.client['LocalLB.VirtualServer'].set_translate_port_state([new_resource.vs_name], [new_resource.translate_port])
+          current_resource.translate_port(new_resource.translate_port.include? ('STATE_ENABLED'))
+
+          new_resource.updated_by_last_action(true)
+        end
+      end
+
+
+      #
+      # Set virtual server description based on new_resource default_pool parameter
+      #
+      def set_description
+        converge_by("Updating #{new_resource} description to #{new_resource.description}") do
+          Chef::Log.info("Updating #{new_resource} description to #{new_resource.description}")
+          load_balancer.client['LocalLB.VirtualServer'].set_description([new_resource.vs_name], [new_resource.description])
+          current_resource.description(new_resource.description)
+
+          new_resource.updated_by_last_action(true)
+        end
+      end
+
 
       #
       # Set virtual server default pool based on new_resource default_pool parameter

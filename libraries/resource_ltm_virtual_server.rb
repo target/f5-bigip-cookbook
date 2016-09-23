@@ -59,6 +59,11 @@ class Chef
         STATE_DISABLED
       )
 
+      VS_TRANSLATE_STATE ||= %w(
+        STATE_ENABLED
+        STATE_DISABLED
+      )
+
       VS_SNAT_TYPES ||= %w(
         SRC_TRANS_UNKNOWN
         SRC_TRANS_NONE
@@ -106,6 +111,10 @@ class Chef
         set_or_return(:type, arg, :equal_to => VS_TYPES)
       end
 
+      def description(arg = nil)
+        set_or_return(:description, arg, :kind_of => String, :required => false)
+      end
+
       def default_pool(arg = nil)
         set_or_return(:default_pool, arg, :kind_of => String, :required => false)
       end
@@ -116,6 +125,16 @@ class Chef
 
       def vlan_state(arg = nil)
         set_or_return(:vlan_state, arg, :equal_to => VS_VLANS_STATE)
+      end
+
+      def translate_address(arg = nil)
+        #set_or_return(:translate_address, arg, :equal_to => VS_TRANSLATE_STATE)
+        set_or_return(:translate_address, arg, :kind_of => [TrueClass, FalseClass])
+      end
+
+      def translate_port(arg = nil)
+        #set_or_return(:translate_port, arg, :equal_to => VS_TRANSLATE_STATE)
+        set_or_return(:translate_address, arg, :kind_of => [TrueClass, FalseClass])
       end
 
       def vlans(arg = nil)
@@ -168,6 +187,9 @@ class Chef
         @fallback_persistence_profile = ''
         @rules = []
         @enabled = true
+        @description = ''
+        @translate_address = 'STATE_DISABLED'
+        @translate_port = 'STATE_DISABLED'
       end
     end
   end

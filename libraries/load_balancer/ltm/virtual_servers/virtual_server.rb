@@ -26,7 +26,8 @@ module F5
           attr_accessor :name, :destination_address, :destination_port, :destination_wildmask,
                         :default_pool, :type, :protocol, :profiles, :status, :vlans,
                         :snat_type, :snat_pool,
-                        :default_persistence_profile, :fallback_persistence_profile
+                        :default_persistence_profile, :fallback_persistence_profile,
+                        :description, :translate_address, :translate_port
 
           attr_writer :rules
 
