@@ -85,10 +85,26 @@ module F5
         end
 
         def refresh_description
-          default_pools = @client['LocalLB.VirtualServer'].get_description(names)
+          description = @client['LocalLB.VirtualServer'].get_description(names)
 
           @virtual_servers.each_with_index do |vs, idx|
             vs.description = description[idx]
+          end
+        end
+
+        def refresh_translate_port
+          translate_port = @client['LocalLB.VirtualServer'].get_translate_port_state(names)
+
+          @virtual_servers.each_with_index do |vs, idx|
+            vs.translate_port = translate_port[idx].include? 'STATE_ENABLED'
+          end
+        end
+
+        def refresh_translate_address
+          translate_address = @client['LocalLB.VirtualServer'].get_translate_address_state(names)
+
+          @virtual_servers.each_with_index do |vs, idx|
+            vs.translate_address = translate_address[idx].include? 'STATE_ENABLED'
           end
         end
 

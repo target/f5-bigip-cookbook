@@ -145,7 +145,7 @@ class Chef
       #
       # Set translate address state
       #
-      def set_translate_address_state
+      def set_translate_address
         converge_by("Updating #{new_resource} translate address to #{new_resource.translate_address}") do
           Chef::Log.info("Updating #{new_resource} translate address to #{new_resource.translate_address}")
     
@@ -156,7 +156,7 @@ class Chef
           end
 
           load_balancer.client['LocalLB.VirtualServer'].set_translate_address([new_resource.vs_name], [v])
-          current_resource.description(new_resource.translate_address)
+          current_resource.translate_address(new_resource.translate_address)
 
           new_resource.updated_by_last_action(true)
         end
@@ -166,7 +166,7 @@ class Chef
       #
       # Set translate port state
       #
-      def set_translate_port_state
+      def set_translate_port
         converge_by("Updating #{new_resource} translate port to #{new_resource.translate_port}") do
           Chef::Log.info("Updating #{new_resource} translate port to #{new_resource.translate_port}")
     
@@ -177,7 +177,7 @@ class Chef
           end
 
           load_balancer.client['LocalLB.VirtualServer'].set_translate_port([new_resource.vs_name], [v])
-          current_resource.description(new_resource.translate_port)
+          current_resource.translate_port(new_resource.translate_port)
 
           new_resource.updated_by_last_action(true)
         end
