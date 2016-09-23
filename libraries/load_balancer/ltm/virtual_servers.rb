@@ -84,6 +84,14 @@ module F5
           end
         end
 
+        def refresh_description
+          default_pools = @client['LocalLB.VirtualServer'].get_description(names)
+
+          @virtual_servers.each_with_index do |vs, idx|
+            vs.description = description[idx]
+          end
+        end
+
         def refresh_status
           statuses = @client['LocalLB.VirtualServer'].get_object_status(names)
 

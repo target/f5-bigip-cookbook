@@ -106,6 +106,10 @@ class Chef
         set_or_return(:type, arg, :equal_to => VS_TYPES)
       end
 
+      def description(arg = nil)
+        set_or_return(:description, arg, :kind_of => String, :required => false)
+      end
+
       def default_pool(arg = nil)
         set_or_return(:default_pool, arg, :kind_of => String, :required => false)
       end

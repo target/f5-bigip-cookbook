@@ -51,6 +51,7 @@ class Chef
         @current_resource.destination_wildmask(vs.destination_wildmask)
         @current_resource.type(vs.type)
         @current_resource.default_pool(vs.default_pool.gsub('/Common/', ''))
+        @current_resource.description(vs.description)
         @current_resource.vlan_state(vs.vlans['state'])
         @current_resource.vlans(vs.vlans['vlans'].map { |v| v.gsub('/Common/', '') })
         @current_resource.enabled(vs.enabled)
@@ -74,6 +75,8 @@ class Chef
         create_virtual_server unless current_resource.exists
 
         set_default_pool unless current_resource.default_pool == new_resource.default_pool
+
+        set_description unless current_resource.description == new_resource.description
 
         set_destination_wildmask unless current_resource.destination_wildmask == new_resource.destination_wildmask
         set_destination_address_port unless current_resource.destination_address == new_resource.destination_address
@@ -126,13 +129,27 @@ class Chef
                        .create new_virtual_server_defenition, [new_resource.destination_wildmask],
                                new_virtual_server_resource, [new_resource.profiles]
           update_current_resource(%w(destination_address destination_port protocol
-                                     destination_wildmask type default_pool profiles))
+                                     destination_wildmask type default_pool profiles description))
           current_resource.default_persistence_profile_cnt = 0
           current_resource.enabled(true)
 
           new_resource.updated_by_last_action(true)
         end
       end
+
+      #
+      # Set virtual server description based on new_resource default_pool parameter
+      #
+      def set_description
+        converge_by("Updating #{new_resource} description to #{new_resource.description}") do
+          Chef::Log.info("Updating #{new_resource} description to #{new_resource.description}")
+          load_balancer.client['LocalLB.VirtualServer'].set_description([new_resource.vs_name], [new_resource.description])
+          current_resource.description(new_resource.description)
+
+          new_resource.updated_by_last_action(true)
+        end
+      end
+
 
       #
       # Set virtual server default pool based on new_resource default_pool parameter
