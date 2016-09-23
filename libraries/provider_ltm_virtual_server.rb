@@ -134,7 +134,8 @@ class Chef
                        .create new_virtual_server_defenition, [new_resource.destination_wildmask],
                                new_virtual_server_resource, [new_resource.profiles]
           update_current_resource(%w(destination_address destination_port protocol
-                                     destination_wildmask type default_pool profiles description))
+                                     destination_wildmask type default_pool profiles description
+                                     translate_port translate_address))
           current_resource.default_persistence_profile_cnt = 0
           current_resource.enabled(true)
 
@@ -149,13 +150,7 @@ class Chef
         converge_by("Updating #{new_resource} translate address to #{new_resource.translate_address}") do
           Chef::Log.info("Updating #{new_resource} translate address to #{new_resource.translate_address}")
     
-          if new_resource.translate_address
-            v = 'STATE_ENABLED'
-          else
-            v = 'STATE_DISABLED'
-          end
-
-          load_balancer.client['LocalLB.VirtualServer'].set_translate_address([new_resource.vs_name], [v])
+          load_balancer.client['LocalLB.VirtualServer'].set_translate_address([new_resource.vs_name], [new_resource.translate_address])
           current_resource.translate_address(new_resource.translate_address)
 
           new_resource.updated_by_last_action(true)
@@ -170,13 +165,7 @@ class Chef
         converge_by("Updating #{new_resource} translate port to #{new_resource.translate_port}") do
           Chef::Log.info("Updating #{new_resource} translate port to #{new_resource.translate_port}")
     
-          if new_resource.translate_port
-            v = 'STATE_ENABLED'
-          else
-            v = 'STATE_DISABLED'
-          end
-
-          load_balancer.client['LocalLB.VirtualServer'].set_translate_port([new_resource.vs_name], [v])
+          load_balancer.client['LocalLB.VirtualServer'].set_translate_port([new_resource.vs_name], [new_resource.translate_port])
           current_resource.translate_port(new_resource.translate_port)
 
           new_resource.updated_by_last_action(true)
