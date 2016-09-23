@@ -154,7 +154,7 @@ class Chef
     
           st = new_resource.translate_address ? 'STATE_ENABLED' : 'STATE_DISABLED'
           load_balancer.client['LocalLB.VirtualServer'].set_translate_address_state([new_resource.vs_name], [st])
-          current_resource.translate_address(new_resource.translate_address.include? 'STATE_ENABLED')
+          current_resource.translate_address(new_resource.translate_address)
 
           new_resource.updated_by_last_action(true)
         end
@@ -170,7 +170,7 @@ class Chef
     
           st = new_resource.translate_port ? 'STATE_ENABLED' : 'STATE_DISABLED'
           load_balancer.client['LocalLB.VirtualServer'].set_translate_port_state([new_resource.vs_name], [st])
-          current_resource.translate_port(new_resource.translate_port.include? ('STATE_ENABLED'))
+          current_resource.translate_port(new_resource.translate_port)
 
           new_resource.updated_by_last_action(true)
         end
