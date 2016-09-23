@@ -53,6 +53,8 @@ class Chef
         @current_resource.default_pool(vs.default_pool.gsub('/Common/', ''))
         @current_resource.description(vs.description)
         @current_resource.vlan_state(vs.vlans['state'])
+        @current_resource.translate_address_state(vs.translate_address_state)
+        @current_resource.translate_port_state(vs.translate_port_state)
         @current_resource.vlans(vs.vlans['vlans'].map { |v| v.gsub('/Common/', '') })
         @current_resource.enabled(vs.enabled)
         @current_resource.profiles(vs.profiles)
@@ -86,6 +88,9 @@ class Chef
         remove_profiles unless match?('profiles')
 
         set_enabled_state unless current_resource.enabled == new_resource.enabled
+
+        set_translate_address_state unless current_resource.translate_address == new_resource.translate_address
+        set_translate_port_state unless current_resource.translate_port == new_resource.translate_port
 
         update_vlans unless current_resource.vlans == new_resource.vlans
         update_vlans unless current_resource.vlan_state == new_resource.vlan_state
@@ -136,6 +141,48 @@ class Chef
           new_resource.updated_by_last_action(true)
         end
       end
+
+      #
+      # Set translate address state
+      #
+      def set_translate_address_state
+        converge_by("Updating #{new_resource} translate address to #{new_resource.translate_address}") do
+          Chef::Log.info("Updating #{new_resource} translate address to #{new_resource.translate_address}")
+    
+          if new_resource.translate_address
+            v = 'STATE_ENABLED'
+          else
+            v = 'STATE_DISABLED'
+          end
+
+          load_balancer.client['LocalLB.VirtualServer'].set_translate_address([new_resource.vs_name], [v])
+          current_resource.description(new_resource.translate_address)
+
+          new_resource.updated_by_last_action(true)
+        end
+      end
+
+
+      #
+      # Set translate port state
+      #
+      def set_translate_port_state
+        converge_by("Updating #{new_resource} translate port to #{new_resource.translate_port}") do
+          Chef::Log.info("Updating #{new_resource} translate port to #{new_resource.translate_port}")
+    
+          if new_resource.translate_port
+            v = 'STATE_ENABLED'
+          else
+            v = 'STATE_DISABLED'
+          end
+
+          load_balancer.client['LocalLB.VirtualServer'].set_translate_port([new_resource.vs_name], [v])
+          current_resource.description(new_resource.translate_port)
+
+          new_resource.updated_by_last_action(true)
+        end
+      end
+
 
       #
       # Set virtual server description based on new_resource default_pool parameter

@@ -59,6 +59,11 @@ class Chef
         STATE_DISABLED
       )
 
+      VS_TRANSLATE_STATE ||= %w(
+        STATE_ENABLED
+        STATE_DISABLED
+      )
+
       VS_SNAT_TYPES ||= %w(
         SRC_TRANS_UNKNOWN
         SRC_TRANS_NONE
@@ -120,6 +125,14 @@ class Chef
 
       def vlan_state(arg = nil)
         set_or_return(:vlan_state, arg, :equal_to => VS_VLANS_STATE)
+      end
+
+      def translate_address_state(arg = nil)
+        set_or_return(:translate_address_state, arg, :equal_to => VS_TRANSLATE_STATE)
+      end
+
+      def translate_port_state(arg = nil)
+        set_or_return(:translate_port_state, arg, :equal_to => VS_TRANSLATE_STATE)
       end
 
       def vlans(arg = nil)
