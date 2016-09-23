@@ -54,8 +54,8 @@ class Chef
         @current_resource.description(vs.description)
         @current_resource.vlan_state(vs.vlans['state'])
 
-        @current_resource.translate_address(vs.translate_address.include?('STATE_ENABLED'))
-        @current_resource.translate_port(vs.translate_port.include?('STATE_ENABLED'))
+        @current_resource.translate_address(vs.translate_address)
+        @current_resource.translate_port(vs.translate_port)
 
         @current_resource.vlans(vs.vlans['vlans'].map { |v| v.gsub('/Common/', '') })
         @current_resource.enabled(vs.enabled)
