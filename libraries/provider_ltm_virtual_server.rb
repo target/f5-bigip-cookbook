@@ -89,8 +89,8 @@ class Chef
 
         set_enabled_state unless current_resource.enabled == new_resource.enabled
 
-        set_translate_address_state unless current_resource.translate_address == new_resource.translate_address
-        set_translate_port_state unless current_resource.translate_port == new_resource.translate_port
+        set_translate_address unless current_resource.translate_address == new_resource.translate_address
+        set_translate_port unless current_resource.translate_port == new_resource.translate_port
 
         update_vlans unless current_resource.vlans == new_resource.vlans
         update_vlans unless current_resource.vlan_state == new_resource.vlan_state
