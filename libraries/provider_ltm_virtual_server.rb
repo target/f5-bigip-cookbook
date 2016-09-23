@@ -53,8 +53,10 @@ class Chef
         @current_resource.default_pool(vs.default_pool.gsub('/Common/', ''))
         @current_resource.description(vs.description)
         @current_resource.vlan_state(vs.vlans['state'])
-        @current_resource.translate_address(vs.translate_address)
-        @current_resource.translate_port(vs.translate_port)
+
+        @current_resource.translate_address(vs.translate_address.include?('STATE_ENABLED'))
+        @current_resource.translate_port(vs.translate_port.include?('STATE_ENABLED'))
+
         @current_resource.vlans(vs.vlans['vlans'].map { |v| v.gsub('/Common/', '') })
         @current_resource.enabled(vs.enabled)
         @current_resource.profiles(vs.profiles)
@@ -151,6 +153,10 @@ class Chef
           Chef::Log.info("Updating #{new_resource} translate address to #{new_resource.translate_address}")
     
           st = new_resource.translate_address ? 'STATE_ENABLED' : 'STATE_DISABLED'
+          puts "+++++++++++++++++++++\n\n\n"
+          puts "#{st}"
+          puts "#{new_resource.translate_address}"
+          puts "+++++++++++++++++++++\n\n\n"
 
           load_balancer.client['LocalLB.VirtualServer'].set_translate_address_state([new_resource.vs_name], [st])
 
