@@ -127,12 +127,12 @@ class Chef
         set_or_return(:vlan_state, arg, :equal_to => VS_VLANS_STATE)
       end
 
-      def translate_address_state(arg = nil)
-        set_or_return(:translate_address_state, arg, :equal_to => VS_TRANSLATE_STATE)
+      def translate_address(arg = nil)
+        set_or_return(:translate_address, arg, :equal_to => VS_TRANSLATE_STATE)
       end
 
-      def translate_port_state(arg = nil)
-        set_or_return(:translate_port_state, arg, :equal_to => VS_TRANSLATE_STATE)
+      def translate_port(arg = nil)
+        set_or_return(:translate_port, arg, :equal_to => VS_TRANSLATE_STATE)
       end
 
       def vlans(arg = nil)
