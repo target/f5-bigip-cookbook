@@ -96,7 +96,7 @@ module F5
           translate_port = @client['LocalLB.VirtualServer'].get_translate_port_state(names)
 
           @virtual_servers.each_with_index do |vs, idx|
-            vs.translate_port = translate_port[idx].include? 'STATE_ENABLED'
+            vs.translate_port = translate_port[idx]
           end
         end
 
@@ -104,7 +104,7 @@ module F5
           translate_address = @client['LocalLB.VirtualServer'].get_translate_address_state(names)
 
           @virtual_servers.each_with_index do |vs, idx|
-            vs.translate_address = translate_address[idx].include? 'STATE_ENABLED'
+            vs.translate_address = translate_address[idx]
           end
         end
 

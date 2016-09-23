@@ -185,6 +185,9 @@ class Chef
         @fallback_persistence_profile = ''
         @rules = []
         @enabled = true
+        @description = ''
+        @translate_address = 'STATE_DISABLED'
+        @translate_port = 'STATE_DISABLED'
       end
     end
   end
