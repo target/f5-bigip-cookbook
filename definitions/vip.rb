@@ -9,8 +9,8 @@ define :f5_vip, :member_port => 443, :monitors => [], :lb_method => nil, :vlan_s
                 :destination_port => 443, :profiles => [], :snat_type => nil, :snat_pool => nil,
                 :default_persistence_profile => nil, :fallback_persistence_profile => nil,
                 :partition => '/Common',
-                :description, 
-                :translate_address, :translate_port,
+                :description => '', 
+                :translate_address => false, :translate_port => false,
                 :rules => [] do
 
   name = params[:name]
