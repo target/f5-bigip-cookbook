@@ -51,6 +51,9 @@ This definition is a wrapper for the [`f5_ltm_node`](#f5_ltm_node), [`f5_ltm_poo
 | fallback_persistence_profile | '' | String | Fallback persistence profile to associate with virtual server |
 | rules | [] | Array[String] | iRules to associate with virtual server |
 | partition | '' | String | Partition name where to create this VIP. It must exist. |
+| description | '' | String | VS description |
+| translate_port | '' | Boolean | Enable/Disable port translation |
+| translate_address | '' | Boolean | Enable/Disable address translation |
 
 ### Example
 The simplest VIP declartion that takes as many defaults as possible:
@@ -225,6 +228,9 @@ f5_ltm_virtual_server
 | fallback_persistence_profile | '' | String | Fallback persistence profile to associate with virtual server |
 | rules | [] | Array[String] | iRules to associate with virtual server |
 | enabled | true | true/false | Enable or disable the virtual server |
+| description | '' | String | VS description |
+| translate_port | '' | Boolean | Enable/Disable port translation |
+| translate_address | '' | Boolean | Enable/Disable address translation |
 
 `vs_name` can be prefixed with a partition name, for example `/internal/vs_name`. Default is `/Common`.
 
@@ -236,6 +242,7 @@ Originally `default_pool` was required but it's actually possible to run a VS wi
 ```ruby
 f5_ltm_virtual_server 'vs_new' do
   f5 'f5-test.test.com'
+  description 'Example VS for my fantastic web server'
   destination_address '10.11.10.10'
   destination_port 80
   default_pool 'new'

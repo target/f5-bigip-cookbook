@@ -9,6 +9,8 @@ define :f5_vip, :member_port => 443, :monitors => [], :lb_method => nil, :vlan_s
                 :destination_port => 443, :profiles => [], :snat_type => nil, :snat_pool => nil,
                 :default_persistence_profile => nil, :fallback_persistence_profile => nil,
                 :partition => '/Common',
+                :description, 
+                :translate_address, :translate_port,
                 :rules => [] do
 
   name = params[:name]
@@ -50,6 +52,9 @@ define :f5_vip, :member_port => 443, :monitors => [], :lb_method => nil, :vlan_s
     default_persistence_profile params[:default_persistence_profile] unless params[:default_persistence_profile].nil?
     fallback_persistence_profile params[:fallback_persistence_profile] unless params[:fallback_persistence_profile].nil?
     rules params[:rules] unless params[:rules].empty?
+    description params[:description]
+    translate_port params[:translate_port]
+    translate_address params[:translate_address]
     notifies :run, "f5_config_sync[#{params[:f5]}]", :delayed
   end
 end
