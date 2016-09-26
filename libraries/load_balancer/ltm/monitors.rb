@@ -83,7 +83,7 @@ module F5
 
         def refresh_description
           descs = @client['LocalLB.Monitor'].get_description(names)
-          @descs.each_with_index { |monitor, idx| monitor.description = descs[idx] }
+          @monitors.each_with_index { |monitor, idx| monitor.description = descs[idx] }
         end
 
         #
