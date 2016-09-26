@@ -83,7 +83,7 @@ class Chef
         set_description unless current_resource.description == new_resource.description
 
         set_destination_wildmask unless current_resource.destination_wildmask == new_resource.destination_wildmask
-        set_destination_address unless current_resource.destination_address == new_resource.destination_address
+        set_destination_address_port unless current_resource.destination_address == new_resource.destination_address
         set_destination_address_port unless current_resource.destination_port == new_resource.destination_port
 
         remove_all_rules unless match?('rules') && match?('profiles')
