@@ -120,7 +120,7 @@ class Chef
         converge_by("Update #{new_resource} description") do
           Chef::Log.info "Update #{new_resource} description"
           current_resource.description(new_resource.description)
-          load_balancer.client['LocalLB.Monitor'].set_description([new_resource.monitor_name], [description])
+          load_balancer.client['LocalLB.Monitor'].set_template_description([new_resource.monitor_name], [description])
 
           new_resource.updated_by_last_action(true)
         end
