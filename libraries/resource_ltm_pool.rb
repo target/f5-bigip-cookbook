@@ -85,7 +85,7 @@ class Chef
       end
 
       def description(arg = nil)
-        set_or_return(:lb_method, arg, :kind_of => String)
+        set_or_return(:description, arg, :kind_of => String)
       end
 
       def monitors(arg = nil)
