@@ -90,13 +90,13 @@ class Chef
           cur_addr = current_resource.destination_address
         end
         if new_resource.destination_address.start_with?('/')
-          new_addr = current_resource.destination_address.split('/')[2]
+          new_addr = new_resource.destination_address.split('/')[2]
         else
-          new_addr = current_resource.destination_address
+          new_addr = new_resource.destination_address
         end
 
         #set_destination_address_port unless current_resource.destination_address == new_resource.destination_address
-        puts "\n\nComparing #{cur_addr} == #{new_addr}\n\n"
+        puts "\n\nComparing '#{cur_addr}' == '#{new_addr}'\n\n"
         set_destination_address_port unless cur_addr == new_addr
         set_destination_address_port unless current_resource.destination_port == new_resource.destination_port
 
