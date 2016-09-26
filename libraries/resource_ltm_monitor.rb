@@ -79,7 +79,7 @@ class Chef
         set_or_return(:dest_addr_ip, arg, :kind_of => String, :regex => IP_REGEX)
       end
 
-      def dest_description(arg = nil)
+      def description(arg = nil)
         set_or_return(:description, arg, :kind_of => String)
       end
 
