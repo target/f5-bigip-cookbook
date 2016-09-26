@@ -80,6 +80,14 @@ module F5
           # refresh_member_status
         end
 
+        def refresh_description
+          pools_members = @client['LocalLB.Pool'].get_member_v2(pool_names)
+
+          pools_members.each_with_index do |description, idx|
+            @pools[idx].description = description
+          end
+        end
+
         # def refresh_member_status
         #   pool_member_statuses = @client['LocalLB.Pool']
         #                            .get_member_object_status(pool_names, pools_members)
@@ -118,6 +126,7 @@ module F5
           refresh_members
           refresh_monitors
           refresh_lb_method
+          refresh_description
         end
       end
     end

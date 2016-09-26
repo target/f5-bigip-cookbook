@@ -65,10 +65,15 @@ class Chef
         @lb_method = 'LB_METHOD_ROUND_ROBIN'
         @monitors = []
         @members = []
+        @description = ''
       end
 
       def pool_name(arg = nil)
         set_or_return(:pool_name, arg, :kind_of => String, :required => true)
+      end
+
+      def description(arg = nil)
+        set_or_return(:description, arg, :kind_of => String)
       end
 
       def f5(arg = nil)
@@ -77,6 +82,10 @@ class Chef
 
       def lb_method(arg = nil)
         set_or_return(:lb_method, arg, :kind_of => String, :equal_to => LB_METHODS)
+      end
+
+      def description(arg = nil)
+        set_or_return(:lb_method, arg, :kind_of => String)
       end
 
       def monitors(arg = nil)

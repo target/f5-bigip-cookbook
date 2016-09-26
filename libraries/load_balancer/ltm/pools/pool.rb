@@ -23,7 +23,7 @@ module F5
       class Pools
         # Representing an F5 LTM Pool
         class Pool
-          attr_accessor :name, :lb_method, :monitors, :members, :status
+          attr_accessor :name, :lb_method, :monitors, :members, :status, :description
 
           def initialize(pool_name)
             @name = pool_name

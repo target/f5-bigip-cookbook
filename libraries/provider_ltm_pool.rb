@@ -45,6 +45,7 @@ class Chef
 
         # If pool exists load it's current state
         @current_resource.lb_method(pool.lb_method)
+        @current_resource.description(pool.description)
         @current_resource.monitors(pool.monitors['monitor_templates'])
         @current_resource.monitor_type = pool.monitors['type']
         @current_resource.members(pool.members)
@@ -55,6 +56,8 @@ class Chef
         create_pool unless current_resource.exists
 
         set_lb_method unless current_resource.lb_method == new_resource.lb_method
+
+        set_description unless current_resource.description == new_resource.description
 
         set_members unless missing_members.empty?
 
@@ -81,6 +84,7 @@ class Chef
           load_balancer.client['LocalLB.Pool'].create_v2([new_resource.pool_name], [new_resource.lb_method], [members])
 
           current_resource.lb_method(new_resource.lb_method)
+          current_resource.description(new_resource.description)
           current_resource.members(new_resource.members)
           current_resource.monitors([])
 
@@ -100,6 +104,21 @@ class Chef
           new_resource.updated_by_last_action(true)
         end
       end
+
+
+      #
+      # Set descrition
+      #
+      def set_description
+        converge_by("Update #{new_resource} pool description") do
+          Chef::Log.info "Update #{new_resource} pool description"
+          load_balancer.client['LocalLB.Pool'].set_description([new_resource.pool_name], [new_resource.description])
+          current_resource.lb_method(new_resource.description)
+
+          new_resource.updated_by_last_action(true)
+        end
+      end
+
 
       #
       # Set pool members for pool given new_resource members parameter
