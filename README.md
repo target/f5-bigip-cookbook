@@ -111,6 +111,7 @@ f5_ltm_node
 |-----------|-------------------|------------|--------------------------------|
 | node_name | The resource name | String     | Name to create node with       |
 | address   | `node_name`       | String     | IP address to create node with |
+| description   |        | String     | Node description |
 | f5        | **REQUIRED**      | String     | f5 to create the node on       |
 | enabled   | `true`            | true/false | State node should be in        |
 
@@ -148,6 +149,7 @@ f5_ltm_pool
 | pool_name | The resource name | String | Name to create node with |
 | f5 | **REQUIRED** | String | f5 to create the node on |
 | lb_method | `LB_METHOD_ROUND_ROBIN` | String | Load balancing method |
+| description |  | String | Pool description |
 | monitors | [] | Array[String] | Monitors to check that pool members are available |
 | members | [] | Array[Hash] | Members to add to the pool |
 
@@ -184,6 +186,7 @@ f5_ltm_monitor
 | Attr | Default/Req? | Type | Description |
 |------|--------------|------|-------------|
 | monitor_name | resource's name | String | Name of monitor to create on f5 |
+| description |  | String | Monitor description |
 | f5 | **REQUIRED** | String | f5 to create the node on |
 | parent | 'https' | String | Name of parent monitor |
 | interval | 5 | Integer | Monitor interval |
