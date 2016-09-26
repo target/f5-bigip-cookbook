@@ -79,6 +79,10 @@ class Chef
         set_or_return(:dest_addr_ip, arg, :kind_of => String, :regex => IP_REGEX)
       end
 
+      def dest_description(arg = nil)
+        set_or_return(:description, arg, :kind_of => String)
+      end
+
       def dest_addr_port(arg = nil)
         set_or_return(:dest_addr_port, arg, :kind_of => Integer, :regex => PORTS_REGEX)
       end
@@ -102,6 +106,7 @@ class Chef
         @dest_addr_type = 'ATYPE_STAR_ADDRESS_EXPLICIT_PORT'
         @dest_addr_ip = '0.0.0.0'
         @dest_addr_port = 443
+        @description = ''
         @user_values = {}
       end
     end

@@ -55,6 +55,7 @@ class Chef
         set_template_destination if current_resource.dest_addr_port != new_resource.dest_addr_port
 
         set_template_interval if current_resource.interval != new_resource.interval
+        set_template_description if current_resource.description != new_resource.description
         set_template_timeout if current_resource.timeout != new_resource.timeout
 
         set_template_parent if current_resource.parent != new_resource.parent
@@ -75,7 +76,7 @@ class Chef
       #   f5 monitor object with data loaded from f5 API
       #
       def populate_current_resource(monitor)
-        %w(parent interval timeout dest_addr_type dest_addr_ip dest_addr_port user_values type).each do |item|
+        %w(parent description interval timeout dest_addr_type dest_addr_ip dest_addr_port user_values type).each do |item|
           current_resource.send(item, monitor.send(item))
         end
       end
@@ -111,6 +112,19 @@ class Chef
           new_resource.updated_by_last_action(true)
         end
       end
+
+      #
+      # Set monitor description
+      #
+      def set_template_description
+        converge_by("Update #{new_resource} description") do
+          Chef::Log.info "Update #{new_resource} description"
+          current_resource.description(new_resource.description)
+
+          new_resource.updated_by_last_action(true)
+        end
+      end
+
 
       #
       # Set monitor interval
@@ -278,6 +292,7 @@ class Chef
         [{
           'parent_template' => new_resource.parent,
           'interval' => new_resource.interval,
+          'description' => new_resource.description,
           'timeout' => new_resource.timeout,
           'dest_ipport' => monitor_ip_port,
           'is_read_only' => 'false',
