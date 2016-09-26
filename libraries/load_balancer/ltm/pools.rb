@@ -81,9 +81,9 @@ module F5
         end
 
         def refresh_description
-          pools_members = @client['LocalLB.Pool'].get_member_v2(pool_names)
+          pools_d = @client['LocalLB.Pool'].get_description(pool_names)
 
-          pools_members.each_with_index do |description, idx|
+          pools_d.each_with_index do |description, idx|
             @pools[idx].description = description
           end
         end
