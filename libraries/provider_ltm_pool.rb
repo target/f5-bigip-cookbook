@@ -113,7 +113,7 @@ class Chef
         converge_by("Update #{new_resource} pool description") do
           Chef::Log.info "Update #{new_resource} pool description"
           load_balancer.client['LocalLB.Pool'].set_description([new_resource.pool_name], [new_resource.description])
-          current_resource.lb_method(new_resource.description)
+          current_resource.description(new_resource.description)
 
           new_resource.updated_by_last_action(true)
         end
