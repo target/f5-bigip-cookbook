@@ -55,6 +55,7 @@ module F5
           refresh_parent
           refresh_destination
           refresh_interval
+          refresh_description
           refresh_timeout
           refresh_send_string
           refresh_receive_string
@@ -78,6 +79,11 @@ module F5
             monitor.dest_addr_ip = dests[idx]['ipport']['address']
             monitor.dest_addr_port = dests[idx]['ipport']['port']
           end
+        end
+
+        def refresh_description
+          descs = @client['LocalLB.Monitor'].get_description(names)
+          @descs.each_with_index { |monitor, idx| monitor.description = descs[idx] }
         end
 
         #

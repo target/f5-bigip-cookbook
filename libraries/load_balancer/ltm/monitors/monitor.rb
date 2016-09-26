@@ -31,7 +31,8 @@ module F5
           attr_reader :name, :type
 
           attr_accessor :parent, :interval, :timeout, :directly_usable,
-                        :dest_addr_type, :dest_addr_ip, :dest_addr_port
+                        :dest_addr_type, :dest_addr_ip, :dest_addr_port,
+                        :description
 
           def_delegators :@data, :[], :[]=, :keys
 
