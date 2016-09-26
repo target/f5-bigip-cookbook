@@ -70,9 +70,10 @@ class Chef
           end
         end
 
-        return @current_resource unless @current_resource.exists
-
-        @current_resource.update = true if current_rule['rule_definition'] != @new_resource.content
+        #return @current_resource unless @current_resource.exists
+        if @current_resource.exists
+          @current_resource.update = true if current_rule['rule_definition'] != @new_resource.content
+        end
 
         @current_resource
       end

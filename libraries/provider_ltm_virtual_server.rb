@@ -83,7 +83,20 @@ class Chef
         set_description unless current_resource.description == new_resource.description
 
         set_destination_wildmask unless current_resource.destination_wildmask == new_resource.destination_wildmask
-        set_destination_address_port unless current_resource.destination_address == new_resource.destination_address
+
+        if current_resource.destination_address.start_with?('/')
+          cur_addr = current_resource.destination_address.split('/')[2]
+        else
+          cur_addr = current_resource.destination_address
+        end
+        if new_resource.destination_address.start_with?('/')
+          new_addr = new_resource.destination_address.split('/')[2]
+        else
+          new_addr = new_resource.destination_address
+        end
+
+        #set_destination_address_port unless current_resource.destination_address == new_resource.destination_address
+        set_destination_address_port unless cur_addr == new_addr
         set_destination_address_port unless current_resource.destination_port == new_resource.destination_port
 
         remove_all_rules unless match?('rules') && match?('profiles')
