@@ -226,7 +226,7 @@ class Chef
         converge_by("Updating #{new_resource} source address to #{new_resource.source_address}") do
           Chef::Log.info("Updating #{new_resource} source address to #{new_resource.source_address}")
           load_balancer.client['LocalLB.VirtualServer'].set_source_address([new_resource.vs_name], [new_resource.source_address])
-          current_resource.destination_wildmask(new_resource.source_address)
+          current_resource.source_address(new_resource.source_address)
 
           new_resource.updated_by_last_action(true)
         end
