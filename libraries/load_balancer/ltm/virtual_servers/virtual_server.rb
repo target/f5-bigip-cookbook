@@ -27,7 +27,7 @@ module F5
                         :default_pool, :type, :protocol, :profiles, :status, :vlans,
                         :snat_type, :snat_pool,
                         :default_persistence_profile, :fallback_persistence_profile,
-                        :description, :translate_address, :translate_port
+                        :description, :translate_address, :translate_port, :source_address
 
           attr_writer :rules
 

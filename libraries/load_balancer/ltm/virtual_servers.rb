@@ -60,6 +60,14 @@ module F5
           end
         end
 
+        def refresh_source_address
+          source_addrs = @client['LocalLB.VirtualServer'].get_source_address(names)
+
+          @virtual_servers.each_with_index do |vs, idx|
+            vs.source_address = source_addrs[idx]
+          end
+        end
+
         def refresh_destination_wildmask
           wildmasks = @client['LocalLB.VirtualServer'].get_wildmask(names)
 
@@ -159,7 +167,7 @@ module F5
           @virtual_servers = @client['LocalLB.VirtualServer']
                              .get_list.map { |v| F5::LoadBalancer::Ltm::VirtualServers::VirtualServer.new(v) }
           %w(destination_wildmask destination_address type default_pool protocol
-             profiles status vlans snat persistence rules description 
+             profiles status vlans snat persistence rules description source_address
              translate_address translate_port).each do |item|
             send("refresh_#{item}")
           end

@@ -49,6 +49,7 @@ class Chef
         @current_resource.destination_address(vs.destination_address.gsub('/Common/', ''))
         @current_resource.destination_port(vs.destination_port)
         @current_resource.destination_wildmask(vs.destination_wildmask)
+        @current_resource.source_address(vs.source_address)
         @current_resource.type(vs.type)
         @current_resource.default_pool(vs.default_pool.gsub('/Common/', ''))
         @current_resource.description(vs.description)
@@ -83,6 +84,7 @@ class Chef
         set_description unless current_resource.description == new_resource.description
 
         set_destination_wildmask unless current_resource.destination_wildmask == new_resource.destination_wildmask
+        set_source_address unless current_resource.source_address == new_resource.source_address
 
         if current_resource.destination_address.start_with?('/')
           cur_addr = current_resource.destination_address.split('/')[2]
@@ -150,7 +152,7 @@ class Chef
                                new_virtual_server_resource, [new_resource.profiles]
           update_current_resource(%w(destination_address destination_port protocol
                                      destination_wildmask type default_pool profiles description
-                                     translate_port translate_address))
+                                     translate_port translate_address source_address))
           current_resource.default_persistence_profile_cnt = 0
           current_resource.enabled(true)
 
@@ -216,6 +218,20 @@ class Chef
           new_resource.updated_by_last_action(true)
         end
       end
+
+      #
+      # Set virtual server source address
+      #
+      def set_source_address
+        converge_by("Updating #{new_resource} source address to #{new_resource.source_address}") do
+          Chef::Log.info("Updating #{new_resource} source address to #{new_resource.source_address}")
+          load_balancer.client['LocalLB.VirtualServer'].set_source_address([new_resource.vs_name], [new_resource.source_address])
+          current_resource.source_address(new_resource.source_address)
+
+          new_resource.updated_by_last_action(true)
+        end
+      end
+
 
       #
       # Set virtual server wildmask based on new_resource wildmask parameter

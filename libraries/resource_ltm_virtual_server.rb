@@ -103,6 +103,10 @@ class Chef
         set_or_return(:destination_wildmask, arg, :regex => NM_REGEX)
       end
 
+      def source_address(arg = nil)
+        set_or_return(:source_address, arg, :kind_of => String, :required => false)
+      end
+
       def destination_port(arg = nil)
         set_or_return(:destination_port, arg, :regex => PORTS_REGEX, :required => true)
       end
@@ -190,6 +194,7 @@ class Chef
         @description = ''
         @translate_address = 'STATE_DISABLED'
         @translate_port = 'STATE_DISABLED'
+        @source_address = '0.0.0.0/0'
       end
     end
   end
