@@ -100,7 +100,7 @@ class Chef
       end
 
       def destination_wildmask(arg = nil)
-        set_or_return(:destination_wildmask, arg, :regex => NM_REGEX)
+        set_or_return(:destination_wildmask, arg, :kind_of => String)
       end
 
       def source_address(arg = nil)
