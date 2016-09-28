@@ -221,6 +221,7 @@ f5_ltm_virtual_server
 | f5 | REQUIRED | String | f5 to create the node on |
 | destination_address | **REQUIRED** | String | Destination IP Address |
 | destination_port | **REQUIRED** | Integer | Destination Port |
+| destination_wildmask | '255.255.255.255' | String | Destination Wildmask as CIDR notation |
 | default_pool | '' | String | Pool for virtual server to use |
 | vlan_state | 'STATE_DISABLED' | String | Wether list of VLANs are disabled or enabled |
 | vlans | [] | Array[String] | List of VLANs to enabled or disable based on `vlan_state` |
