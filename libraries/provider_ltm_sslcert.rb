@@ -52,8 +52,8 @@ class Chef
           cert_name = "/#{load_balancer.active_folder}/#{@new_resource.sslcert_name}"
         end
 
-        cert = load_balancer.client['Management.KeyCertificate'].get_certificate_list(t).find { |c| c.certificate.cert_info.id == cert_name }
-        key  = load_balancer.client['Management.KeyCertificate'].get_key_list(t).find { |c| c.key_info.id == cert_name }
+        cert = load_balancer.client['Management.KeyCertificate'].get_certificate_list(@new_resource.mode).find { |c| c.certificate.cert_info.id == cert_name }
+        key  = load_balancer.client['Management.KeyCertificate'].get_key_list(@new_resource.mode).find { |c| c.key_info.id == cert_name }
 
         if cert and key and @new_resource.override
           @current_resource.exists = true
