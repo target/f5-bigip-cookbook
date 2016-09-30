@@ -307,6 +307,31 @@ f5_ltm_irule "irule_name" do
 end
 ```
 
+f5_ltm_sslcert
+-------------------
+`f5_ltm_irule` - Used to create, delete or update an iRule
+
+| Attr | Default/Req? | Type | Description |
+|------|--------------|------|-------------|
+| sslcert_name | resource's name | String | Name of the cert (ie, mysite.com)
+| f5 | REQUIRED | String | f5 to create the node on |
+| crt | **REQUIRED** | String | Name of the CRT file (as per files/default)
+| key | **REQUIRED** | String | Name of the Key file (as per files/default)
+| key | false| Boolena | Override cert in F5 with this one
+
+
+### Example
+```
+f5_ltm_sslcert "/web/mysite.com" do
+  f5 "f5-test.test.com"
+  crt "server.crt"
+  key "server.key"
+  override false
+end
+```
+
+
+
 Recipes
 =======
 
