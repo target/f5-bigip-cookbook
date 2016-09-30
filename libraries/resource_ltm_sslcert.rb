@@ -63,6 +63,8 @@ class Chef
         set_or_return(:f5, arg, :kind_of => String, :required => true)
       end
 
+      attr_accessor :exists, :update
+
       private
       def set_defaults
         @mode = 'MANAGEMENT_MODE_DEFAULT'
@@ -71,7 +73,6 @@ class Chef
         @override = false
       end
 
-      attr_accessor :exists, :update, :sslcert
     end
   end
 end
