@@ -62,6 +62,9 @@ class Chef
             
           @current_resource.exists = true
           @current_resource.update = false
+        else
+          @current_resource.exists = false
+          @current_resource.update = false
         end
 
         @current_resource
