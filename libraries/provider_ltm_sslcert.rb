@@ -105,6 +105,11 @@ class Chef
         end
         return f if f.nil?
 
+        require pp
+        pp cb.manifest['files']
+        if not ::File.exists?(f)
+          fail("Cannot read #{f}")
+        end
         Chef::Log.info("Loading Cert / Key from #{f}")
         return ::File.read(f)
       end
