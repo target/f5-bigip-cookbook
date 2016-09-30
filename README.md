@@ -317,7 +317,8 @@ f5_ltm_sslcert
 | f5 | REQUIRED | String | f5 to create the node on |
 | crt | **REQUIRED** | String | Name of the CRT file (as per files/default)
 | key | **REQUIRED** | String | Name of the Key file (as per files/default)
-| key | false| Boolena | Override cert in F5 with this one
+| override | false| Boolean | Override cert in F5 with this one
+| mode | MANAGEMENT_MODE_DEFAULT| String | Type of cert you're uploading (see below)
 
 
 ### Example
@@ -330,6 +331,12 @@ f5_ltm_sslcert "/web/mysite.com" do
 end
 ```
 
+Valid modes are: 
+  MANAGEMENT_MODE_DEFAULT
+  MANAGEMENT_MODE_WEBSERVER
+  MANAGEMENT_MODE_EM
+  MANAGEMENT_MODE_IQUERY
+  MANAGEMENT_MODE_IQUERY_BIG3D
 
 
 Recipes
