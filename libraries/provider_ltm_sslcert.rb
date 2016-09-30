@@ -57,8 +57,8 @@ class Chef
         certs = load_balancer.client['Management.KeyCertificate'].get_certificate_list(@new_resource.mode)
         keys  = load_balancer.client['Management.KeyCertificate'].get_key_list(@new_resource.mode)
 
-        if certs.include?(sslcert_name) and
-            keys.include?(sslcert_name)
+        if certs.include?(cert_name) and
+            keys.include?(cert_name)
             
           @current_resource.exists = true
           @current_resource.update = false
