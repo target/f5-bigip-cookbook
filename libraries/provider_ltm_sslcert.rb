@@ -95,7 +95,7 @@ class Chef
           return
         end
 
-        f = cb.manifest['files'].find { |x| ::File.basename(x) == filename }
+        f = cb.manifest['files'].find { |x| ::File.basename(x['name']) == filename }
 
         Chef::Log.info("Loading Cert / Key from #{f}")
         return ::File.read(f)

@@ -48,7 +48,7 @@ class Chef
       end
 
       def crt(arg = nil)
-        set_or_return(:content, arg, :kind_of => String, :required => true)
+        set_or_return(:crt, arg, :kind_of => String, :required => true)
       end
 
       def mode(arg = nil)
