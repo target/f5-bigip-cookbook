@@ -52,18 +52,13 @@ class Chef
           cert_name = "/#{load_balancer.active_folder}/#{@new_resource.sslcert_name}"
         end
 
-        # Important: .query_rule will not find the rule if the content of the rule is empty
-        #            Pretty bizare behaviour in the API we'll have to work with
-        certs = load_balancer.client['Management.KeyCertificate'].get_certificate_list(@new_resource.mode)
-        keys  = load_balancer.client['Management.KeyCertificate'].get_key_list(@new_resource.mode)
+        cert = load_balancer.client['Management.KeyCertificate'].get_certificate_list(t).find { |c| c.certificate.cert_info.id == cert_name }
+        key  = load_balancer.client['Management.KeyCertificate'].get_key_list(t).find { |c| c.key_info.id == cert_name }
 
-        if certs.include?(cert_name) and
-            keys.include?(cert_name) and
-            @new_resource.override
-            
+        if cert and key and @new_resource.override
           @current_resource.exists = true
           @current_resource.update = true
-        elsif certs.include?(cert_name) and keys.include?(cert_name)
+        elsif cert and key
           @current_resource.exists = true
           @current_resource.update = false
         else
