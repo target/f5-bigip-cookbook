@@ -54,8 +54,8 @@ class Chef
 
         # Important: .query_rule will not find the rule if the content of the rule is empty
         #            Pretty bizare behaviour in the API we'll have to work with
-        certs = load_balancer.client['Management.KeyCertificate'].get_certificate_list
-        keys  = load_balancer.client['Management.KeyCertificate'].get_key_list
+        certs = load_balancer.client['Management.KeyCertificate'].get_certificate_list(@new_resource.mode)
+        keys  = load_balancer.client['Management.KeyCertificate'].get_key_list(@new_resource.mode)
 
         if certs.include?(sslcert_name) and
             keys.include?(sslcert_name)
