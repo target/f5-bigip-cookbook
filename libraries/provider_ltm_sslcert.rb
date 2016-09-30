@@ -93,20 +93,11 @@ class Chef
       def load_file_contents(filename, cookb=nil)
         cook = cookbook_name if cookb.nil?
         cb = run_context.cookbook_collection[cook]
-        if not run_context.has_cookbook_file_in_cookbook?(cook, filename)
-          Chef::Log.error("Filename #{filename} not found on cookbook #{cook}")
-          return
-        end
 
-        f = nil
-        cb.manifest['files'].each do |x|
-          next unless ::File.basename(x['name']) == filename
-          f = x['path']
-        end
-        return f if f.nil?
+        f = cb.file_filenames.find { |t| ::File.basename(f) == filename }
 
-        require 'pp'
-        pp cb.manifest['files']
+        fail("#{f} not found on cookbook #{cook}") if f.nil?
+
         if not ::File.exists?(f)
           fail("Cannot read #{f}")
         end
