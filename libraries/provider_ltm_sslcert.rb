@@ -95,7 +95,12 @@ class Chef
           return
         end
 
-        f = cb.manifest['files'].find { |x| ::File.basename(x['name']) == filename }
+        f = nil
+        cb.manifest['files'].each do |x|
+          next unless ::File.basename(x['name']) == filename
+          f = x['path']
+        end
+        return f if f.nil?
 
         Chef::Log.info("Loading Cert / Key from #{f}")
         return ::File.read(f)

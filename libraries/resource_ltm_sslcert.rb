@@ -52,7 +52,7 @@ class Chef
       end
 
       def mode(arg = nil)
-        set_or_return(:variables, arg, :kind_of => String, :required => false)
+        set_or_return(:mode, arg, :kind_of => String, :required => false)
       end
 
       def override(arg = nil)
