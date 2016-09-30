@@ -87,6 +87,20 @@ class Chef
 
       private
 
+      def load_file_contents(filename, cookb=nil)
+        cook = cookbook_name if cookb.nil?
+        cb = run_context.cookbook_collection[cook]
+        if not run_context.has_cookbook_file_in_cookbook?(cook, filename)
+          Chef::Log.error("Filename #{filename} not found on cookbook #{cook}")
+          return
+        end
+
+        f = cb.manifest['files'].find { |x| ::File.basename(x) == filename }
+
+        Chef::Log.info("Loading Cert / Key from #{f}")
+        return ::File.read(f)
+      end
+
       #
       # Update Key and Cert
       #
@@ -94,17 +108,19 @@ class Chef
         converge_by("Update Key/Cert #{new_resource}") do
           Chef::Log.info "Update #{new_resource}"
 
+          pemCrt = load_file_contents(new_resource.crt)
           load_balancer.client['Management.KeyCertificate'].certificate_import_from_pem(
             new_resource.mode,
             [new_resource.sslcert_name],
-            [new_resource.crt],
+            [pemCrt],
             new_resource.override
           )
 
+          pemKey = load_file_contents(new_resource.key)
           load_balancer.client['Management.KeyCertificate'].key_import_from_pem(
             new_resource.mode,
             [new_resource.sslcert_name],
-            [new_resource.key],
+            [pemKey],
             new_resource.override
           )
           new_resource.updated_by_last_action(true)
