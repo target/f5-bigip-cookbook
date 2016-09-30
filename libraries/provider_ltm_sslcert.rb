@@ -94,7 +94,7 @@ class Chef
         cook = cookbook_name if cookb.nil?
         cb = run_context.cookbook_collection[cook]
 
-        f = cb.file_filenames.find { |t| ::File.basename(f) == filename }
+        f = cb.file_filenames.find { |t| ::File.basename(t) == filename }
 
         fail("#{f} not found on cookbook #{cook}") if f.nil?
 
