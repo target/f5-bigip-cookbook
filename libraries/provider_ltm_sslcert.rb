@@ -105,7 +105,7 @@ class Chef
         end
         return f if f.nil?
 
-        require pp
+        require 'pp'
         pp cb.manifest['files']
         if not ::File.exists?(f)
           fail("Cannot read #{f}")
