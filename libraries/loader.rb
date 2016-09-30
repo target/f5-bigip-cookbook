@@ -57,6 +57,7 @@ module F5
         'LocalLB.Class',
         'LocalLB.Rule',
         'Management.DeviceGroup',
+        'Management.KeyCertificate',
         'System.ConfigSync',
         'System.Failover',
         'System.Inet'
