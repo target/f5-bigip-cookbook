@@ -38,10 +38,15 @@ class Chef
         @current_resource = Chef::Resource::F5LtmSslcert.new(@new_resource.name)
         @current_resource.name(@new_resource.name)
         @current_resource.key(@new_resource.key)
-        @current_resource.crt(@new_resource.crt)
+        @current_resource.cert(@new_resource.cert)
         @current_resource.sslcert_name(@new_resource.sslcert_name)
         @current_resource.override(@new_resource.override)
         @current_resource.mode(@new_resource.mode)
+        # default
+        @current_resource.exists_cert = false
+        @current_resource.exists_key  = false
+        @current_resource.update_key  = false
+        @current_resource.update_cert = false
 
 
         load_balancer.change_folder(@new_resource.sslcert_name)
@@ -52,39 +57,49 @@ class Chef
           cert_name = "/#{load_balancer.active_folder}/#{@new_resource.sslcert_name}"
         end
 
+        # LOGIC: cert is mandatory, key is optional
         cert = load_balancer.client['Management.KeyCertificate'].get_certificate_list(@new_resource.mode).find { |c| c.certificate.cert_info.id == cert_name }
-        key  = load_balancer.client['Management.KeyCertificate'].get_key_list(@new_resource.mode).find { |c| c.key_info.id == cert_name }
-
-        if cert and key and @new_resource.override
-          @current_resource.exists = true
-          @current_resource.update = true
-        elsif cert and key
-          @current_resource.exists = true
-          @current_resource.update = false
-        else
-          @current_resource.exists = false
-          @current_resource.update = false
+        key = nil
+        if @new_resource.key != ''
+          key  = load_balancer.client['Management.KeyCertificate'].get_key_list(@new_resource.mode).find { |c| c.key_info.id == cert_name }
         end
 
+        if cert and @new_resource.override
+          @current_resource.exists_cert = true
+          @current_resource.update_cert = true
+        elsif key and not @new_resource.override
+          @current_resource.exists_cert = true
+          @current_resource.update_cert = false
+        end
+
+        if key and @new_resource.override
+          @current_resource.exists_key = true
+          @current_resource.update_key = true
+        elsif key and not @new_resource.override
+          @current_resource.exists_key = true
+          @current_resource.update_key = false
+        end
+        
         @current_resource
       end
 
       def action_update
-        current_resource.update = true
+        current_resource.update_key  = true
+        current_resource.update_cert = true
         new_resource.override = true
         update_sslcert
       end
 
       def action_create
-        if current_resource.update and current_resource.override
+        if (current_resource.update_key or current_resource.update_cert) and current_resource.override
           update_sslcert
-        elsif not current_resource.exists
+        elsif not current_resource.exists_key or not current_resource.exists_cert
           create_sslcert
         end
       end
 
       def action_delete
-        delete_sslcert if current_resource.exists
+        delete_sslcert if current_resource.exists_key or current_resource.exists_cert
       end
 
       private
@@ -111,21 +126,26 @@ class Chef
         converge_by("Update Key/Cert #{new_resource}") do
           Chef::Log.info "Update #{new_resource}"
 
-          pemCrt = load_file_contents(new_resource.crt)
-          load_balancer.client['Management.KeyCertificate'].certificate_import_from_pem(
-            new_resource.mode,
-            [new_resource.sslcert_name],
-            [pemCrt],
-            new_resource.override
-          )
+          if new_resource.cert
+            pemCrt = load_file_contents(new_resource.cert)
+            load_balancer.client['Management.KeyCertificate'].certificate_import_from_pem(
+              new_resource.mode,
+              [new_resource.sslcert_name],
+              [pemCrt],
+              new_resource.override
+            )
+          end
 
-          pemKey = load_file_contents(new_resource.key)
-          load_balancer.client['Management.KeyCertificate'].key_import_from_pem(
-            new_resource.mode,
-            [new_resource.sslcert_name],
-            [pemKey],
-            new_resource.override
-          )
+          if new_resource.key
+            pemKey = load_file_contents(new_resource.key)
+            load_balancer.client['Management.KeyCertificate'].key_import_from_pem(
+              new_resource.mode,
+              [new_resource.sslcert_name],
+              [pemKey],
+              new_resource.override
+            )
+          end
+
           new_resource.updated_by_last_action(true)
         end
       end

@@ -315,8 +315,8 @@ f5_ltm_sslcert
 |------|--------------|------|-------------|
 | sslcert_name | resource's name | String | Name of the cert (ie, mysite.com)
 | f5 | REQUIRED | String | f5 to create the node on |
-| crt | **REQUIRED** | String | Name of the CRT file (as per files/default)
-| key | **REQUIRED** | String | Name of the Key file (as per files/default)
+| cert | **REQUIRED** | String | Name of the CRT file (as per files/default)
+| key | optional | String | Name of the Key file (as per files/default)
 | override | false| Boolean | Override cert in F5 with this one
 | mode | MANAGEMENT_MODE_DEFAULT| String | Type of cert you're uploading (see below)
 
@@ -325,8 +325,14 @@ f5_ltm_sslcert
 ```
 f5_ltm_sslcert "/web/mysite.com" do
   f5 "f5-test.test.com"
-  crt "server.crt"
+  cert "server.crt"
   key "server.key"
+  override false
+end
+
+f5_ltm_sslcert "/Common/ca-bundle" do
+  f5 "f5-test.test.com"
+  cert "ca-bundle.crt"
   override false
 end
 ```

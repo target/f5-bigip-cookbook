@@ -44,11 +44,11 @@ class Chef
       end
 
       def key(arg = nil)
-        set_or_return(:key, arg, :kind_of => String, :required => true)
+        set_or_return(:key, arg, :kind_of => String, :required => false)
       end
 
-      def crt(arg = nil)
-        set_or_return(:crt, arg, :kind_of => String, :required => true)
+      def cert(arg = nil)
+        set_or_return(:cert, arg, :kind_of => String, :required => true)
       end
 
       def mode(arg = nil)
@@ -63,13 +63,13 @@ class Chef
         set_or_return(:f5, arg, :kind_of => String, :required => true)
       end
 
-      attr_accessor :exists, :update
+      attr_accessor :exists_key, :exists_cert, :update_key, :update_cert
 
       private
       def set_defaults
         @mode = 'MANAGEMENT_MODE_DEFAULT'
         @key = ''
-        @crt = ''
+        @cert = ''
         @override = false
       end
 
