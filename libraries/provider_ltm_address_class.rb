@@ -54,7 +54,7 @@ class Chef
         
         @current_resource.records(members)
 
-        if members.sort != @new_resource.records.sort
+        if members != @new_resource.records
           @current_resource.update = true
         else
           @current_resource.update = false
