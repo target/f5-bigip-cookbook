@@ -27,7 +27,7 @@ class Chef
     class  F5LtmAddressClass < Chef::Resource
       def initialize(name, run_context = nil)
         super
-        @resource_name = :f5_ltm_string_class
+        @resource_name = :f5_ltm_address_class
         @provider = Chef::Provider::F5LtmAddressClass
         @action = :create
         @allowed_actions = [:create, :delete]
