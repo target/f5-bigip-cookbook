@@ -87,7 +87,7 @@ class Chef
         converge_by("Create/Update data list #{new_resource}") do
           Chef::Log.info "Create #{new_resource}"
           new_sc = {"name" => new_resource.sc_name, "members" => new_resource.records}
-          new_values = new_resource.records.values
+          new_values = new_resource.records
 
           if current_resource.update
             load_balancer.client['LocalLB.Class'].modify_address_class([new_sc])
