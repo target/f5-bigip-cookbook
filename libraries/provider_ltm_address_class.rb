@@ -52,7 +52,7 @@ class Chef
         
         require 'pp'
         pp sc['members']
-#        if sc['members'].sort != @new_resource.records.keys.sort or address_class_values[0].sort != @new_resource.records.values.sort
+#        if sc['members'] != @new_resource.records.keys.sort or address_class_values[0].sort != @new_resource.records.values.sort
 #          @current_resource.update = true
 #        else
 #          @current_resource.update = false
@@ -70,7 +70,7 @@ class Chef
       def action_create
         # If node doesn't exist
         if not current_resource.exists or current_resource.update
-          create_sc
+          create_address_class
         end
       end
 
@@ -83,10 +83,10 @@ class Chef
       #
       # Create a new node from new_resource attribtues
       #
-      def create_sc
+      def create_address_class
         converge_by("Create/Update data list #{new_resource}") do
           Chef::Log.info "Create #{new_resource}"
-          new_sc = {"name" => new_resource.sc_name, "members" => new_resource.records.keys}
+          new_sc = {"name" => new_resource.sc_name, "members" => new_resource.records}
           new_values = new_resource.records.values
 
           if current_resource.update
