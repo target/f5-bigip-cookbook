@@ -50,12 +50,13 @@ class Chef
         address_class = [{"name" => sc['name'], "members" => sc['members']}]
         address_class_values = load_balancer.client['LocalLB.Class'].get_address_class_member_data_value(address_class)
         
-        if sc['members'].sort != @new_resource.records.keys.sort or address_class_values[0].sort != @new_resource.records.values.sort
-          @current_resource.update = true
-        else
-          @current_resource.update = false
-        end
-
+        require 'pp'
+        pp sc['members']
+#        if sc['members'].sort != @new_resource.records.keys.sort or address_class_values[0].sort != @new_resource.records.values.sort
+#          @current_resource.update = true
+#        else
+#          @current_resource.update = false
+#        end
 
         recs={}
         address_class[0]['members'].each_with_index do |m,i|
