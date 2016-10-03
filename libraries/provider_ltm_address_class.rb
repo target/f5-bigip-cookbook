@@ -51,9 +51,14 @@ class Chef
         sc.members.each do |m|
           members << {'address' => m.address, 'netmask' => m.netmask }
         end
-        address_class = [{"name" => sc['name'], "members" => members}]
         
         @current_resource.records(members)
+
+        if members.sort != @new_resource.records.sort
+          @current_resource.update = true
+        else
+          @current_resource.update = false
+        end
 
         @current_resource
       end
