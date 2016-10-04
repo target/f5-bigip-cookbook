@@ -275,7 +275,30 @@ f5_ltm_string_class "test002" do
 end
 ```
 
-f5_ltm_string_class
+f5_ltm_address_class
+-------------------
+`f5_ltm_address_class` - Used to create, delete or update a list of networks
+
+| Attr | Default/Req? | Type | Description |
+|------|--------------|------|-------------|
+| sc_name | resource's name | String | Name of the string class. May contain partition name. (/partition/name)|
+| f5 | REQUIRED | String | f5 to create the node on |
+| records | **REQUIRED** | Hash|Array | { "address" => "x.x.x.x", "netmaks" => "y.y.y.y"} |
+
+### Example
+
+```ruby
+records = [
+  {"address"=>"10.10.8.0", "netmask"=>"255.255.252.0"}, 
+  {"address"=>"192.168.0.0", "netmask"=>"255.255.224.0"}
+]
+f5_ltm_address_class '/Common/MyAddressList' do
+  f5        "f5-test.test.com"
+  records   records
+end
+```
+
+f5_ltm_string_irule
 -------------------
 `f5_ltm_irule` - Used to create, delete or update an iRule
 
