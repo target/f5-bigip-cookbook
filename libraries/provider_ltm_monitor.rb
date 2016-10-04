@@ -194,9 +194,6 @@ class Chef
       #
       def set_template_string(monitor_types, string_type, type_description)
         error_message = "Can not set '#{type_description}' for #{new_resource} as it's type is currently #{current_resource.type}"
-        puts "=====================\n\n"
-        puts "Setting '#{type_description}' for #{new_resource}: type #{string_type}"
-        puts "=====================\n\n"
         fail error_message unless monitor_types.include? current_resource.type
 
         converge_by("Update #{new_resource} '#{type_description}'") do

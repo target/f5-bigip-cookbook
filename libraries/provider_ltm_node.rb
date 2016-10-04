@@ -43,6 +43,7 @@ class Chef
 
         # If node exists load it's current state
         @current_resource.enabled(node['enabled']) if @current_resource.exists
+        @current_resource.description(node['description']) if @current_resource.exists
         @current_resource
       end
 
@@ -52,6 +53,7 @@ class Chef
 
         # If enable state isn't what we want
         set_enabled unless current_resource.enabled == new_resource.enabled
+        set_description unless current_resource.description == new_resource.description
       end
 
       def action_delete
@@ -74,6 +76,18 @@ class Chef
       end
 
       #
+      # Set node as description
+      #
+      def set_description
+        converge_by("#{enabled_msg} #{new_resource}") do
+          Chef::Log.info "#{enabled_msg} #{new_resource}"
+          load_balancer.client['LocalLB.NodeAddressV2'].set_description([new_resource.node_name], [new_resource.description])
+          new_resource.updated_by_last_action(true)
+        end
+      end
+
+
+      #
       # Set node as enabled or disabled given new_resource enabled attribute
       #
       def set_enabled
@@ -81,7 +95,6 @@ class Chef
           Chef::Log.info "#{enabled_msg} #{new_resource}"
           load_balancer.client['LocalLB.NodeAddressV2'].set_session_enabled_state([new_resource.node_name], [enabled_state])
           current_resource.enabled(new_resource.enabled)
-          new_resource.updated_by_last_action(true)
 
           new_resource.updated_by_last_action(true)
         end
