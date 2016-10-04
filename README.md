@@ -298,7 +298,7 @@ f5_ltm_address_class '/Common/MyAddressList' do
 end
 ```
 
-f5_ltm_string_irule
+f5_ltm_irule
 -------------------
 `f5_ltm_irule` - Used to create, delete or update an iRule
 
