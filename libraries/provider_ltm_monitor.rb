@@ -171,6 +171,24 @@ class Chef
                             'Receive String')
       end
 
+      def set_template_dns_query_name
+        set_template_string(%w(TTYPE_DNS),
+                            'STYPE_QUERY_NAME',
+                            'Query name')
+      end
+
+      def set_template_dns_query_type
+        set_template_string(%w(TTYPE_DNS),
+                            'STYPE_QUERY_TYPE',
+                            'Query type')
+      end
+
+      def set_template_dns_query_answer
+        set_template_string(%w(TTYPE_DNS),
+                            'STYPE_ANSWER_CONTAINS',
+                            'Query answer')
+      end
+
       #
       # Wrapper function for setting string values for an f5 type
       #
@@ -191,6 +209,9 @@ class Chef
       def set_user_values
         set_template_send_string unless user_values_match? 'STYPE_SEND'
         set_template_receive_string unless user_values_match? 'STYPE_RECEIVE'
+        set_template_dns_query_name unless user_values_match? 'STYPE_QUERY_NAME'
+        set_template_dns_query_type unless user_values_match? 'STYPE_QUERY_TYPE'
+        set_template_dns_query_answer unless user_values_match? 'STYPE_ANSWER_CONTAINS'
       end
 
       #
