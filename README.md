@@ -345,7 +345,7 @@ f5_ltm_sslcert
 
 
 ### Example
-```
+```ruby
 f5_ltm_sslcert "/web/mysite.com" do
   f5 "f5-test.test.com"
   cert "server.crt"
@@ -360,13 +360,14 @@ f5_ltm_sslcert "/Common/ca-bundle" do
 end
 ```
 
+```
 Valid modes are: 
   MANAGEMENT_MODE_DEFAULT
   MANAGEMENT_MODE_WEBSERVER
   MANAGEMENT_MODE_EM
   MANAGEMENT_MODE_IQUERY
   MANAGEMENT_MODE_IQUERY_BIG3D
-
+```
 
 Recipes
 =======
