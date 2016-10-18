@@ -60,7 +60,7 @@ class Chef
       end
 
       def preserve_status(arg = nil)
-        set_or_return(:enabled, arg, :kind_of => [TrueClass, FalseClass])
+        set_or_return(:preserve_status, arg, :kind_of => [TrueClass, FalseClass])
       end
 
       def description(arg = nil)
