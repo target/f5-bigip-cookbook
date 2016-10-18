@@ -46,7 +46,9 @@ class Chef
         @current_resource.description(node['description']) unless node.nil?
         
         # preserve status
-        @new_resource.enabled(node['enabled']) unless node.nil?
+        if @new_resource.preserve_status
+          @new_resource.enabled(node['enabled']) unless node.nil?
+        end
         @current_resource
       end
 
