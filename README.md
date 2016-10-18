@@ -114,6 +114,7 @@ f5_ltm_node
 | description   |        | String     | Node description |
 | f5        | **REQUIRED**      | String     | f5 to create the node on       |
 | enabled   | `true`            | true/false | State node should be in        |
+| preserve_status   | `true`            | true/false | Retain status is manually enabled / disabled |
 
 If the `address` attribute is unset, the `node_name` (which in turn defaults to the resource's name) will be used instead.
 
