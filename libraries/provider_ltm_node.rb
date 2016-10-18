@@ -44,7 +44,9 @@ class Chef
         # If node exists load it's current state
         @current_resource.enabled(node['enabled']) unless node.nil?
         @current_resource.description(node['description']) unless node.nil?
-        puts "DEBUG: #{@current_resource.name} - current state #{@current_resource.enabled}" unless node.nil?
+        
+        # preserve status
+        @new_resource.enabled(node['enabled']) unless node.nil?
         @current_resource
       end
 
