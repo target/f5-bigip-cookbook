@@ -8,7 +8,6 @@ require 'chef/event_dispatch/dispatcher'
 
 require 'resource_ltm_monitor'
 
-# rubocop:disable Documentation
 describe Chef::Provider::F5LtmMonitor do
   # Create a provider instance
   let(:provider) { Chef::Provider::F5LtmMonitor.new(new_resource, run_context) }
@@ -101,16 +100,16 @@ describe Chef::Provider::F5LtmMonitor do
       it 'creates a new monitor if not already created' do
         provider.current_resource.exists = false
         expect(locallb_monitor).to receive(:create_template)
-                                   .with([{ 'template_name' => '/Common/test_monitor',
-                                            'template_type' => nil }],
-                                         [{ 'parent_template' => 'https',
-                                            'interval' => 5, 'timeout' => 16,
-                                            'dest_ipport' => {
-                                              'address_type' => 'ATYPE_STAR_ADDRESS_EXPLICIT_PORT',
-                                              'ipport' => {
-                                                'address' => '0.0.0.0', 'port' => 443 } },
-                                            'is_read_only' => 'false',
-                                            'is_directly_usable' => 'true' }])
+          .with([{ 'template_name' => '/Common/test_monitor',
+                   'template_type' => nil }],
+                [{ 'parent_template' => 'https',
+                   'interval' => 5, 'timeout' => 16,
+                   'dest_ipport' => {
+                     'address_type' => 'ATYPE_STAR_ADDRESS_EXPLICIT_PORT',
+                     'ipport' => {
+                       'address' => '0.0.0.0', 'port' => 443 } },
+                   'is_read_only' => 'false',
+                   'is_directly_usable' => 'true' }])
         provider.action_create
       end
 
@@ -136,11 +135,9 @@ describe Chef::Provider::F5LtmMonitor do
       before do
         allow(provider).to receive(:load_current_resource).and_call_original
         allow(locallb_monitor).to receive(:get_template_integer_property)
-                                  .with(['/Common/test_monitor'], ['ITYPE_INTERVAL'])
-                                  .and_return(['value' => 10])
+          .with(['/Common/test_monitor'], ['ITYPE_INTERVAL']).and_return(['value' => 10])
         allow(locallb_monitor).to receive(:get_template_integer_property)
-                                  .with(['/Common/test_monitor'], ['ITYPE_TIMEOUT'])
-                                  .and_return(['value' => 31])
+          .with(['/Common/test_monitor'], ['ITYPE_TIMEOUT']).and_return(['value' => 31])
         provider.new_resource.parent('http')
         provider.new_resource.interval(10)
         provider.new_resource.timeout(31)
@@ -152,15 +149,15 @@ describe Chef::Provider::F5LtmMonitor do
       it 'creates a new monitor if not already created' do
         provider.current_resource.exists = false
         expect(locallb_monitor).to receive(:create_template)
-                                   .with([{ 'template_name' => '/Common/test_monitor', 'template_type' => nil }],
-                                         [{ 'parent_template' => 'http',
-                                            'interval' => 10, 'timeout' => 31,
-                                            'dest_ipport' => {
-                                              'address_type' => 'ATYPE_EXPLICIT_ADDRESS_EXPLICIT_PORT',
-                                              'ipport' => {
-                                                'address' => '10.10.10.11', 'port' => 4443 } },
-                                            'is_read_only' => 'false',
-                                            'is_directly_usable' => 'true' }])
+          .with([{ 'template_name' => '/Common/test_monitor', 'template_type' => nil }],
+                [{ 'parent_template' => 'http',
+                   'interval' => 10, 'timeout' => 31,
+                   'dest_ipport' => {
+                     'address_type' => 'ATYPE_EXPLICIT_ADDRESS_EXPLICIT_PORT',
+                     'ipport' => {
+                       'address' => '10.10.10.11', 'port' => 4443 } },
+                   'is_read_only' => 'false',
+                   'is_directly_usable' => 'true' }])
         provider.action_create
       end
 
@@ -181,33 +178,33 @@ describe Chef::Provider::F5LtmMonitor do
       it 'set destination type' do
         provider.new_resource.dest_addr_type('ATYPE_EXPLICIT_ADDRESS_EXPLICIT_PORT')
         expect(locallb_monitor).to receive(:set_template_destination)
-                                   .with(['/Common/test_monitor'],
-                                         [{ 'address_type' => 'ATYPE_EXPLICIT_ADDRESS_EXPLICIT_PORT',
-                                            'ipport' => {
-                                              'address' => '0.0.0.0',
-                                              'port' => 443 } }])
+          .with(['/Common/test_monitor'],
+                [{ 'address_type' => 'ATYPE_EXPLICIT_ADDRESS_EXPLICIT_PORT',
+                   'ipport' => {
+                     'address' => '0.0.0.0',
+                     'port' => 443 } }])
         provider.action_create
       end
 
       it 'sets destination ip' do
         provider.new_resource.dest_addr_ip('10.10.10.11')
         expect(locallb_monitor).to receive(:set_template_destination)
-                                   .with(['/Common/test_monitor'],
-                                         [{ 'address_type' => 'ATYPE_STAR_ADDRESS_EXPLICIT_PORT',
-                                            'ipport' => {
-                                              'address' => '10.10.10.11',
-                                              'port' => 443 } }])
+          .with(['/Common/test_monitor'],
+                [{ 'address_type' => 'ATYPE_STAR_ADDRESS_EXPLICIT_PORT',
+                   'ipport' => {
+                     'address' => '10.10.10.11',
+                     'port' => 443 } }])
         provider.action_create
       end
 
       it 'sets destination port' do
         provider.new_resource.dest_addr_port(8888)
         expect(locallb_monitor).to receive(:set_template_destination)
-                                   .with(['/Common/test_monitor'],
-                                         [{ 'address_type' => 'ATYPE_STAR_ADDRESS_EXPLICIT_PORT',
-                                            'ipport' => {
-                                              'address' => '0.0.0.0',
-                                              'port' => 8888 } }])
+          .with(['/Common/test_monitor'],
+                [{ 'address_type' => 'ATYPE_STAR_ADDRESS_EXPLICIT_PORT',
+                   'ipport' => {
+                     'address' => '0.0.0.0',
+                     'port' => 8888 } }])
         provider.action_create
       end
 
@@ -227,7 +224,7 @@ describe Chef::Provider::F5LtmMonitor do
       it 'sets interval' do
         provider.new_resource.interval(10)
         expect(locallb_monitor).to receive(:set_template_integer_property)
-                                   .with(['/Common/test_monitor'], [{ 'type' => 'ITYPE_INTERVAL', 'value' => 10 }])
+          .with(['/Common/test_monitor'], [{ 'type' => 'ITYPE_INTERVAL', 'value' => 10 }])
         provider.action_create
       end
 
@@ -243,7 +240,7 @@ describe Chef::Provider::F5LtmMonitor do
       it 'sets timeout' do
         provider.new_resource.timeout(10)
         expect(locallb_monitor).to receive(:set_template_integer_property)
-                                   .with(['/Common/test_monitor'], [{ 'type' => 'ITYPE_TIMEOUT', 'value' => 10 }])
+          .with(['/Common/test_monitor'], [{ 'type' => 'ITYPE_TIMEOUT', 'value' => 10 }])
         provider.action_create
       end
 
@@ -281,7 +278,7 @@ describe Chef::Provider::F5LtmMonitor do
       it 'sets send string' do
         provider.new_resource.user_values('STYPE_SEND' => 'test')
         expect(locallb_monitor).to receive(:set_template_string_property)
-                                   .with(['/Common/test_monitor'], [{ 'type' => 'STYPE_SEND', 'value' => 'test' }])
+          .with(['/Common/test_monitor'], [{ 'type' => 'STYPE_SEND', 'value' => 'test' }])
         provider.action_create
       end
 
@@ -295,7 +292,7 @@ describe Chef::Provider::F5LtmMonitor do
       it 'sets receive string' do
         provider.new_resource.user_values('STYPE_RECEIVE' => 'test')
         expect(locallb_monitor).to receive(:set_template_string_property)
-                                   .with(['/Common/test_monitor'], [{ 'type' => 'STYPE_RECEIVE', 'value' => 'test' }])
+          .with(['/Common/test_monitor'], [{ 'type' => 'STYPE_RECEIVE', 'value' => 'test' }])
         provider.action_create
       end
 
@@ -311,8 +308,7 @@ describe Chef::Provider::F5LtmMonitor do
   describe '#action_delete' do
     it 'deletes the existing monitor' do
       provider.current_resource.exists = true
-      expect(locallb_monitor).to receive(:delete_template)
-                                 .with(['/Common/test_monitor'])
+      expect(locallb_monitor).to receive(:delete_template).with(['/Common/test_monitor'])
       provider.action_delete
     end
 

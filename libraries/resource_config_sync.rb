@@ -23,7 +23,7 @@ class Chef
     #
     # Chef Resource for F5 Config Sync
     #
-    class  F5ConfigSync < Chef::Resource
+    class F5ConfigSync < Chef::Resource
       def initialize(name, run_context = nil)
         super
         @resource_name = :f5_config_sync

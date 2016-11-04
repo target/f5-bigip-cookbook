@@ -42,7 +42,7 @@ module F5
         # The names of all the monitors
         #
         def names
-          @monitors.map { |m| m.name }
+          @monitors.map(&:name)
         end
 
         #

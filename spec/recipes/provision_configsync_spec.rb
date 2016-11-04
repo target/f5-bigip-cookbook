@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe 'f5-bigip::provision_configsync' do
   let(:chef_server) do
-    ChefSpec::ServerRunner.new do |node, server|
+    ChefSpec::ServerRunner.new do |_node, server|
       server.create_data_bag('f5-provisioner',
                              f5_provisioner_databag_data)
     end

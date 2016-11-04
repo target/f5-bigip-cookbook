@@ -53,7 +53,7 @@ module F5
         end
 
         def pool_names
-          @pools.map { |p| p.name }
+          @pools.map(&:name)
         end
 
         # Not currently used but hate to delete code ...
@@ -109,7 +109,7 @@ module F5
         private
 
         def pools_members
-          @pools.map { |p| p.members.map { |m| m.to_hash } }
+          @pools.map { |p| p.members.map(&:to_hash) }
         end
 
         def refresh_all

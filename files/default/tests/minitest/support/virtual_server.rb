@@ -8,7 +8,7 @@ module Helpers
         refute true, "Received exception getting address for #{vs}, probably does not exist"
       end
 
-      assert_match((/(^|\/)#{exp_address}$/), dest_address['address'])
+      assert_match(%r{(^|\/)#{exp_address}$}, dest_address['address'])
     end
 
     def check_vs_port(client, vs, exp_port)

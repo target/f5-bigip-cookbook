@@ -1,9 +1,18 @@
-rvm:
-  - 1.9.3
-  - 2.0.0
-before_script:
-  - bundle exec berks install
+sudo: false
+
+addons:
+  apt:
+    sources:
+      - chef-current-precise
+    packages:
+      - chefdk
+
+before_install:
+  - eval "$(/opt/chefdk/bin/chef shell-init bash)"
+
+install: "bundle install --no-cache"
+
 script:
-  - bundle exec foodcritic -f any -f ~FC015 -X spec .
+  - rubocop
+  - foodcritic -f any -f ~FC015 -X spec .
   - bundle exec rspec --color --format progress
-  - bundle exec rubocop

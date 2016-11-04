@@ -8,7 +8,6 @@ require 'chef/event_dispatch/dispatcher'
 
 require 'resource_config_sync'
 
-# rubocop:disable Documentation
 describe Chef::Provider::F5ConfigSync do
   # Create a provider instance
   let(:provider) { Chef::Provider::F5ConfigSync.new(new_resource, run_context) }
@@ -46,10 +45,8 @@ describe Chef::Provider::F5ConfigSync do
   describe '#action_run' do
     describe 'active f5' do
       it 'pushes configs to other devices' do
-        expect(locallb_config_sync).to receive(:synchronize_to_group_v2)
-                                           .with('dev', 'test.test.com', true)
-        expect(locallb_config_sync).to receive(:synchronize_to_group_v2)
-                                           .with('prod', 'test.test.com', true)
+        expect(locallb_config_sync).to receive(:synchronize_to_group_v2).with('dev', 'test.test.com', true)
+        expect(locallb_config_sync).to receive(:synchronize_to_group_v2).with('prod', 'test.test.com', true)
         provider.action_run
       end
 

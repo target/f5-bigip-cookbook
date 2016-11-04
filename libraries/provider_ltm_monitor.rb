@@ -31,12 +31,12 @@ class Chef
         false
       end
 
-      def load_current_resource
+      def load_current_resource # rubocop:disable AbcSize
         @current_resource = Chef::Resource::F5LtmMonitor.new(@new_resource.name)
         @current_resource.name(@new_resource.name)
         @current_resource.monitor_name(@new_resource.monitor_name)
 
-        monitor = load_balancer.ltm.monitors.find { |m| m.name =~ /(^|\/)#{@new_resource.monitor_name}$/ }
+        monitor = load_balancer.ltm.monitors.find { |m| m.name =~ %r{(^|\/)#{@new_resource.monitor_name}$} }
         @current_resource.exists = !monitor.nil?
         return @current_resource unless @current_resource.exists
 
@@ -46,7 +46,7 @@ class Chef
         @current_resource
       end
 
-      def action_create # rubocop:disable CyclomaticComplexity
+      def action_create # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
         create_template unless current_resource.exists
 
         set_template_destination if current_resource.dest_addr_type != new_resource.dest_addr_type
@@ -82,7 +82,7 @@ class Chef
       #
       # Create a new monitor from new_resource attribtues
       #
-      def create_template
+      def create_template # rubocop:disable AbcSize
         converge_by("Create #{new_resource}") do
           Chef::Log.info "Create #{new_resource}"
           load_balancer.client['LocalLB.Monitor'].create_template(monitor_template, common_attributes)
@@ -100,7 +100,7 @@ class Chef
       #
       # Set monitor destination address
       #
-      def set_template_destination
+      def set_template_destination # rubocop:disable AbcSize
         converge_by("Update #{new_resource} destination") do
           Chef::Log.info "Update #{new_resource} destination"
           Chef::Log.info "Monitor destination for #{new_resource} will fail if monitor is currently associated"
@@ -160,7 +160,7 @@ class Chef
       #
       def set_template_string(monitor_types, string_type, type_description)
         error_message = "Can not set '#{type_description}' for #{new_resource} as it's type is currently #{current_resource.type}"
-        fail error_message unless monitor_types.include? current_resource.type
+        raise error_message unless monitor_types.include? current_resource.type
 
         converge_by("Update #{new_resource} '#{type_description}'") do
           set_string_for(string_type)
@@ -180,12 +180,12 @@ class Chef
       #
       #
       #
-      def user_values_match?(type)
+      def user_values_match?(type) # rubocop:disable AbcSize
         # 'Skip' by returning true if new_resource is not set with the type
         return true unless new_resource.user_values.key? type
 
         # No match if current_resource does not have it set
-        fail "#{current_resource} missing string value for #{type}" unless current_resource.user_values.key? type
+        raise "#{current_resource} missing string value for #{type}" unless current_resource.user_values.key? type
 
         return false if current_resource.user_values[type] != new_resource.user_values[type]
         true
@@ -238,8 +238,8 @@ class Chef
       #
       def set_integer_for(type, value)
         load_balancer.client['LocalLB.Monitor']
-                     .set_template_integer_property([new_resource.monitor_name],
-                                                    [{ 'type' => type, 'value' => value }])
+          .set_template_integer_property([new_resource.monitor_name],
+                                         [{ 'type' => type, 'value' => value }])
       end
 
       #
@@ -248,12 +248,12 @@ class Chef
       # @param [String] type
       #   the F5 type to set the value for
       #
-      def set_string_for(type) # rubocop:disable AccessorMethodName
+      def set_string_for(type) # rubocop:disable AccessorMethodName, AbcSize
         Chef::Log.info "Update #{new_resource} String '#{type}'"
         load_balancer.client['LocalLB.Monitor']
-                     .set_template_string_property([new_resource.monitor_name],
-                                                   [{ 'type' => type,
-                                                      'value' => new_resource.user_values[type] }])
+          .set_template_string_property([new_resource.monitor_name],
+                                        [{ 'type' => type,
+                                           'value' => new_resource.user_values[type] }])
         current_resource.user_values(current_resource.user_values.merge(type => new_resource.user_values[type]))
       end
 

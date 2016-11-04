@@ -19,7 +19,6 @@
 require 'spec_helper'
 
 describe Chef::Resource::F5LtmNode do
-
   let(:new_resource) do
     r = Chef::Resource::F5LtmNode.new('node1.test.com')
     r.f5('test')
@@ -50,7 +49,7 @@ describe Chef::Resource::F5LtmNode do
   it "requires parameter 'f5' to be set" do
     r = Chef::Resource::F5LtmNode.new('node1.test.com')
     p = Chef::Provider::F5LtmNode.new(r, run_context)
-    expect { p.load_current_resource }.to raise_error(Chef::Exceptions::ValidationFailed, 'Required argument f5 is missing!')
+    expect { p.load_current_resource }.to raise_error(Chef::Exceptions::ValidationFailed, 'f5 is required')
   end
 
   it "can set parameter 'f5'" do

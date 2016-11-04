@@ -23,7 +23,7 @@ class Chef
     #
     # Chef Resource for F5 LTM Node
     #
-    class  F5LtmNode < Chef::Resource
+    class F5LtmNode < Chef::Resource
       def initialize(name, run_context = nil)
         super
         @resource_name = :f5_ltm_node
