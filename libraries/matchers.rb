@@ -48,6 +48,10 @@ if defined?(ChefSpec)
     ChefSpec::Matchers::ResourceMatcher.new(:f5_ltm_pool, :delete, resource_name)
   end
 
+  def clear_f5_ltm_pool(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:f5_ltm_pool, :clear, resource_name)
+  end
+
   def create_f5_ltm_virtual_server(resource_name)
     ChefSpec::Matchers::ResourceMatcher.new(:f5_ltm_virtual_server, :create, resource_name)
   end

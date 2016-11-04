@@ -56,7 +56,7 @@ class Chef
         @resource_name = :f5_ltm_pool
         @provider = Chef::Provider::F5LtmPool
         @action = :create
-        @allowed_actions = [:create, :delete]
+        @allowed_actions = [:create, :delete, :clear]
 
         # This is equivalent to setting :name_attribute => true
         @pool_name = name

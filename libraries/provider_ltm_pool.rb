@@ -55,13 +55,17 @@ class Chef
 
         set_lb_method unless current_resource.lb_method == new_resource.lb_method
 
-        set_members unless missing_members.empty?
+        add_members unless missing_members.empty?
 
         set_health_monitors unless current_health_monitors == new_health_monitors
       end
 
       def action_delete
         delete_pool if current_resource.exists
+      end
+
+      def action_clear
+        remove_members unless members_to_remove.empty?
       end
 
       private
@@ -102,17 +106,39 @@ class Chef
       #
       # Set pool members for pool given new_resource members parameter
       #
-      def set_members # rubocop:disable AbcSize, MethodLength
+      def add_members # rubocop:disable AbcSize, MethodLength
         converge_by("Update #{new_resource} with additional members") do
           Chef::Log.info "Update #{new_resource} with additional members"
+          Chef::Log.debug "Existing members: #{current_resource.members}"
           members = []
           missing_members.each do |member|
             members << { 'address' => member['address'],
                          'port' => member['port'] }
           end
 
+          Chef::Log.debug("Adding these missing nodes: #{missing_members}")
           load_balancer.client['LocalLB.Pool'].add_member_v2([new_resource.pool_name], [missing_members])
           current_resource.members(new_resource.members)
+
+          new_resource.updated_by_last_action(true)
+        end
+      end
+
+      #
+      # Remove pool members for a pool given new_resource members parameter
+      #
+      def remove_members # rubocop:disable MethodLength, AbcSize
+        converge_by("Update #{new_resource} by removing members") do
+          Chef::Log.info "Update #{new_resource} by removing members"
+          members = []
+          members_to_remove.each do |member|
+            members << {
+              'address' => member['address'],
+              'port' => member['port']
+            }
+          end
+          load_balancer.client['LocalLB.Pool'].remove_member_v2([new_resource.pool_name], [members_to_remove])
+          current_resource.members(current_resource.members - new_resource.members)
 
           new_resource.updated_by_last_action(true)
         end
@@ -200,7 +226,7 @@ class Chef
         # Strip off partition (good/bad?)
         # Set port to String from Integer
         members.each do |member|
-          member['address'] = member['address'].gsub('/Common/', '')
+          member['address'] = member['address'].gsub(%r{\/[a-zA-Z]*\/}, '')
           member['port'] = member['port'].to_s
         end
         members
@@ -217,20 +243,35 @@ class Chef
 
         # Strip off partition (good/bad?)
         members.each do |member|
-          member['address'] = member['address'].gsub('/Common/', '')
+          member['address'] = member['address'].gsub(%r{\/[a-zA-Z]*\/}, '')
           member['port'] = member['port'].to_s
         end
         members
       end
 
       #
-      # Return pool members defined that are not currently associated to pool
+      # Return pool members defined that are not currently associated with pool
       #
       # @return [Array]
       #   defined pool members not currently associated with pool
       #
       def missing_members
+        Chef::Log.debug("New members #{new_members} - (Current members #{current_members} & New members #{new_members}) = #{new_members - (current_members & new_members)}")
         new_members - (current_members & new_members)
+      end
+
+      #
+      # Return the intersection of pool members in the current resource and pool members in the new resource, or all
+      # pool members in the current resource if none are defined in the new resource.
+      # Used to determine what pool members we want to remove actually exist in the F5 pool.
+      #
+      # @return [Array]
+      #    intersection of pool members in the current resource and new resource, or all in the current resource if
+      #    none are in the new resource
+      #
+      def members_to_remove
+        # if no members were given in the resource definition, clear the whole pool
+        new_members.empty? ? current_members : new_members & current_members
       end
 
       #

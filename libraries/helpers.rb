@@ -25,7 +25,7 @@ module F5
     # Provider Class
     # TD: Figure out if there is a way to actually use chef_vault_item
     # From chef-vault cookbook in providers
-    def chef_vault_item(bag, item)
+    def chef_vault_item(bag, item) # rubocop:disable MethodLength
       begin
         require 'chef-vault'
       rescue LoadError
@@ -35,7 +35,14 @@ module F5
       if node['dev_mode']
         Chef::DataBagItem.load(bag, item)
       else
-        ChefVault::Item.load(bag, item)
+        case ChefVault::Item.data_bag_item_type(bag, item)
+        when :vault
+          ChefVault::Item.load(bag, item)
+        when :encrypted
+          Chef::EncryptedDataBagItem.load(bag, item)
+        when :normal
+          Chef::DataBagItem.load(bag, item)
+        end
       end
     end
 
