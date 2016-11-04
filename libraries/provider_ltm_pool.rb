@@ -127,7 +127,7 @@ class Chef
       #
       # Remove pool members for a pool given new_resource members parameter
       #
-      def remove_members
+      def remove_members # rubocop:disable MethodLength, AbcSize
         converge_by("Update #{new_resource} by removing members") do
           Chef::Log.info "Update #{new_resource} by removing members"
           members = []

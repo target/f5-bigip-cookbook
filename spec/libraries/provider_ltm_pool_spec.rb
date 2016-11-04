@@ -117,12 +117,16 @@ describe Chef::Provider::F5LtmPool do
     it 'removes extra pool members' do
       provider.current_resource.exists = true
       provider.current_resource.members(pool_members)
-      provider.new_resource.members([
-        { 'address' => '10.10.10.10', 'port' => '80' },
-        { 'address' => '10.10.10.11', 'port' => '80' }])
-      expect(locallb_pool).to receive(:remove_member_v2)
-                              .with(['test_pool'],
-                                    [[{ 'address' => '10.10.10.11', 'port' => '8081' }]])
+      provider.new_resource.members(
+        [
+          { 'address' => '10.10.10.10', 'port' => '80' },
+          { 'address' => '10.10.10.11', 'port' => '80' }
+        ]
+      )
+      expect(locallb_pool).to receive(:remove_member_v2).with(
+        ['test_pool'],
+        [[{ 'address' => '10.10.10.11', 'port' => '8081' }]]
+      )
       provider.action_create
     end
 
