@@ -192,8 +192,8 @@ class Chef
         @rules = []
         @enabled = true
         @description = ''
-        @translate_address = 'STATE_DISABLED'
-        @translate_port = 'STATE_DISABLED'
+        @translate_address = false
+        @translate_port = false
         @source_address = '0.0.0.0/0'
       end
     end
