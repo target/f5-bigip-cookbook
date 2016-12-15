@@ -171,6 +171,24 @@ class Chef
                             'Receive String')
       end
 
+      #
+      # Set Username String
+      #
+      def set_template_username_string
+        set_template_string(%w(TTYPE_HTTP TTYPE_HTTPS TTYPE_NNTP TTYPE_FTP TTYPE_POP3 TTYPE_SQL TTYPE_IMAP TTYPE_RADIUS TTYPE_RADIUS_ACCOUNTING TTYPE_LDAP TTYPE_WMI TTYPE_SIPTTYPE_TCP),
+                            'STYPE_USERNAME',
+                            'Username String')
+      end
+
+      #
+      # Set Password String
+      #
+      def set_template_password_string
+        set_template_string(%w(TTYPE_HTTP TTYPE_HTTPS TTYPE_NNTP TTYPE_FTP TTYPE_POP3 TTYPE_SQL TTYPE_IMAP TTYPE_RADIUS TTYPE_LDAP TTYPE_WMI TTYPE_SIPTTYPE_TCP),
+                            'STYPE_PASSWORD',
+                            'Password String')
+      end
+
       def set_template_dns_query_name
         set_template_string(%w(TTYPE_DNS),
                             'STYPE_QUERY_NAME',
@@ -209,6 +227,8 @@ class Chef
       def set_user_values
         set_template_send_string unless user_values_match? 'STYPE_SEND'
         set_template_receive_string unless user_values_match? 'STYPE_RECEIVE'
+        set_template_username_string unless user_values_match? 'STYPE_USERNAME'
+        set_template_password_string unless user_values_match? 'STYPE_PASSWORD'
         set_template_dns_query_name unless user_values_match? 'STYPE_QUERY_NAME'
         set_template_dns_query_type unless user_values_match? 'STYPE_QUERY_TYPE'
         set_template_dns_query_answer unless user_values_match? 'STYPE_ANSWER_CONTAINS'

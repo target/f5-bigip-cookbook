@@ -59,6 +59,8 @@ module F5
           refresh_timeout
           refresh_send_string
           refresh_receive_string
+          refresh_username_string
+          refresh_password_string
         end
 
         #
@@ -122,6 +124,22 @@ module F5
         def refresh_receive_string
           monitors = monitors_are(%w(TTYPE_HTTP TTYPE_HTTPS TTYPE_TCP))
           refresh_string_for(monitors, 'STYPE_RECEIVE')
+        end
+
+        #
+        # Update username string value for the monitors with type [HTTP, HTTPS, NNTP, FTP, POP3, SQL, IMAP, RADIUS, RADIUS_ACCOUNTING, LDAP, WMI, SIP]
+        #
+        def refresh_username_string
+          monitors = monitors_are(%w(TTYPE_HTTP TTYPE_HTTPS TTYPE_NNTP TTYPE_FTP TTYPE_POP3 TTYPE_SQL TTYPE_IMAP TTYPE_RADIUS TTYPE_RADIUS_ACCOUNTING TTYPE_LDAP TTYPE_WMI TTYPE_SIPTTYPE_TCP))
+          refresh_string_for(monitors, 'STYPE_USERNAME')
+        end
+
+        #
+        # Update password string value for the monitors with type [HTTP, HTTPS, NNTP, FTP, POP3, SQL, IMAP, RADIUS, LDAP, WMI, SIP]
+        #
+        def refresh_password_string
+          monitors = monitors_are(%w(TTYPE_HTTP TTYPE_HTTPS TTYPE_NNTP TTYPE_FTP TTYPE_POP3 TTYPE_SQL TTYPE_IMAP TTYPE_RADIUS TTYPE_LDAP TTYPE_WMI TTYPE_SIPTTYPE_TCP))
+          refresh_string_for(monitors, 'STYPE_PASSWORD')
         end
 
         private
