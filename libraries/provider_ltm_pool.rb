@@ -59,7 +59,7 @@ class Chef
 
         set_description unless current_resource.description == new_resource.description
 
-        set_members unless missing_members.empty?
+        set_members unless missing_members.empty? && extra_members.empty?
 
         set_health_monitors unless current_health_monitors == new_health_monitors
       end
@@ -133,7 +133,9 @@ class Chef
           end
 
           load_balancer.client['LocalLB.Pool'].add_member_v2([new_resource.pool_name], [missing_members])
-          current_resource.members(new_resource.members)
+          load_balancer.client['LocalLB.Pool'].remove_member_v2([new_resource.pool_name], [extra_members])
+
+          current_resource.members(@new_resource.members)
 
           new_resource.updated_by_last_action(true)
         end
@@ -255,6 +257,20 @@ class Chef
         Chef::Log.info(new_members - (current_members & new_members))
 
         new_members - (current_members & new_members)
+      end
+
+      #
+      # Return pool members that should be removed from the pool
+      #
+      # @return [Array]
+      #   pool members to remove from the pool
+      #
+      def extra_members
+        Chef::Log.info(current_members)
+        Chef::Log.info(new_members)
+        Chef::Log.info(current_members - (current_members & new_members))
+
+        current_members - (current_members & new_members)
       end
 
       #
