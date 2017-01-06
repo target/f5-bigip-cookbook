@@ -2,6 +2,10 @@ f5-bigip Cookbook CHANGELOG
 ==============================
 This file is used to list changes made in each version of the f5-bigip cookbook.
 
+v0.5.3
+------
+* Additional bits for hmh cookbook support
+
 v0.5.1
 ------
 * Bugfix: Load System.Inet interface (#7)
