@@ -53,6 +53,7 @@ class Chef
         @current_resource.type(vs.type)
         @current_resource.default_pool(vs.default_pool.gsub('/Common/', ''))
         @current_resource.description(vs.description)
+        @current_resource.rules(vs.rules)
         @current_resource.vlan_state(vs.vlans['state'])
 
         @current_resource.translate_address(vs.translate_address)
@@ -101,7 +102,7 @@ class Chef
         set_destination_address_port unless cur_addr == new_addr
         set_destination_address_port unless current_resource.destination_port == new_resource.destination_port
 
-        remove_all_rules unless match?('rules') && match?('profiles')
+        remove_all_rules unless match?('rules')
         remove_profiles unless match?('profiles')
 
         set_enabled_state unless current_resource.enabled == new_resource.enabled

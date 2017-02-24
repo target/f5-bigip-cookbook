@@ -132,13 +132,11 @@ class Chef
       end
 
       def translate_address(arg = nil)
-        #set_or_return(:translate_address, arg, :equal_to => VS_TRANSLATE_STATE)
         set_or_return(:translate_address, arg, :kind_of => [TrueClass, FalseClass])
       end
 
       def translate_port(arg = nil)
-        #set_or_return(:translate_port, arg, :equal_to => VS_TRANSLATE_STATE)
-        set_or_return(:translate_address, arg, :kind_of => [TrueClass, FalseClass])
+        set_or_return(:translate_port, arg, :kind_of => [TrueClass, FalseClass])
       end
 
       def vlans(arg = nil)

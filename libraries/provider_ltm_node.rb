@@ -36,10 +36,56 @@ class Chef
         @current_resource.name(@new_resource.name)
         @current_resource.node_name(@new_resource.node_name)
 
-        # Check if node exists
+        # Check if node exists and matches
+        # Delete any existing node that has the same name and mismatched address
+        # or same address and mismatched name, as well as removing from any pools
         load_balancer.change_folder(@new_resource.node_name)
         node = load_balancer.ltm.nodes.find { |n| n['name'] =~ /(^|\/)#{@new_resource.node_name}$/ or n['name'] == @new_resource.node_name }
-        @current_resource.exists = !node.nil?
+        addr_node = load_balancer.ltm.nodes.find { |n| n['address'] =~ /(^|\/)#{@new_resource.address}$/ or n['name'] == @new_resource.address }
+        delete_old_node = false
+        delete_old_addr_node = false
+        @current_resource.exists = false
+        if !node.nil?
+          if !addr_node.nil?
+            if node['address'] == addr_node['address']
+              @current_resource.exists = true
+            else
+              delete_old_node = true
+              delete_old_addr_node = true
+            end
+          else
+            delete_old_node = true
+          end
+        else
+          if !addr_node.nil?
+            delete_old_addr_node = true
+          end
+        end
+
+        if delete_old_node
+          load_balancer.ltm.pools.all.each do |pool|
+            member = pool.members.find { |m| m.address == node['name'] }
+            unless member.nil?
+              members = []
+              members.push member
+              load_balancer.client['LocalLB.Pool'].remove_member_v2([pool.name], [members])
+            end
+          end
+          load_balancer.client['LocalLB.NodeAddressV2'].delete_node_address([node['name']])
+          node = nil
+        end
+        if delete_old_addr_node
+          load_balancer.ltm.pools.all.each do |pool|
+            member = pool.members.find { |m| m.address == addr_node['name'] }
+            unless member.nil?
+              members = []
+              members.push member
+              load_balancer.client['LocalLB.Pool'].remove_member_v2([pool.name], [members])
+            end
+          end
+          load_balancer.client['LocalLB.NodeAddressV2'].delete_node_address([addr_node['name']])
+          addr_node = nil
+        end
 
         # If node exists load it's current state
         @current_resource.enabled(node['enabled']) unless node.nil?
