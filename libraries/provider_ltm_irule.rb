@@ -41,7 +41,7 @@ class Chef
         @current_resource.irule_name(@new_resource.irule_name)
 
         if @new_resource.content.nil? && @new_resource.template.nil?
-          fail "Resource #{@new_resource.name} requires either 'content' or 'template'"
+          raise "Resource #{@new_resource.name} requires either 'content' or 'template'"
         end
 
         load_balancer.change_folder(@new_resource.irule_name)
@@ -52,11 +52,11 @@ class Chef
           @new_resource.content(load_template)
         end
 
-        if @new_resource.irule_name.include?('/')
-          rule_name = @new_resource.irule_name
-        else
-          rule_name = "/#{load_balancer.active_folder}/#{@new_resource.irule_name}"
-        end
+        rule_name = if @new_resource.irule_name.include?('/')
+                      @new_resource.irule_name
+                    else
+                      "/#{load_balancer.active_folder}/#{@new_resource.irule_name}"
+                    end
 
         # Important: .query_rule will not find the rule if the content of the rule is empty
         #            Pretty bizare behaviour in the API we'll have to work with
@@ -100,7 +100,7 @@ class Chef
         cb = run_context.cookbook_collection[cookbook_name]
         template = cb.template_filenames.find { |t| ::File.basename(t) == @new_resource.template }
         unless template && ::File.exist?(template)
-          fail "Template #{@new_resource.template} not found"
+          raise "Template #{@new_resource.template} not found"
         end
 
         Chef::Log.info("Generating iRule from template #{template}")

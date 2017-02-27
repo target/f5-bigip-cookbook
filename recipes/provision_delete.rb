@@ -21,55 +21,55 @@ include_recipe 'f5-bigip::provision_configsync'
 
 f5s = data_bag(node['f5-bigip']['provisioner']['databag'])
 
-f5s.each do |item| # rubocop:disable Next
+f5s.each do |item|
   f5 = data_bag_item(node['f5-bigip']['provisioner']['databag'], item)
-  if f5.key? 'delete'
-    # Delete virtual servers
-    if f5['delete'].key? 'virtual_servers'
-      f5['delete']['virtual_servers'].each do |vs|
-        f5_ltm_virtual_server "#{f5['hostname']}-#{vs}" do
-          vs_name vs
-          f5 f5['hostname']
-          action :delete
-          notifies :run, "f5_config_sync[#{f5['hostname']}]", :delayed
-        end
+  next unless f5.key? 'delete'
+
+  # Delete virtual servers
+  if f5['delete'].key? 'virtual_servers'
+    f5['delete']['virtual_servers'].each do |vs|
+      f5_ltm_virtual_server "#{f5['hostname']}-#{vs}" do
+        vs_name vs
+        f5 f5['hostname']
+        action :delete
+        notifies :run, "f5_config_sync[#{f5['hostname']}]", :delayed
       end
     end
+  end
 
-    # Delete pools
-    if f5['delete'].key? 'pools'
-      f5['delete']['pools'].each do |pool|
-        f5_ltm_pool "#{f5['hostname']}-#{pool}" do
-          pool_name pool
-          f5 f5['hostname']
-          action :delete
-          notifies :run, "f5_config_sync[#{f5['hostname']}]", :delayed
-        end
+  # Delete pools
+  if f5['delete'].key? 'pools'
+    f5['delete']['pools'].each do |pool|
+      f5_ltm_pool "#{f5['hostname']}-#{pool}" do
+        pool_name pool
+        f5 f5['hostname']
+        action :delete
+        notifies :run, "f5_config_sync[#{f5['hostname']}]", :delayed
       end
     end
+  end
 
-    # Delete monitors
-    if f5['delete'].key? 'monitors'
-      f5['delete']['monitors'].each do |name|
-        f5_ltm_monitor "#{f5['hostname']}-#{name}" do
-          monitor_name name
-          f5 f5['hostname']
-          action :delete
-          notifies :run, "f5_config_sync[#{f5['hostname']}]", :delayed
-        end
+  # Delete monitors
+  if f5['delete'].key? 'monitors'
+    f5['delete']['monitors'].each do |name|
+      f5_ltm_monitor "#{f5['hostname']}-#{name}" do
+        monitor_name name
+        f5 f5['hostname']
+        action :delete
+        notifies :run, "f5_config_sync[#{f5['hostname']}]", :delayed
       end
     end
+  end
 
-    # Delete nodes
-    if f5['delete'].key? 'nodes'
-      f5['delete']['nodes'].each do |node|
-        f5_ltm_node "#{f5['hostname']}-#{node}" do
-          node_name node
-          f5 f5['hostname']
-          action :delete
-          notifies :run, "f5_config_sync[#{f5['hostname']}]", :delayed
-        end
-      end
+  next unless f5['delete'].key? 'nodes'
+
+  # Delete nodes
+  f5['delete']['nodes'].each do |node|
+    f5_ltm_node "#{f5['hostname']}-#{node}" do
+      node_name node
+      f5 f5['hostname']
+      action :delete
+      notifies :run, "f5_config_sync[#{f5['hostname']}]", :delayed
     end
   end
 end

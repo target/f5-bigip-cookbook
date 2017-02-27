@@ -62,7 +62,7 @@ class Chef
       VS_TRANSLATE_STATE ||= %w(
         STATE_ENABLED
         STATE_DISABLED
-      )
+      ).freeze
 
       VS_SNAT_TYPES ||= %w(
         SRC_TRANS_UNKNOWN

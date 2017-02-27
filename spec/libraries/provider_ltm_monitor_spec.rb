@@ -103,11 +103,15 @@ describe Chef::Provider::F5LtmMonitor do
           .with([{ 'template_name' => '/Common/test_monitor',
                    'template_type' => nil }],
                 [{ 'parent_template' => 'https',
-                   'interval' => 5, 'timeout' => 16,
+                   'interval' => 5,
+                   'timeout' => 16,
                    'dest_ipport' => {
                      'address_type' => 'ATYPE_STAR_ADDRESS_EXPLICIT_PORT',
                      'ipport' => {
-                       'address' => '0.0.0.0', 'port' => 443 } },
+                       'address' => '0.0.0.0',
+                       'port' => 443
+                     }
+                   },
                    'is_read_only' => 'false',
                    'is_directly_usable' => 'true' }])
         provider.action_create
@@ -151,11 +155,15 @@ describe Chef::Provider::F5LtmMonitor do
         expect(locallb_monitor).to receive(:create_template)
           .with([{ 'template_name' => '/Common/test_monitor', 'template_type' => nil }],
                 [{ 'parent_template' => 'http',
-                   'interval' => 10, 'timeout' => 31,
+                   'interval' => 10,
+                   'timeout' => 31,
                    'dest_ipport' => {
                      'address_type' => 'ATYPE_EXPLICIT_ADDRESS_EXPLICIT_PORT',
                      'ipport' => {
-                       'address' => '10.10.10.11', 'port' => 4443 } },
+                       'address' => '10.10.10.11',
+                       'port' => 4443
+                     }
+                   },
                    'is_read_only' => 'false',
                    'is_directly_usable' => 'true' }])
         provider.action_create
@@ -177,34 +185,46 @@ describe Chef::Provider::F5LtmMonitor do
     describe 'managing destination' do
       it 'set destination type' do
         provider.new_resource.dest_addr_type('ATYPE_EXPLICIT_ADDRESS_EXPLICIT_PORT')
-        expect(locallb_monitor).to receive(:set_template_destination)
-          .with(['/Common/test_monitor'],
-                [{ 'address_type' => 'ATYPE_EXPLICIT_ADDRESS_EXPLICIT_PORT',
-                   'ipport' => {
-                     'address' => '0.0.0.0',
-                     'port' => 443 } }])
+        expect(locallb_monitor).to receive(:set_template_destination).with(
+          ['/Common/test_monitor'],
+          [{
+            'address_type' => 'ATYPE_EXPLICIT_ADDRESS_EXPLICIT_PORT',
+            'ipport' => {
+              'address' => '0.0.0.0',
+              'port' => 443
+            }
+          }]
+        )
         provider.action_create
       end
 
       it 'sets destination ip' do
         provider.new_resource.dest_addr_ip('10.10.10.11')
-        expect(locallb_monitor).to receive(:set_template_destination)
-          .with(['/Common/test_monitor'],
-                [{ 'address_type' => 'ATYPE_STAR_ADDRESS_EXPLICIT_PORT',
-                   'ipport' => {
-                     'address' => '10.10.10.11',
-                     'port' => 443 } }])
+        expect(locallb_monitor).to receive(:set_template_destination).with(
+          ['/Common/test_monitor'],
+          [{
+            'address_type' => 'ATYPE_STAR_ADDRESS_EXPLICIT_PORT',
+            'ipport' => {
+              'address' => '10.10.10.11',
+              'port' => 443
+            }
+          }]
+        )
         provider.action_create
       end
 
       it 'sets destination port' do
         provider.new_resource.dest_addr_port(8888)
-        expect(locallb_monitor).to receive(:set_template_destination)
-          .with(['/Common/test_monitor'],
-                [{ 'address_type' => 'ATYPE_STAR_ADDRESS_EXPLICIT_PORT',
-                   'ipport' => {
-                     'address' => '0.0.0.0',
-                     'port' => 8888 } }])
+        expect(locallb_monitor).to receive(:set_template_destination).with(
+          ['/Common/test_monitor'],
+          [{
+            'address_type' => 'ATYPE_STAR_ADDRESS_EXPLICIT_PORT',
+            'ipport' => {
+              'address' => '0.0.0.0',
+              'port' => 8888
+            }
+          }]
+        )
         provider.action_create
       end
 

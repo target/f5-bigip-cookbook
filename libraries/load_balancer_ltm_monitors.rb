@@ -73,7 +73,7 @@ module F5
         #
         # Update the destination address information for the monitors
         #
-        def refresh_destination # rubocop:disable AbcSize
+        def refresh_destination
           dests = @client['LocalLB.Monitor'].get_template_destination(names)
           @monitors.each_with_index do |monitor, idx|
             monitor.dest_addr_type = dests[idx]['address_type']

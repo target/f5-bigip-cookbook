@@ -211,7 +211,7 @@ class Chef
       #
       def set_template_string(monitor_types, string_type, type_description)
         error_message = "Can not set '#{type_description}' for #{new_resource} as it's type is currently #{current_resource.type}"
-        raise error_message unless monitor_types.include? current_resource.type # rubocop:disable SignalException
+        raise error_message unless monitor_types.include? current_resource.type
 
         converge_by("Update #{new_resource} '#{type_description}'") do
           set_string_for(string_type)
@@ -241,7 +241,7 @@ class Chef
         return true unless new_resource.user_values.key? type
 
         # No match if current_resource does not have it set
-        raise "#{current_resource} missing string value for #{type}" unless current_resource.user_values.key? type # rubocop:disable SignalException
+        raise "#{current_resource} missing string value for #{type}" unless current_resource.user_values.key? type
 
         return false if current_resource.user_values[type] != new_resource.user_values[type]
         true
@@ -294,8 +294,8 @@ class Chef
       #
       def set_integer_for(type, value)
         load_balancer.client['LocalLB.Monitor']
-          .set_template_integer_property([new_resource.monitor_name],
-                                         [{ 'type' => type, 'value' => value }])
+                     .set_template_integer_property([new_resource.monitor_name],
+                                                    [{ 'type' => type, 'value' => value }])
       end
 
       #
@@ -307,9 +307,9 @@ class Chef
       def set_string_for(type) # rubocop:disable AccessorMethodName, AbcSize
         Chef::Log.info "Update #{new_resource} String '#{type}'"
         load_balancer.client['LocalLB.Monitor']
-          .set_template_string_property([new_resource.monitor_name],
-                                        [{ 'type' => type,
-                                           'value' => new_resource.user_values[type] }])
+                     .set_template_string_property([new_resource.monitor_name],
+                                                   [{ 'type' => type,
+                                                      'value' => new_resource.user_values[type] }])
         current_resource.user_values(current_resource.user_values.merge(type => new_resource.user_values[type]))
       end
 

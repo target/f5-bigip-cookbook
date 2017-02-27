@@ -50,11 +50,11 @@ class Chef
 
         load_balancer.change_folder(@new_resource.sslcert_name)
 
-        if @new_resource.sslcert_name.include?('/')
-          cert_name = @new_resource.sslcert_name
-        else
-          cert_name = "/#{load_balancer.active_folder}/#{@new_resource.sslcert_name}"
-        end
+        cert_name = if @new_resource.sslcert_name.include?('/')
+                      @new_resource.sslcert_name
+                    else
+                      "/#{load_balancer.active_folder}/#{@new_resource.sslcert_name}"
+                    end
 
         # LOGIC: cert is mandatory, key is optional
         cert = load_balancer.client['Management.KeyCertificate'].get_certificate_list(@new_resource.mode).find { |c| c.certificate.cert_info.id == cert_name }
@@ -102,8 +102,8 @@ class Chef
 
         f = cb.file_filenames.find { |t| ::File.basename(t) == filename }
 
-        fail("#{f} not found on cookbook #{cook}") if f.nil?
-        fail("Cannot read #{f}") unless ::File.exist?(f)
+        raise("#{f} not found on cookbook #{cook}") if f.nil?
+        raise("Cannot read #{f}") unless ::File.exist?(f)
 
         Chef::Log.info("Loading Cert / Key from #{f}")
         ::File.read(f)

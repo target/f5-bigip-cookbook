@@ -84,16 +84,16 @@ class Chef
         set_destination_wildmask unless current_resource.destination_wildmask == new_resource.destination_wildmask
         set_source_address unless current_resource.source_address == new_resource.source_address
 
-        if current_resource.destination_address.start_with?('/')
-          cur_addr = current_resource.destination_address.split('/')[2]
-        else
-          cur_addr = current_resource.destination_address
-        end
-        if new_resource.destination_address.start_with?('/')
-          new_addr = new_resource.destination_address.split('/')[2]
-        else
-          new_addr = new_resource.destination_address
-        end
+        cur_addr = if current_resource.destination_address.start_with?('/')
+                     current_resource.destination_address.split('/')[2]
+                   else
+                     current_resource.destination_address
+                   end
+        new_addr = if new_resource.destination_address.start_with?('/')
+                     new_resource.destination_address.split('/')[2]
+                   else
+                     new_resource.destination_address
+                   end
 
         set_destination_address_port unless cur_addr == new_addr && current_resource.destination_port == new_resource.destination_port
 
@@ -137,8 +137,8 @@ class Chef
         converge_by("Create #{new_resource}") do
           Chef::Log.info("Create #{new_resource}")
           load_balancer.client['LocalLB.VirtualServer']
-            .create new_virtual_server_defenition, [new_resource.destination_wildmask],
-                    new_virtual_server_resource, [new_resource.profiles]
+                       .create new_virtual_server_defenition, [new_resource.destination_wildmask],
+                               new_virtual_server_resource, [new_resource.profiles]
           update_current_resource(%w(destination_address destination_port protocol
                                      destination_wildmask type default_pool profiles description
                                      translate_port translate_address source_address))
@@ -380,9 +380,9 @@ class Chef
         converge_by("Updating #{new_resource} vlans") do
           Chef::Log.info "Updating #{new_resource} vlans"
           load_balancer.client['LocalLB.VirtualServer']
-            .set_vlan([new_resource.vs_name],
-                      [{ 'state' => new_resource.vlan_state,
-                         'vlans' => new_resource.vlans }])
+                       .set_vlan([new_resource.vs_name],
+                                 [{ 'state' => new_resource.vlan_state,
+                                    'vlans' => new_resource.vlans }])
           current_resource.vlans(new_resource.vlans)
           current_resource.vlan_state(new_resource.vlan_state)
 
@@ -405,21 +405,21 @@ class Chef
 
       def update_snat_none
         load_balancer.client['LocalLB.VirtualServer']
-          .set_snat_none([new_resource.vs_name])
+                     .set_snat_none([new_resource.vs_name])
 
         new_resource.updated_by_last_action(true)
       end
 
       def update_snat_automap
         load_balancer.client['LocalLB.VirtualServer']
-          .set_snat_automap([new_resource.vs_name])
+                     .set_snat_automap([new_resource.vs_name])
 
         new_resource.updated_by_last_action(true)
       end
 
       def update_snat_pool(pool)
         load_balancer.client['LocalLB.VirtualServer']
-          .set_snat_pool([new_resource.vs_name], [pool])
+                     .set_snat_pool([new_resource.vs_name], [pool])
 
         new_resource.updated_by_last_action(true)
       end
@@ -455,7 +455,7 @@ class Chef
       #
       def remove_all_persistence_profiles
         load_balancer.client['LocalLB.VirtualServer']
-          .remove_all_persistence_profiles [new_resource.vs_name]
+                     .remove_all_persistence_profiles [new_resource.vs_name]
         current_resource.default_persistence_profile('')
 
         new_resource.updated_by_last_action(true)
@@ -466,8 +466,8 @@ class Chef
       #
       def add_persistence_profile
         load_balancer.client['LocalLB.VirtualServer']
-          .add_persistence_profile [new_resource.vs_name],
-                                   [default_persistence_profile_hash]
+                     .add_persistence_profile [new_resource.vs_name],
+                                              [default_persistence_profile_hash]
         current_resource.default_persistence_profile(new_resource.default_persistence_profile)
 
         new_resource.updated_by_last_action(true)
@@ -480,8 +480,8 @@ class Chef
         converge_by("Updating #{new_resource} fallback persistence profile") do
           Chef::Log.info("Updating #{new_resource} fallback persistence profile")
           load_balancer.client['LocalLB.VirtualServer']
-            .set_fallback_persistence_profile [new_resource.vs_name],
-                                              [profile_name]
+                       .set_fallback_persistence_profile [new_resource.vs_name],
+                                                         [profile_name]
           current_resource.fallback_persistence_profile(profile_name)
 
           new_resource.updated_by_last_action(true)
@@ -510,7 +510,7 @@ class Chef
         converge_by("Removing all rules on #{new_resource}") do
           Chef::Log.info("Removing all rules on #{new_resource}")
           load_balancer.client['LocalLB.VirtualServer']
-            .remove_all_rules [new_resource.vs_name]
+                       .remove_all_rules [new_resource.vs_name]
           current_resource.rules([])
 
           new_resource.updated_by_last_action(true)
@@ -524,8 +524,8 @@ class Chef
         converge_by("Adding rules to #{new_resource}") do
           Chef::Log.info("Adding rules to #{new_resource}")
           load_balancer.client['LocalLB.VirtualServer']
-            .add_rule [new_resource.vs_name],
-                      [rules_datastructure]
+                       .add_rule [new_resource.vs_name],
+                                 [rules_datastructure]
           current_resource.rules(new_resource.rules)
 
           new_resource.updated_by_last_action(true)

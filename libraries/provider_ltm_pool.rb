@@ -147,7 +147,9 @@ class Chef
               'monitor_rule' => {
                 'type' => monitor_rule_type, 'quorum' => 0,
                 'monitor_templates' => new_resource.monitors
-              }])
+              }
+            ]
+          )
           current_resource.monitors(new_resource.monitors)
 
           new_resource.updated_by_last_action(true)

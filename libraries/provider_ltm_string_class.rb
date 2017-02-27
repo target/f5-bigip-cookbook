@@ -50,11 +50,7 @@ class Chef
         string_class = [{ 'name' => sc['name'], 'members' => sc['members'] }]
         string_class_values = load_balancer.client['LocalLB.Class'].get_string_class_member_data_value(string_class)
 
-        if sc['members'].sort != @new_resource.records.keys.sort || string_class_values[0].sort != @new_resource.records.values.sort
-          @current_resource.update = true
-        else
-          @current_resource.update = false
-        end
+        @current_resource.update = sc['members'].sort != @new_resource.records.keys.sort || string_class_values[0].sort != @new_resource.records.values.sort
 
         recs = {}
         string_class[0]['members'].each_with_index do |m, i|

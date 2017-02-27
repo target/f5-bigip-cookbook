@@ -53,12 +53,7 @@ class Chef
         end
 
         @current_resource.records(members)
-
-        if members != @new_resource.records
-          @current_resource.update = true
-        else
-          @current_resource.update = false
-        end
+        @current_resource.update = members != @new_resource.records
 
         @current_resource
       end

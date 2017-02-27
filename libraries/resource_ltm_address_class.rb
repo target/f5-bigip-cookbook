@@ -24,7 +24,7 @@ class Chef
     #
     # Chef Resource for F5 LTM Node
     #
-    class  F5LtmAddressClass < Chef::Resource
+    class F5LtmAddressClass < Chef::Resource
       def initialize(name, run_context = nil)
         super
         @resource_name = :f5_ltm_address_class

@@ -82,7 +82,7 @@ describe_recipe 'f5-bigip::create' do
       refute_kind_of(String, monitors, "Expected pool 'new' health checks to be https and udp")
 
       result = (monitors.size == 2 &&
-               (monitors.uniq.sort == ['/Common/https', '/Common/udp'] || monitors.uniq.sort == %w('https' 'udp')))
+               (monitors.uniq.sort == %w(/Common/https /Common/udp) || monitors.uniq.sort == %w(https udp)))
       assert result,
              "Expected pool 'new' health checks to be https and udp"
     end

@@ -82,13 +82,18 @@ describe Chef::Provider::F5LtmPool do
                 [[
                   { 'address' => '10.10.10.11', 'port' => 80 },
                   { 'address' => '10.10.10.11', 'port' => 8081 },
-                  { 'address' => '10.10.10.10', 'port' => 80 }]])
-        expect(locallb_pool).to receive(:set_monitor_association)
-          .with([{ 'pool_name' => 'test_pool',
-                   'monitor_rule' => {
-                     'type' => 'MONITOR_RULE_TYPE_AND_LIST',
-                     'quorum' => 0,
-                     'monitor_templates' => ['/Common/https', '/Common/tcp'] } }])
+                  { 'address' => '10.10.10.10', 'port' => 80 }
+                ]])
+        expect(locallb_pool).to receive(:set_monitor_association).with(
+          [{
+            'pool_name' => 'test_pool',
+            'monitor_rule' => {
+              'type' => 'MONITOR_RULE_TYPE_AND_LIST',
+              'quorum' => 0,
+              'monitor_templates' => ['/Common/https', '/Common/tcp']
+            }
+          }]
+        )
         provider.action_create
       end
 
@@ -106,7 +111,11 @@ describe Chef::Provider::F5LtmPool do
     it 'adds missing pool members' do
       provider.current_resource.exists = true
       provider.current_resource.members(
-        [{ 'address' => '10.10.10.10', 'port' => '80' }, { 'address' => '10.10.10.11', 'port' => '8081' }])
+        [
+          { 'address' => '10.10.10.10', 'port' => '80' },
+          { 'address' => '10.10.10.11', 'port' => '8081' }
+        ]
+      )
       provider.new_resource.members(pool_members)
       expect(locallb_pool).to receive(:add_member_v2)
         .with(['test_pool'],
@@ -157,12 +166,16 @@ describe Chef::Provider::F5LtmPool do
       provider.current_resource.exists = true
       provider.current_resource.monitors(['/Common/http', '/Common/https'])
       provider.new_resource.monitors([])
-      expect(locallb_pool).to receive(:set_monitor_association)
-        .with([{ 'pool_name' => 'test_pool',
-                 'monitor_rule' => {
-                   'type' => 'MONITOR_RULE_TYPE_NONE',
-                   'quorum' => 0,
-                   'monitor_templates' => [] } }])
+      expect(locallb_pool).to receive(:set_monitor_association).with(
+        [{
+          'pool_name' => 'test_pool',
+          'monitor_rule' => {
+            'type' => 'MONITOR_RULE_TYPE_NONE',
+            'quorum' => 0,
+            'monitor_templates' => []
+          }
+        }]
+      )
       provider.action_create
     end
 
@@ -170,12 +183,16 @@ describe Chef::Provider::F5LtmPool do
       provider.current_resource.exists = true
       provider.current_resource.monitors(['/Common/http', '/Common/https'])
       provider.new_resource.monitors(['/Common/https'])
-      expect(locallb_pool).to receive(:set_monitor_association)
-        .with([{ 'pool_name' => 'test_pool',
-                 'monitor_rule' => {
-                   'type' => 'MONITOR_RULE_TYPE_SINGLE',
-                   'quorum' => 0,
-                   'monitor_templates' => ['/Common/https'] } }])
+      expect(locallb_pool).to receive(:set_monitor_association).with(
+        [{
+          'pool_name' => 'test_pool',
+          'monitor_rule' => {
+            'type' => 'MONITOR_RULE_TYPE_SINGLE',
+            'quorum' => 0,
+            'monitor_templates' => ['/Common/https']
+          }
+        }]
+      )
       provider.action_create
     end
 
@@ -183,12 +200,16 @@ describe Chef::Provider::F5LtmPool do
       provider.current_resource.exists = true
       provider.current_resource.monitors(['/Common/https'])
       provider.new_resource.monitors(['/Common/https', '/Common/tcp'])
-      expect(locallb_pool).to receive(:set_monitor_association)
-        .with([{ 'pool_name' => 'test_pool',
-                 'monitor_rule' => {
-                   'type' => 'MONITOR_RULE_TYPE_AND_LIST',
-                   'quorum' => 0,
-                   'monitor_templates' => ['/Common/https', '/Common/tcp'] } }])
+      expect(locallb_pool).to receive(:set_monitor_association).with(
+        [{
+          'pool_name' => 'test_pool',
+          'monitor_rule' => {
+            'type' => 'MONITOR_RULE_TYPE_AND_LIST',
+            'quorum' => 0,
+            'monitor_templates' => ['/Common/https', '/Common/tcp']
+          }
+        }]
+      )
       provider.action_create
     end
 

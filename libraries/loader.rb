@@ -70,7 +70,7 @@ module F5
     # @return [F5::LoadBalancer] instance of F5::LoadBalancer matching the resource
     #
     def load_balancer # rubocop:disable AbcSize
-      raise 'Can not determine hostname to load client for' if @new_resource.f5.nil? # rubocop:disable SignalException
+      raise 'Can not determine hostname to load client for' if @new_resource.f5.nil?
       @@load_balancers ||= []
       add_lb(@new_resource.f5) if @@load_balancers.empty?
       add_lb(@new_resource.f5) if @@load_balancers.find { |lb| lb.name == @new_resource.f5 }.nil?

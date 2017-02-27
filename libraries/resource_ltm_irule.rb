@@ -24,7 +24,7 @@ class Chef
     #
     # Chef Resource for F5 LTM iRule
     #
-    class  F5LtmIrule < Chef::Resource
+    class F5LtmIrule < Chef::Resource
       def initialize(name, run_context = nil)
         super
         @resource_name = :f5_ltm_irule
