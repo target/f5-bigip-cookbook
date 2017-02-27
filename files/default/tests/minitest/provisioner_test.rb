@@ -2,7 +2,6 @@ require File.expand_path('../support/helpers', __FILE__)
 require 'f5-icontrol'
 
 describe_recipe 'f5-bigip::default' do
-
   include Helpers::F5Icontrol
 
   client = nil
@@ -102,11 +101,8 @@ describe_recipe 'f5-bigip::default' do
       # Check format of monitor string
       monitor_string_check = monitors
       monitor_string_check = monitors.first if monitors.is_a? Array
-      if monitor_string_check.include? '/Common/'
-        monitor_check = '/Common/udp'
-      else
-        monitor_check = 'udp'
-      end
+      monitor_check = 'udp'
+      monitor_check = '/Common/udp' if monitor_string_check.include? '/Common/'
 
       if monitors.is_a? Array
         assert_includes(monitors, monitor_check, "Expected pool 'bad_dns' to include udp")

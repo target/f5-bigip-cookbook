@@ -8,7 +8,6 @@ require 'chef/event_dispatch/dispatcher'
 
 require 'resource_ltm_node'
 
-# rubocop:disable Documentation
 describe Chef::Provider::F5LtmNode do
   # Create a provider instance
   let(:provider) { Chef::Provider::F5LtmNode.new(new_resource, run_context) }
@@ -49,7 +48,7 @@ describe Chef::Provider::F5LtmNode do
   describe '#action_create' do
     it 'creates a new node if not already created' do
       expect(locallb_node_address_v2).to receive(:create)
-                                         .with([new_resource.node_name], [new_resource.node_name], [0])
+        .with([new_resource.node_name], [new_resource.node_name], [0])
       provider.action_create
     end
 
@@ -63,7 +62,7 @@ describe Chef::Provider::F5LtmNode do
       provider.current_resource.exists = true
       provider.current_resource.enabled(false)
       expect(locallb_node_address_v2).to receive(:set_session_enabled_state)
-                                         .with([new_resource.node_name], ['STATE_ENABLED'])
+        .with([new_resource.node_name], ['STATE_ENABLED'])
       provider.action_create
     end
 
@@ -79,7 +78,7 @@ describe Chef::Provider::F5LtmNode do
       provider.current_resource.exists = true
       provider.current_resource.enabled(true)
       expect(locallb_node_address_v2).to receive(:set_session_enabled_state)
-                                         .with([new_resource.node_name], ['STATE_DISABLED'])
+        .with([new_resource.node_name], ['STATE_DISABLED'])
       provider.action_create
     end
 
@@ -96,7 +95,7 @@ describe Chef::Provider::F5LtmNode do
     it 'deletes the existing node' do
       provider.current_resource.exists = true
       expect(locallb_node_address_v2).to receive(:delete_node_address)
-                              .with(['node1.test.com'])
+        .with(['node1.test.com'])
       provider.action_delete
     end
 

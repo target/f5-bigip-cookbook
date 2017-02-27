@@ -1,3 +1,11 @@
+AllCops:
+  Exclude:
+    - '.kitchen/**/*'
+    - 'metadata.rb'
+    - 'Berksfile'
+    - 'test/fixtures/cookbooks/**/*'
+    - 'Vagrantfile'
+
 Encoding:
   Enabled: false
 
@@ -16,3 +24,6 @@ HashSyntax:
 TrivialAccessors:
   Enabled: true
   ExactNameMatch: true
+
+DuplicatedKey:
+  Enabled: false

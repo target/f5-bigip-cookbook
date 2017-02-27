@@ -14,7 +14,12 @@ v0.5.5
 
 v0.5.3
 ------
-* Additional bits for hmh cookbook support
+* Support removing pool members
+* Set username and password for monitors (sets password on every run, because encryption)
+
+v0.5.2
+------
+* Remove subdirs in libraries folder (#9)
 
 v0.5.1
 ------

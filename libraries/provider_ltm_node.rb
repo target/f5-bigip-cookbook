@@ -31,7 +31,7 @@ class Chef
         false
       end
 
-      def load_current_resource
+      def load_current_resource # rubocop:disable AbcSize
         @current_resource = Chef::Resource::F5LtmNode.new(@new_resource.name)
         @current_resource.name(@new_resource.name)
         @current_resource.node_name(@new_resource.node_name)
@@ -40,8 +40,8 @@ class Chef
         # Delete any existing node that has the same name and mismatched address
         # or same address and mismatched name, as well as removing from any pools
         load_balancer.change_folder(@new_resource.node_name)
-        node = load_balancer.ltm.nodes.find { |n| n['name'] =~ /(^|\/)#{@new_resource.node_name}$/ or n['name'] == @new_resource.node_name }
-        addr_node = load_balancer.ltm.nodes.find { |n| n['address'] =~ /(^|\/)#{@new_resource.address}$/ or n['name'] == @new_resource.address }
+        node = load_balancer.ltm.nodes.find { |n| n['name'] =~ %r{(^|\/)#{@new_resource.node_name}$} or n['name'] == @new_resource.node_name }
+        addr_node = load_balancer.ltm.nodes.find { |n| n['address'] =~ %r{(^|\/)#{@new_resource.address}$} or n['name'] == @new_resource.address }
         delete_old_node = false
         delete_old_addr_node = false
         @current_resource.exists = false
@@ -116,7 +116,7 @@ class Chef
       #
       # Create a new node from new_resource attribtues
       #
-      def create_node
+      def create_node # rubocop:disable AbcSize
         converge_by("Create #{new_resource}") do
           Chef::Log.info "Create #{new_resource}"
           load_balancer.client['LocalLB.NodeAddressV2'].create([new_resource.node_name], [new_resource.address], [0])
@@ -141,7 +141,7 @@ class Chef
       #
       # Set node as enabled or disabled given new_resource enabled attribute
       #
-      def set_enabled
+      def set_enabled # rubocop:disable AbcSize
         converge_by("#{enabled_msg} #{new_resource}") do
           Chef::Log.info "#{enabled_msg} #{new_resource}"
           load_balancer.client['LocalLB.NodeAddressV2'].set_session_enabled_state([new_resource.node_name], [enabled_state])

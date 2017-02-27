@@ -12,7 +12,6 @@ define :f5_vip, :member_port => 443, :monitors => [], :lb_method => nil, :vlan_s
                 :description => '', 
                 :translate_address => false, :translate_port => false,
                 :rules => [] do
-
   name = params[:name]
   name = params[:virtual_server] unless params[:virtual_server].nil?
 

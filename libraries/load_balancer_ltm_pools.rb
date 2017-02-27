@@ -17,8 +17,8 @@
 # limitations under the License.
 #
 
-require 'load_balancer/ltm/pools/pool'
-require 'load_balancer/ltm/pools/pool/member'
+require 'load_balancer_ltm_pools_pool'
+require 'load_balancer_ltm_pools_pool_member'
 require 'forwardable'
 
 module F5
@@ -53,7 +53,7 @@ module F5
         end
 
         def pool_names
-          @pools.map { |p| p.name }
+          @pools.map(&:name)
         end
 
         # Not currently used but hate to delete code ...
@@ -116,7 +116,7 @@ module F5
         private
 
         def pools_members
-          @pools.map { |p| p.members.map { |m| m.to_hash } }
+          @pools.map { |p| p.members.map(&:to_hash) }
         end
 
         def refresh_all

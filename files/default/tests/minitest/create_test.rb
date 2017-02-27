@@ -2,7 +2,6 @@ require File.expand_path('../support/helpers', __FILE__)
 require 'f5-icontrol'
 
 describe_recipe 'f5-bigip::create' do
-
   include Helpers::F5Icontrol
 
   client = nil
@@ -31,7 +30,7 @@ describe_recipe 'f5-bigip::create' do
   describe 'f5_ltm_node' do
     it 'creates a node' do
       node = '10.10.10.13'
-      nodes = client['LocalLB.NodeAddressV2'].get_list.find { |n| n =~ /(^|\/)#{node}$/ }
+      nodes = client['LocalLB.NodeAddressV2'].get_list.find { |n| n =~ %r{(^|\/)#{node}$} }
 
       refute_empty nodes, "Node #{node} not created"
 
@@ -102,7 +101,7 @@ describe_recipe 'f5-bigip::create' do
   describe 'f5_ltm_virtual_server' do
     it 'creates a virtual server' do
       vs = 'vs_new'
-      vs_list = client['LocalLB.VirtualServer'].get_list.find { |v| v =~ /(^|\/)#{vs}$/ }
+      vs_list = client['LocalLB.VirtualServer'].get_list.find { |v| v =~ %r{(^|\/)#{vs}$} }
 
       refute_nil vs_list, "Virtual Server #{vs} not created"
 

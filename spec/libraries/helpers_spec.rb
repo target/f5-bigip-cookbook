@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-# rubocop:disable Documentation
 module F5
   describe Helpers do
     include F5::Helpers

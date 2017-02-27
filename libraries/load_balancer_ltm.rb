@@ -17,9 +17,9 @@
 # limitations under the License.
 #
 
-require 'load_balancer/ltm/monitors'
-require 'load_balancer/ltm/pools'
-require 'load_balancer/ltm/virtual_servers'
+require 'load_balancer_ltm_monitors'
+require 'load_balancer_ltm_pools'
+require 'load_balancer_ltm_virtual_servers'
 
 module F5
   class LoadBalancer
@@ -31,7 +31,7 @@ module F5
         @client = client
       end
 
-      def nodes # rubocop:disable MethodLength
+      def nodes # rubocop:disable AbcSize
         @nodes ||= begin
           node_list = client['LocalLB.NodeAddressV2'].get_list
 

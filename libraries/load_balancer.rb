@@ -20,7 +20,7 @@
 # add currrent dir to load path
 $LOAD_PATH << File.dirname(__FILE__)
 
-require 'load_balancer/ltm'
+require 'load_balancer_ltm'
 
 module F5
   # The F5 device
@@ -60,8 +60,8 @@ module F5
     #
     def device_groups
       @device_groups ||= client['Management.DeviceGroup']
-                           .get_list
-                           .delete_if { |g| g =~ /device_trust_group/ || g == '/Common/gtm' }
+                         .get_list
+                         .delete_if { |g| g =~ /device_trust_group/ || g == '/Common/gtm' }
     end
 
     #

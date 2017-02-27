@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-require 'load_balancer/ltm/monitors/monitor'
+require 'load_balancer_ltm_monitors_monitor'
 require 'forwardable'
 
 module F5
@@ -42,7 +42,7 @@ module F5
         # The names of all the monitors
         #
         def names
-          @monitors.map { |m| m.name }
+          @monitors.map(&:name)
         end
 
         #

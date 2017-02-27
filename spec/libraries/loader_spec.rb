@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-# rubocop:disable Documentation
 module F5
   describe Loader do
     include F5::Loader
@@ -47,8 +46,7 @@ module F5
     end
 
     before do
-      allow_any_instance_of(F5::Loader).to receive(:chef_vault_item)
-                                           .and_return(creds)
+      allow_any_instance_of(F5::Loader).to receive(:chef_vault_item).and_return(creds)
       F5::Loader.class_variable_set :@@load_balancers, nil
     end
 
@@ -93,8 +91,8 @@ module F5
       let(:icontrol) { double('F5::IControl', :get_interfaces => true) }
       it 'creates a new f5 icontrol interface' do
         expect(F5::IControl).to receive(:new)
-                                .with('test.test.com', 'test_user', 'test_pass', wanted_interfaces)
-                                .and_return(icontrol)
+          .with('test.test.com', 'test_user', 'test_pass', wanted_interfaces)
+          .and_return(icontrol)
         expect(icontrol).to receive(:get_interfaces)
         provider.create_icontrol('test.test.com')
         # expect(provider.load_balancer).to be_a(F5::LoadBalancer)
