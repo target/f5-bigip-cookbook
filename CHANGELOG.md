@@ -2,6 +2,10 @@ f5-bigip Cookbook CHANGELOG
 ==============================
 This file is used to list changes made in each version of the f5-bigip cookbook.
 
+v0.5.6
+------
+* Bug - irule variables hash defaults to an empty array
+
 v0.5.5
 ------
 * Bug - translate address current value overwritten by translate port value

@@ -36,7 +36,7 @@ class Chef
         @irule_name = name
         @template = nil
         @content = nil
-        @variables = []
+        @variables = {}
       end
 
       def irule_name(arg = nil)
