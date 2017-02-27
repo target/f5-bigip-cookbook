@@ -52,7 +52,7 @@ class Chef
       end
 
       def variables(arg = nil)
-        set_or_return(:variables, arg, :kind_of => [Array,Hash], :required => false)
+        set_or_return(:variables, arg, :kind_of => [Array, Hash], :required => false)
       end
 
       def f5(arg = nil)

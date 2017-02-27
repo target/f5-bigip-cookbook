@@ -42,7 +42,7 @@ class Chef
       end
 
       def records(arg = nil)
-        set_or_return(:records, arg, :kind_of => [Array,Hash], :required => true)
+        set_or_return(:records, arg, :kind_of => [Array, Hash], :required => true)
       end
 
       def f5(arg = nil)

@@ -66,13 +66,13 @@ class Chef
       attr_accessor :exists_key, :exists_cert, :update_key, :update_cert
 
       private
+
       def set_defaults
         @mode = 'MANAGEMENT_MODE_DEFAULT'
         @key = ''
         @cert = ''
         @override = false
       end
-
     end
   end
 end

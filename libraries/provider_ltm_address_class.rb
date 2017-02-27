@@ -31,7 +31,7 @@ class Chef
         false
       end
 
-      def load_current_resource
+      def load_current_resource # rubocop:disable AbcSize, MethodLength
         @current_resource = Chef::Resource::F5LtmAddressClass.new(@new_resource.name)
         @current_resource.name(@new_resource.name)
         @current_resource.sc_name(@new_resource.sc_name)
@@ -39,8 +39,8 @@ class Chef
 
         Chef::Log.info("Changing partition to #{@new_resource.sc_name}")
         load_balancer.change_folder(@new_resource.sc_name)
-        if @new_resource.sc_name.include?("/")
-          @current_resource.sc_name (@new_resource.sc_name.split("/")[2])
+        if @new_resource.sc_name.include?('/')
+          @current_resource.sc_name(@new_resource.sc_name.split('/')[2])
         end
         sc = load_balancer.client['LocalLB.Class'].get_address_class([@new_resource.sc_name]).find { |n| n['name'] == @new_resource.sc_name }
         @current_resource.exists = !sc['members'].empty?
@@ -49,9 +49,9 @@ class Chef
 
         members = []
         sc.members.each do |m|
-          members << {'address' => m.address, 'netmask' => m.netmask }
+          members << { 'address' => m.address, 'netmask' => m.netmask }
         end
-        
+
         @current_resource.records(members)
 
         if members != @new_resource.records
@@ -64,10 +64,7 @@ class Chef
       end
 
       def action_create
-        # If node doesn't exist
-        if not current_resource.exists or current_resource.update
-          create_address_class
-        end
+        create_address_class unless current_resource.exists && !current_resource.update
       end
 
       def action_delete
@@ -79,10 +76,10 @@ class Chef
       #
       # Create a new node from new_resource attribtues
       #
-      def create_address_class
+      def create_address_class # rubocop:disable AbcSize, MethodLength
         converge_by("Create/Update data list #{new_resource}") do
           Chef::Log.info "Create #{new_resource}"
-          new_sc = {"name" => new_resource.sc_name, "members" => new_resource.records}
+          new_sc = { 'name' => new_resource.sc_name, 'members' => new_resource.records }
           new_values = new_resource.records
 
           if current_resource.update

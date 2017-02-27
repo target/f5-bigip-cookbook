@@ -1,7 +1,7 @@
 #
 # Author:: Sergio Rua <sergio@rua.me.uk>
 # Cookbook Name:: f5-bigip
-# Provider:: ltm_node
+# Provider:: ltm_sslcert
 #
 # Copyright:: 2015 Sky Betting and Gaming
 #
@@ -24,7 +24,7 @@ require 'ostruct'
 class Chef
   class Provider
     #
-    # Chef Provider for F5 LTM Node
+    # Chef Provider for F5 LTM SSL Cert
     #
     class F5LtmSslcert < Chef::Provider
       include F5::Loader
@@ -34,7 +34,7 @@ class Chef
         false
       end
 
-      def load_current_resource
+      def load_current_resource # rubocop:disable AbcSize, MethodLength
         @current_resource = Chef::Resource::F5LtmSslcert.new(@new_resource.name)
         @current_resource.name(@new_resource.name)
         @current_resource.key(@new_resource.key)
@@ -48,7 +48,6 @@ class Chef
         @current_resource.update_key  = false
         @current_resource.update_cert = false
 
-
         load_balancer.change_folder(@new_resource.sslcert_name)
 
         if @new_resource.sslcert_name.include?('/')
@@ -61,25 +60,18 @@ class Chef
         cert = load_balancer.client['Management.KeyCertificate'].get_certificate_list(@new_resource.mode).find { |c| c.certificate.cert_info.id == cert_name }
         key = nil
         if @new_resource.key != ''
-          key  = load_balancer.client['Management.KeyCertificate'].get_key_list(@new_resource.mode).find { |c| c.key_info.id == cert_name }
+          key = load_balancer.client['Management.KeyCertificate'].get_key_list(@new_resource.mode).find { |c| c.key_info.id == cert_name }
         end
 
-        if cert and @new_resource.override
+        if cert
           @current_resource.exists_cert = true
-          @current_resource.update_cert = true
-        elsif key and not @new_resource.override
-          @current_resource.exists_cert = true
-          @current_resource.update_cert = false
+          @current_resource.update_cert = @new_resource.override
+        end
+        if key
+          @current_resource.exists_key = true
+          @current_resource.update_key = @new_resource.override
         end
 
-        if key and @new_resource.override
-          @current_resource.exists_key = true
-          @current_resource.update_key = true
-        elsif key and not @new_resource.override
-          @current_resource.exists_key = true
-          @current_resource.update_key = false
-        end
-        
         @current_resource
       end
 
@@ -91,57 +83,55 @@ class Chef
       end
 
       def action_create
-        if (current_resource.update_key or current_resource.update_cert) and current_resource.override
+        if (current_resource.update_key || current_resource.update_cert) && current_resource.override
           update_sslcert
-        elsif not current_resource.exists_key or not current_resource.exists_cert
+        elsif !current_resource.exists_key || !current_resource.exists_cert
           create_sslcert
         end
       end
 
       def action_delete
-        delete_sslcert if current_resource.exists_key or current_resource.exists_cert
+        delete_sslcert if current_resource.exists_key || current_resource.exists_cert
       end
 
       private
 
-      def load_file_contents(filename, cookb=nil)
+      def load_file_contents(filename, cookb = nil) # rubocop:disable AbcSize
         cook = cookbook_name if cookb.nil?
         cb = run_context.cookbook_collection[cook]
 
         f = cb.file_filenames.find { |t| ::File.basename(t) == filename }
 
         fail("#{f} not found on cookbook #{cook}") if f.nil?
+        fail("Cannot read #{f}") unless ::File.exist?(f)
 
-        if not ::File.exists?(f)
-          fail("Cannot read #{f}")
-        end
         Chef::Log.info("Loading Cert / Key from #{f}")
-        return ::File.read(f)
+        ::File.read(f)
       end
 
       #
       # Update Key and Cert
       #
-      def update_sslcert
+      def update_sslcert # rubocop:disable AbcSize, MethodLength
         converge_by("Update Key/Cert #{new_resource}") do
           Chef::Log.info "Update #{new_resource}"
 
           if new_resource.cert
-            pemCrt = load_file_contents(new_resource.cert)
+            pem_crt = load_file_contents(new_resource.cert)
             load_balancer.client['Management.KeyCertificate'].certificate_import_from_pem(
               new_resource.mode,
               [new_resource.sslcert_name],
-              [pemCrt],
+              [pem_crt],
               new_resource.override
             )
           end
 
           if new_resource.key
-            pemKey = load_file_contents(new_resource.key)
+            pem_key = load_file_contents(new_resource.key)
             load_balancer.client['Management.KeyCertificate'].key_import_from_pem(
               new_resource.mode,
               [new_resource.sslcert_name],
-              [pemKey],
+              [pem_key],
               new_resource.override
             )
           end
@@ -164,9 +154,9 @@ class Chef
       end
 
       #
-      # Delete node
+      # Delete cert
       #
-      def delete_sslcert
+      def delete_sslcert # rubocop:disable AbcSize
         converge_by("Delete #{new_resource}") do
           Chef::Log.info "Delete #{new_resource}"
           load_balancer.client['Management.KeyCertificate'].certicate_delete(new_resource.mode, [new_resource.sslcert_name])

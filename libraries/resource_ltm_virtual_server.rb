@@ -173,7 +173,7 @@ class Chef
 
       private
 
-      def set_defaults # rubocop:disable MethodLength
+      def set_defaults # rubocop:disable AbcSize, MethodLength
         @destination_wildmask = '255.255.255.255'
         @type = 'RESOURCE_TYPE_POOL'
         @protocol = 'PROTOCOL_TCP'

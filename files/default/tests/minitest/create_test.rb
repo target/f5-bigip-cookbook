@@ -216,9 +216,7 @@ describe_recipe 'f5-bigip::create' do
   describe 'f5_ltm_monitor' do
     it 'creates a new monitor templates' do
       exp_monitors = ['/Common/mon_new', '/Common/mon_new_defaults', '/Common/mon_delete'].sort.uniq
-      monitors = client['LocalLB.Monitor'].get_template_list
-                                          .map { |m| m['template_name'] }
-                                          .sort.uniq
+      monitors = client['LocalLB.Monitor'].get_template_list.map { |m| m['template_name'] }.sort.uniq
 
       assert array_contains?(monitors, exp_monitors),
              "Expected monitors of #{exp_monitors.inspect} to be included in #{monitors.inspect}"

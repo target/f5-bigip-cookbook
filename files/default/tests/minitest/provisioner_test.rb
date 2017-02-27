@@ -268,8 +268,7 @@ describe_recipe 'f5-bigip::default' do
 
     it 'deletes a monitor template' do
       monitors_to_delete = ['mon_delete']
-      monitors = client['LocalLB.Monitor'].get_template_list
-                                          .map! { |m| m['template_name'].gsub('/Common/', '') }
+      monitors = client['LocalLB.Monitor'].get_template_list.map! { |m| m['template_name'].gsub('/Common/', '') }
       monitors_missed = monitors_to_delete & monitors
       assert_empty monitors_missed, "These virtual servers still exist: #{monitors_missed}. Not deleted?"
     end

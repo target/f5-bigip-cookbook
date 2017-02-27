@@ -21,9 +21,9 @@ include_recipe 'f5-bigip::provision_configsync'
 
 f5s = data_bag(node['f5-bigip']['provisioner']['databag'])
 
-f5s.each do |item|
+f5s.each do |item| # rubocop:disable Next
   f5 = data_bag_item(node['f5-bigip']['provisioner']['databag'], item)
-  if f5.key? 'delete' # rubocop:disable Next
+  if f5.key? 'delete'
     # Delete virtual servers
     if f5['delete'].key? 'virtual_servers'
       f5['delete']['virtual_servers'].each do |vs|

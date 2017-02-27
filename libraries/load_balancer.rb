@@ -33,19 +33,21 @@ module F5
       @client = client
     end
 
-    def change_folder(folder='Common')
+    def change_folder(folder = 'Common') # rubocop:disable MethodLength
       if folder.include?('/')
         folder = folder.split('/')[1]
       else
         folder = 'Common'
       end
-      return true if @active_folder == folder
-
-      @ltm = nil
-      Chef::Log.info "Setting #{folder} as active folder"
-      @client['System.Session'].set_active_folder("/#{folder}")
-      @active_folder = folder
-      return true
+      if @active_folder == folder
+        return true
+      else
+        @ltm = nil
+        Chef::Log.info "Setting #{folder} as active folder"
+        @client['System.Session'].set_active_folder("/#{folder}")
+        @active_folder = folder
+        return true
+      end
     end
 
     #

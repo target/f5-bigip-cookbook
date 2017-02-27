@@ -128,8 +128,7 @@ module F5
           profiles = @client['LocalLB.VirtualServer'].get_profile(names)
 
           @virtual_servers.each_with_index do |vs, idx|
-            vs.profiles = F5::Helpers.soap_mapping_to_hash(profiles[idx])
-                                     .each { |p| p.delete('profile_type') }
+            vs.profiles = F5::Helpers.soap_mapping_to_hash(profiles[idx]).each { |p| p.delete('profile_type') }
           end
         end
 

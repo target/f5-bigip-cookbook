@@ -120,8 +120,7 @@ module F5
         end
 
         def refresh_all
-          @pools = @client['LocalLB.Pool'].get_list
-                                          .map { |p| F5::LoadBalancer::Ltm::Pools::Pool.new(p) }
+          @pools = @client['LocalLB.Pool'].get_list.map { |p| F5::LoadBalancer::Ltm::Pools::Pool.new(p) }
           return if @pools.empty?
           refresh_members
           refresh_monitors

@@ -48,9 +48,8 @@ module F5
         #
         # Refresh all monitor data
         #
-        def refresh_all
-          @monitors = @client['LocalLB.Monitor'].get_template_list
-                                                .map { |m| F5::LoadBalancer::Ltm::Monitors::Monitor.new(m) }
+        def refresh_all # rubocop:disable AbcSize, MethodLength
+          @monitors = @client['LocalLB.Monitor'].get_template_list.map { |m| F5::LoadBalancer::Ltm::Monitors::Monitor.new(m) }
           @monitors.reject! { |m| root_templates.include? m.name }
           refresh_parent
           refresh_destination
@@ -74,7 +73,7 @@ module F5
         #
         # Update the destination address information for the monitors
         #
-        def refresh_destination
+        def refresh_destination # rubocop:disable AbcSize
           dests = @client['LocalLB.Monitor'].get_template_destination(names)
           @monitors.each_with_index do |monitor, idx|
             monitor.dest_addr_type = dests[idx]['address_type']

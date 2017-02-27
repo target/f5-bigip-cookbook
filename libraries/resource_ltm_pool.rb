@@ -84,10 +84,6 @@ class Chef
         set_or_return(:lb_method, arg, :kind_of => String, :equal_to => LB_METHODS)
       end
 
-      def description(arg = nil)
-        set_or_return(:description, arg, :kind_of => String)
-      end
-
       def monitors(arg = nil)
         set_or_return(:monitors, arg, :kind_of => Array)
       end

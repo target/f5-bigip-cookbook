@@ -60,7 +60,6 @@ module F5
       def monitors
         @monitors ||= F5::LoadBalancer::Ltm::Monitors.new(client)
       end
-
     end
   end
 end

@@ -34,22 +34,22 @@ class Chef
         false
       end
 
-      def load_current_resource
+      def load_current_resource # rubocop:disable AbcSize, MethodLength, CyclomaticComplexity, PerceivedComplexity
         @current_resource = Chef::Resource::F5LtmIrule.new(@new_resource.name)
         @current_resource.name(@new_resource.name)
         @current_resource.template(@new_resource.template)
         @current_resource.irule_name(@new_resource.irule_name)
 
-        if @new_resource.content.nil? and @new_resource.template.nil?
+        if @new_resource.content.nil? && @new_resource.template.nil?
           fail "Resource #{@new_resource.name} requires either 'content' or 'template'"
         end
 
         load_balancer.change_folder(@new_resource.irule_name)
 
-        if not @new_resource.template.nil?
-          @new_resource.content(load_template)
-        else
+        if @new_resource.template.nil?
           @new_resource.content(@new_resource.content)
+        else
+          @new_resource.content(load_template)
         end
 
         if @new_resource.irule_name.include?('/')
@@ -63,16 +63,15 @@ class Chef
         if load_balancer.client['LocalLB.Rule'].get_list.include?(rule_name)
           @current_resource.exists = true
           current_rule = load_balancer.client['LocalLB.Rule'].query_rule([rule_name])[0]
-          if not current_rule.nil?
-            @current_resource.content(current_rule['rule_definition'])
-          else
+          if current_rule.nil?
             current_rule = { 'rule_name' => rule_name, 'rule_definition' => '' }
+          else
+            @current_resource.content(current_rule['rule_definition'])
           end
         end
 
-        #return @current_resource unless @current_resource.exists
-        if @current_resource.exists
-          @current_resource.update = true if current_rule['rule_definition'] != @new_resource.content
+        if @current_resource.exists && current_rule['rule_definition'] != @new_resource.content
+          @current_resource.update = true
         end
 
         @current_resource
@@ -81,7 +80,7 @@ class Chef
       def action_create
         if current_resource.update
           update_irule
-        elsif not current_resource.exists
+        elsif !current_resource.exists
           create_irule
         end
       end
@@ -92,15 +91,15 @@ class Chef
 
       private
 
-      def load_template
-        def erb(template_file, vars)
-          template = ::File.read(template_file)
-          ERB.new(template).result(OpenStruct.new(vars).instance_eval { binding })
-        end
+      def erb(template_file, vars)
+        template = ::File.read(template_file)
+        ERB.new(template).result(OpenStruct.new(vars).instance_eval { binding })
+      end
 
+      def load_template # rubocop:disable AbcSize
         cb = run_context.cookbook_collection[cookbook_name]
         template = cb.template_filenames.find { |t| ::File.basename(t) == @new_resource.template }
-        if not template or not ::File.exists?(template)
+        unless template && ::File.exist?(template)
           fail "Template #{@new_resource.template} not found"
         end
 
@@ -114,7 +113,7 @@ class Chef
       def update_irule
         converge_by("Update iRule #{new_resource}") do
           Chef::Log.info "Update #{new_resource}"
-          new_irule = {"rule_name" => new_resource.irule_name, "rule_definition" => new_resource.content}
+          new_irule = { 'rule_name' => new_resource.irule_name, 'rule_definition' => new_resource.content }
 
           load_balancer.client['LocalLB.Rule'].modify_rule([new_irule])
 
@@ -128,7 +127,7 @@ class Chef
       def create_irule
         converge_by("Create iRule #{new_resource}") do
           Chef::Log.info "Create #{new_resource}"
-          new_irule = {"rule_name" => new_resource.irule_name, "rule_definition" => new_resource.content}
+          new_irule = { 'rule_name' => new_resource.irule_name, 'rule_definition' => new_resource.content }
 
           load_balancer.client['LocalLB.Rule'].create([new_irule])
 

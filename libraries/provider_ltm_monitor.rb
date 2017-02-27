@@ -36,8 +36,8 @@ class Chef
         @current_resource.name(@new_resource.name)
         @current_resource.monitor_name(@new_resource.monitor_name)
 
-        load_balancer.change_folder(@new_resource.monitor_name) 
-        monitor = load_balancer.ltm.monitors.find { |m| m.name =~ %r{(^|\/)#{@new_resource.monitor_name}$} or m.name == @new_resource.monitor_name }
+        load_balancer.change_folder(@new_resource.monitor_name)
+        monitor = load_balancer.ltm.monitors.find { |m| m.name =~ %r{(^|\/)#{@new_resource.monitor_name}$} || m.name == @new_resource.monitor_name }
         @current_resource.exists = !monitor.nil?
         return @current_resource unless @current_resource.exists
 
@@ -116,7 +116,7 @@ class Chef
       #
       # Set monitor description
       #
-      def set_template_description
+      def set_template_description # rubocop:disable AbcSize
         converge_by("Update #{new_resource} description") do
           Chef::Log.info "Update #{new_resource} description"
           current_resource.description(new_resource.description)
@@ -125,7 +125,6 @@ class Chef
           new_resource.updated_by_last_action(true)
         end
       end
-
 
       #
       # Set monitor interval
@@ -212,7 +211,7 @@ class Chef
       #
       def set_template_string(monitor_types, string_type, type_description)
         error_message = "Can not set '#{type_description}' for #{new_resource} as it's type is currently #{current_resource.type}"
-        raise error_message unless monitor_types.include? current_resource.type
+        raise error_message unless monitor_types.include? current_resource.type # rubocop:disable SignalException
 
         converge_by("Update #{new_resource} '#{type_description}'") do
           set_string_for(string_type)
@@ -224,7 +223,7 @@ class Chef
       #
       #
       #
-      def set_user_values
+      def set_user_values # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
         set_template_send_string unless user_values_match? 'STYPE_SEND'
         set_template_receive_string unless user_values_match? 'STYPE_RECEIVE'
         set_template_username_string unless user_values_match? 'STYPE_USERNAME'
@@ -242,7 +241,7 @@ class Chef
         return true unless new_resource.user_values.key? type
 
         # No match if current_resource does not have it set
-        raise "#{current_resource} missing string value for #{type}" unless current_resource.user_values.key? type
+        raise "#{current_resource} missing string value for #{type}" unless current_resource.user_values.key? type # rubocop:disable SignalException
 
         return false if current_resource.user_values[type] != new_resource.user_values[type]
         true

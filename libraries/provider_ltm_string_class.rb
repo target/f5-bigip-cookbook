@@ -1,7 +1,7 @@
 #
 # Author:: Sergio Rua <sergio@rua.me.uk>
 # Cookbook Name:: f5-bigip
-# Provider:: ltm_node
+# Provider:: ltm_string_class
 #
 # Copyright:: 2015 Sky Betting and Gaming
 #
@@ -21,7 +21,7 @@
 class Chef
   class Provider
     #
-    # Chef Provider for F5 LTM Node
+    # Chef Provider for F5 LTM String Class
     #
     class F5LtmStringClass < Chef::Provider
       include F5::Loader
@@ -31,7 +31,7 @@ class Chef
         false
       end
 
-      def load_current_resource
+      def load_current_resource # rubocop:disable AbcSize, MethodLength
         @current_resource = Chef::Resource::F5LtmStringClass.new(@new_resource.name)
         @current_resource.name(@new_resource.name)
         @current_resource.sc_name(@new_resource.sc_name)
@@ -39,26 +39,25 @@ class Chef
 
         Chef::Log.info("Changing partition to #{@new_resource.sc_name}")
         load_balancer.change_folder(@new_resource.sc_name)
-        if @new_resource.sc_name.include?("/")
-          @current_resource.sc_name (@new_resource.sc_name.split("/")[2])
+        if @new_resource.sc_name.include?('/')
+          @current_resource.sc_name(@new_resource.sc_name.split('/')[2])
         end
         sc = load_balancer.client['LocalLB.Class'].get_string_class([@new_resource.sc_name]).find { |n| n['name'] == @new_resource.sc_name }
         @current_resource.exists = !sc['members'].empty?
 
         return @current_resource unless @current_resource.exists
 
-        string_class = [{"name" => sc['name'], "members" => sc['members']}]
+        string_class = [{ 'name' => sc['name'], 'members' => sc['members'] }]
         string_class_values = load_balancer.client['LocalLB.Class'].get_string_class_member_data_value(string_class)
-        
-        if sc['members'].sort != @new_resource.records.keys.sort or string_class_values[0].sort != @new_resource.records.values.sort
+
+        if sc['members'].sort != @new_resource.records.keys.sort || string_class_values[0].sort != @new_resource.records.values.sort
           @current_resource.update = true
         else
           @current_resource.update = false
         end
 
-
-        recs={}
-        string_class[0]['members'].each_with_index do |m,i|
+        recs = {}
+        string_class[0]['members'].each_with_index do |m, i|
           recs[m] = string_class_values[i]
         end
         @current_resource.records(recs)
@@ -67,10 +66,7 @@ class Chef
       end
 
       def action_create
-        # If node doesn't exist
-        if not current_resource.exists or current_resource.update
-          create_sc
-        end
+        create_sc unless current_resource.exists && !current_resource.update
       end
 
       def action_delete
@@ -82,10 +78,10 @@ class Chef
       #
       # Create a new node from new_resource attribtues
       #
-      def create_sc
+      def create_sc # rubocop:disable AbcSize, MethodLength
         converge_by("Create/Update data list #{new_resource}") do
           Chef::Log.info "Create #{new_resource}"
-          new_sc = {"name" => new_resource.sc_name, "members" => new_resource.records.keys}
+          new_sc = { 'name' => new_resource.sc_name, 'members' => new_resource.records.keys }
           new_values = new_resource.records.values
 
           if current_resource.update

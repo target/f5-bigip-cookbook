@@ -21,9 +21,9 @@ include_recipe 'f5-bigip::provision_configsync'
 
 f5s = data_bag(node['f5-bigip']['provisioner']['databag'])
 
-f5s.each do |item|
+f5s.each do |item| # rubocop:disable Next
   f5 = data_bag_item(node['f5-bigip']['provisioner']['databag'], item)
-  if f5.key? 'create' # rubocop:disable Next
+  if f5.key? 'create'
     # Create Nodes
     if f5['create'].key? 'nodes'
       f5['create']['nodes'].each do |name, node|
