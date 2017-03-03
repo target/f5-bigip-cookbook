@@ -2,6 +2,10 @@ f5-bigip Cookbook CHANGELOG
 ==============================
 This file is used to list changes made in each version of the f5-bigip cookbook.
 
+v0.5.8
+------
+* Bug - address data group creation fails because it tries to set the records as the values
+
 v0.5.7
 ------
 * Rubocop style cleanup

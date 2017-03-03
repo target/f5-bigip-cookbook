@@ -82,7 +82,7 @@ class Chef
           else
             load_balancer.client['LocalLB.Class'].create_address_class([new_sc])
           end
-          load_balancer.client['LocalLB.Class'].set_address_class_member_data_value([new_sc], [new_values])
+          #load_balancer.client['LocalLB.Class'].set_address_class_member_data_value([new_sc], [new_values])
 
           new_resource.updated_by_last_action(true)
         end
