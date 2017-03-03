@@ -71,18 +71,16 @@ class Chef
       #
       # Create a new node from new_resource attribtues
       #
-      def create_address_class # rubocop:disable AbcSize, MethodLength
+      def create_address_class # rubocop:disable AbcSize
         converge_by("Create/Update data list #{new_resource}") do
           Chef::Log.info "Create #{new_resource}"
           new_sc = { 'name' => new_resource.sc_name, 'members' => new_resource.records }
-          new_values = new_resource.records
 
           if current_resource.update
             load_balancer.client['LocalLB.Class'].modify_address_class([new_sc])
           else
             load_balancer.client['LocalLB.Class'].create_address_class([new_sc])
           end
-          #load_balancer.client['LocalLB.Class'].set_address_class_member_data_value([new_sc], [new_values])
 
           new_resource.updated_by_last_action(true)
         end
