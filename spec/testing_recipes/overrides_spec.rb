@@ -5,16 +5,16 @@ describe 'testing::overrides' do
     config_sync_f5 = chef_run.f5_config_sync('test-f5.test.com')
     expect(config_sync_f5).to do_nothing
     expect(chef_run).to create_f5_ltm_node('test-f5.test.com-10.10.10.10')
-      .with(:node_name => '10.10.10.10', :f5 => 'test-f5.test.com', :enabled => true)
+      .with(:node_name => '/Common/10.10.10.10', :f5 => 'test-f5.test.com', :enabled => true)
     expect(chef_run).to create_f5_ltm_node('test-f5.test.com-10.10.10.11')
-      .with(:node_name => '10.10.10.11', :f5 => 'test-f5.test.com', :enabled => true)
+      .with(:node_name => '/Common/10.10.10.11', :f5 => 'test-f5.test.com', :enabled => true)
     expect(chef_run).to create_f5_ltm_pool('test-f5.test.com-test-pool')
-      .with(:pool_name => 'test-pool', :f5 => 'test-f5.test.com', :lb_method => 'LB_METHOD_RATIO_MEMBER',
+      .with(:pool_name => '/Common/test-pool', :f5 => 'test-f5.test.com', :lb_method => 'LB_METHOD_RATIO_MEMBER',
             :monitors => ['/Common/https', '/Common/tcp'],
             :members => [{ 'address' => '10.10.10.10', 'port' => 4443, 'enabled' => true },
                          { 'address' => '10.10.10.11', 'port' => 4443, 'enabled' => true }])
     expect(chef_run).to create_f5_ltm_virtual_server('test-f5.test.com-testing')
-      .with(:vs_name => 'testing', :f5 => 'test-f5.test.com', :destination_address => '192.168.1.10',
+      .with(:vs_name => '/Common/testing', :f5 => 'test-f5.test.com', :destination_address => '192.168.1.10',
             :destination_port => 8443, :default_pool => 'test-pool',
             :vlan_state => 'STATE_ENABLED', :vlans => ['/Common/vlan123', '/Common/vlan234'],
             :profiles => [
