@@ -49,11 +49,15 @@ module F5
     #
     def interfaces
       [
+        'System.Session',
         'LocalLB.Monitor',
         'LocalLB.NodeAddressV2',
         'LocalLB.Pool',
         'LocalLB.VirtualServer',
+        'LocalLB.Class',
+        'LocalLB.Rule',
         'Management.DeviceGroup',
+        'Management.KeyCertificate',
         'System.ConfigSync',
         'System.Failover',
         'System.Inet'

@@ -25,11 +25,27 @@ require 'load_balancer_ltm'
 module F5
   # The F5 device
   class LoadBalancer
-    attr_accessor :name, :client
+    attr_accessor :name, :client, :active_folder
 
     def initialize(name, client)
       @name = name
+      @active_folder = client['System.Session'].get_active_folder
       @client = client
+    end
+
+    def change_folder(folder = 'Common') # rubocop:disable MethodLength
+      folder = if folder.include?('/')
+                 folder.split('/')[1]
+               else
+                 'Common'
+               end
+      unless @active_folder == folder
+        @ltm = nil
+        Chef::Log.info "Setting #{folder} as active folder"
+        @client['System.Session'].set_active_folder("/#{folder}")
+        @active_folder = folder
+      end
+      true
     end
 
     #

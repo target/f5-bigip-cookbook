@@ -36,6 +36,8 @@ class Chef
 
         # Now we need to set up any resource defaults
         @enabled = true
+        @description = 'Created by CHEF'
+        @preserve_status = true
       end
 
       def node_name(arg = nil)
@@ -55,6 +57,14 @@ class Chef
 
       def enabled(arg = nil)
         set_or_return(:enabled, arg, :kind_of => [TrueClass, FalseClass])
+      end
+
+      def preserve_status(arg = nil)
+        set_or_return(:preserve_status, arg, :kind_of => [TrueClass, FalseClass])
+      end
+
+      def description(arg = nil)
+        set_or_return(:description, arg, :kind_of => String)
       end
 
       attr_accessor :exists

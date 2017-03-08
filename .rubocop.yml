@@ -9,6 +9,9 @@ AllCops:
 Encoding:
   Enabled: false
 
+BlockLength:
+  Enabled: false
+
 ClassLength:
   Max: 300
 

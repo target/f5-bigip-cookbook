@@ -48,16 +48,18 @@ module F5
         #
         # Refresh all monitor data
         #
-        def refresh_all
-          @monitors = @client['LocalLB.Monitor'].get_template_list
-                                                .map { |m| F5::LoadBalancer::Ltm::Monitors::Monitor.new(m) }
+        def refresh_all # rubocop:disable AbcSize, MethodLength
+          @monitors = @client['LocalLB.Monitor'].get_template_list.map { |m| F5::LoadBalancer::Ltm::Monitors::Monitor.new(m) }
           @monitors.reject! { |m| root_templates.include? m.name }
           refresh_parent
           refresh_destination
           refresh_interval
+          refresh_description
           refresh_timeout
           refresh_send_string
           refresh_receive_string
+          refresh_username_string
+          refresh_password_string
         end
 
         #
@@ -78,6 +80,11 @@ module F5
             monitor.dest_addr_ip = dests[idx]['ipport']['address']
             monitor.dest_addr_port = dests[idx]['ipport']['port']
           end
+        end
+
+        def refresh_description
+          descs = @client['LocalLB.Monitor'].get_description(names)
+          @monitors.each_with_index { |monitor, idx| monitor.description = descs[idx] }
         end
 
         #
@@ -116,6 +123,22 @@ module F5
         def refresh_receive_string
           monitors = monitors_are(%w(TTYPE_HTTP TTYPE_HTTPS TTYPE_TCP))
           refresh_string_for(monitors, 'STYPE_RECEIVE')
+        end
+
+        #
+        # Update username string value for the monitors with type [HTTP, HTTPS, NNTP, FTP, POP3, SQL, IMAP, RADIUS, RADIUS_ACCOUNTING, LDAP, WMI, SIP]
+        #
+        def refresh_username_string
+          monitors = monitors_are(%w(TTYPE_HTTP TTYPE_HTTPS TTYPE_NNTP TTYPE_FTP TTYPE_POP3 TTYPE_SQL TTYPE_IMAP TTYPE_RADIUS TTYPE_RADIUS_ACCOUNTING TTYPE_LDAP TTYPE_WMI TTYPE_SIPTTYPE_TCP))
+          refresh_string_for(monitors, 'STYPE_USERNAME')
+        end
+
+        #
+        # Update password string value for the monitors with type [HTTP, HTTPS, NNTP, FTP, POP3, SQL, IMAP, RADIUS, LDAP, WMI, SIP]
+        #
+        def refresh_password_string
+          monitors = monitors_are(%w(TTYPE_HTTP TTYPE_HTTPS TTYPE_NNTP TTYPE_FTP TTYPE_POP3 TTYPE_SQL TTYPE_IMAP TTYPE_RADIUS TTYPE_LDAP TTYPE_WMI TTYPE_SIPTTYPE_TCP))
+          refresh_string_for(monitors, 'STYPE_PASSWORD')
         end
 
         private

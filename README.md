@@ -50,6 +50,10 @@ This definition is a wrapper for the [`f5_ltm_node`](#f5_ltm_node), [`f5_ltm_poo
 | default_persistence_profile | '' | String | Default persistence profile to associate with virtual server |
 | fallback_persistence_profile | '' | String | Fallback persistence profile to associate with virtual server |
 | rules | [] | Array[String] | iRules to associate with virtual server |
+| partition | '' | String | Partition name where to create this VIP. It must exist. |
+| description | '' | String | VS description |
+| translate_port | '' | Boolean | Enable/Disable port translation |
+| translate_address | '' | Boolean | Enable/Disable address translation |
 
 ### Example
 The simplest VIP declartion that takes as many defaults as possible:
@@ -107,10 +111,14 @@ f5_ltm_node
 |-----------|-------------------|------------|--------------------------------|
 | node_name | The resource name | String     | Name to create node with       |
 | address   | `node_name`       | String     | IP address to create node with |
+| description   |        | String     | Node description |
 | f5        | **REQUIRED**      | String     | f5 to create the node on       |
 | enabled   | `true`            | true/false | State node should be in        |
+| preserve_status   | `true`            | true/false | Retain status if manually enabled / disabled |
 
 If the `address` attribute is unset, the `node_name` (which in turn defaults to the resource's name) will be used instead.
+
+`node_name` can be prefixed with a partition name, for example `/internal/node_name`. Default is `/Common`.
 
 ### Examples
 
@@ -142,8 +150,11 @@ f5_ltm_pool
 | pool_name | The resource name | String | Name to create node with |
 | f5 | **REQUIRED** | String | f5 to create the node on |
 | lb_method | `LB_METHOD_ROUND_ROBIN` | String | Load balancing method |
+| description |  | String | Pool description |
 | monitors | [] | Array[String] | Monitors to check that pool members are available |
 | members | [] | Array[Hash] | Members to add to the pool |
+
+`pool_name` can be prefixed with a partition name, for example `/internal/pool_name`. Default is `/Common`.
 
 ### Example
 
@@ -176,6 +187,7 @@ f5_ltm_monitor
 | Attr | Default/Req? | Type | Description |
 |------|--------------|------|-------------|
 | monitor_name | resource's name | String | Name of monitor to create on f5 |
+| description |  | String | Monitor description |
 | f5 | **REQUIRED** | String | f5 to create the node on |
 | parent | 'https' | String | Name of parent monitor |
 | interval | 5 | Integer | Monitor interval |
@@ -184,6 +196,8 @@ f5_ltm_monitor
 | dest_addr_ip | '0.0.0.0' | String | IP address |
 | dest_addr_port | 443 | Integer | Port |
 | user_values | {} | Hash | Hash of user specific values |
+
+`monitor_name` can be prefixed with a partition name, for example `/internal/monitor_name`. Default is `/Common`.
 
 ### Example
 
@@ -208,7 +222,8 @@ f5_ltm_virtual_server
 | f5 | REQUIRED | String | f5 to create the node on |
 | destination_address | **REQUIRED** | String | Destination IP Address |
 | destination_port | **REQUIRED** | Integer | Destination Port |
-| default_pool | **REQUIRED** | String | Pool for virtual server to use |
+| destination_wildmask | '255.255.255.255' | String | Destination Wildmask as CIDR notation |
+| default_pool | '' | String | Pool for virtual server to use |
 | vlan_state | 'STATE_DISABLED' | String | Wether list of VLANs are disabled or enabled |
 | vlans | [] | Array[String] | List of VLANs to enabled or disable based on `vlan_state` |
 | profiles | [{<br/>'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL',<br/>'profile_name' => '/Common/tcp'<br/>}] | Array[Hash] | Profiles to associate to virtual server |
@@ -218,17 +233,141 @@ f5_ltm_virtual_server
 | fallback_persistence_profile | '' | String | Fallback persistence profile to associate with virtual server |
 | rules | [] | Array[String] | iRules to associate with virtual server |
 | enabled | true | true/false | Enable or disable the virtual server |
+| description | '' | String | VS description |
+| translate_port | '' | Boolean | Enable/Disable port translation |
+| translate_address | '' | Boolean | Enable/Disable address translation |
+
+`vs_name` can be prefixed with a partition name, for example `/internal/vs_name`. Default is `/Common`.
+
+Originally `default_pool` was required but it's actually possible to run a VS with no pools just but using an iRule. Changed option to not required.
+
 
 ### Example
 
 ```ruby
 f5_ltm_virtual_server 'vs_new' do
   f5 'f5-test.test.com'
+  description 'Example VS for my fantastic web server'
   destination_address '10.11.10.10'
   destination_port 80
   default_pool 'new'
   enabled true
 end
+```
+
+f5_ltm_string_class
+-------------------
+`f5_ltm_string_class` - Used to create, delete or update a string data group list
+
+| Attr | Default/Req? | Type | Description |
+|------|--------------|------|-------------|
+| sc_name | resource's name | String | Name of the string class. May contain partition name. (/partition/name)|
+| f5 | REQUIRED | String | f5 to create the node on |
+| records | **REQUIRED** | Hash|Array | { "key1" => "value1", "key2" => "value2"} |
+
+### Example
+
+```ruby
+entry = { "key1" => "value1", "key2" => "value2"}
+f5_ltm_string_class "test002" do
+  f5 "f5-test.test.com"
+  records entry
+  action :create
+end
+```
+
+f5_ltm_address_class
+-------------------
+`f5_ltm_address_class` - Used to create, delete or update a list of networks
+
+| Attr | Default/Req? | Type | Description |
+|------|--------------|------|-------------|
+| sc_name | resource's name | String | Name of the string class. May contain partition name. (/partition/name)|
+| f5 | REQUIRED | String | f5 to create the node on |
+| records | **REQUIRED** | Hash|Array | { "address" => "x.x.x.x", "netmaks" => "y.y.y.y"} |
+
+### Example
+
+```ruby
+records = [
+  {"address"=>"10.10.8.0", "netmask"=>"255.255.252.0"}, 
+  {"address"=>"192.168.0.0", "netmask"=>"255.255.224.0"}
+]
+f5_ltm_address_class '/Common/MyAddressList' do
+  f5        "f5-test.test.com"
+  records   records
+end
+```
+
+f5_ltm_irule
+-------------------
+`f5_ltm_irule` - Used to create, delete or update an iRule
+
+| Attr | Default/Req? | Type | Description |
+|------|--------------|------|-------------|
+| irule_name | resource's name | String | Name of the iRule. It may contain partition name. (/partition/name)|
+| f5 | REQUIRED | String | f5 to create the node on |
+| content | **REQUIRED** | String | The iRule. Please note it'll fail if the the syntax is incorrect
+| template | '' | String | Build up rule from template instead of inline content
+
+### Example
+
+```ruby
+f5_ltm_irule "irule_name" do
+  f5 "f5-test.test.com"
+  content <<END
+irule with right syntax here
+END
+  action :create
+end
+```
+
+```ruby
+f5_ltm_irule "irule_name" do
+  f5 "f5-test.test.com"
+  template "my_rule001.erb"
+  variables { "var1" => "value1", "var2", "value2"} 
+  action :create
+end
+```
+
+f5_ltm_sslcert
+-------------------
+`f5_ltm_irule` - Used to create, delete or update an iRule
+
+| Attr | Default/Req? | Type | Description |
+|------|--------------|------|-------------|
+| sslcert_name | resource's name | String | Name of the cert (ie, mysite.com)
+| f5 | REQUIRED | String | f5 to create the node on |
+| cert | **REQUIRED** | String | Name of the CRT file (as per files/default)
+| key | optional | String | Name of the Key file (as per files/default)
+| override | false| Boolean | Override cert in F5 with this one
+| mode | MANAGEMENT_MODE_DEFAULT| String | Type of cert you're uploading (see below)
+
+
+### Example
+```ruby
+f5_ltm_sslcert "/web/mysite.com" do
+  f5 "f5-test.test.com"
+  cert "server.crt"
+  key "server.key"
+  override false
+end
+
+f5_ltm_sslcert "/Common/ca-bundle" do
+  f5 "f5-test.test.com"
+  cert "ca-bundle.crt"
+  override false
+end
+```
+
+```
+Valid modes are: 
+  MANAGEMENT_MODE_DEFAULT
+  MANAGEMENT_MODE_WEBSERVER
+  MANAGEMENT_MODE_EM
+  MANAGEMENT_MODE_IQUERY
+  MANAGEMENT_MODE_IQUERY_BIG3D
 ```
 
 Recipes
@@ -314,6 +453,24 @@ Author:: Jacob McCann (<jacob.mccann2@target.com>)
 
 ```text
 Copyright:: 2013, Target Corporation
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```
+
+Partitions and iRules support
+Author: Sergio Rua
+```text
+Copyright:: 2015, Sky Betting and Gaming
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

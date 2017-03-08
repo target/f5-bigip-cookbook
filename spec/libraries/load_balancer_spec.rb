@@ -13,6 +13,9 @@ module F5
     let(:system_inet) do
       double 'System.Inet', :get_hostname => 'test-f5.test.com'
     end
+    let(:management_partition) do
+      double 'Management.Partition', :get_active_partition => 'Common'
+    end
 
     let(:load_balancer) { F5::LoadBalancer.new('test-f5', client) }
 
@@ -20,6 +23,7 @@ module F5
       allow(client).to receive(:[]).with('Management.DeviceGroup').and_return(management_device_group)
       allow(client).to receive(:[]).with('System.Failover').and_return(system_failover)
       allow(client).to receive(:[]).with('System.Inet').and_return(system_inet)
+      allow(client).to receive(:[]).with('Management.Partition').and_return(management_partition)
     end
 
     describe '#ltm' do
@@ -27,10 +31,17 @@ module F5
         load_balancer.instance_variable_set(:@ltm, 'test')
         expect(F5::LoadBalancer::Ltm).to_not receive(:new)
         expect(load_balancer.ltm).to eq('test')
+        expect(load_balancer.active_partition).to eq('Common')
       end
 
       it 'sets @ltm if not already set and then returns it' do
         expect(load_balancer.ltm).to be_a(F5::LoadBalancer::Ltm)
+      end
+    end
+
+    describe '#change_partition' do
+      it 'changes the active partition' do
+        expect(load_balancer.change_partition).to eq(true)
       end
     end
 

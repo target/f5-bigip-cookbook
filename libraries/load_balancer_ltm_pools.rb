@@ -76,9 +76,16 @@ module F5
           pools_members.each_with_index do |pool_members, idx|
             pool_members.each { |m| @pools[idx].members << F5::LoadBalancer::Ltm::Pools::Pool::Member.new(m) }
           end
-
           # Automatically update members states
           # refresh_member_status
+        end
+
+        def refresh_description
+          pools_d = @client['LocalLB.Pool'].get_description(pool_names)
+
+          pools_d.each_with_index do |description, idx|
+            @pools[idx].description = description
+          end
         end
 
         # def refresh_member_status
@@ -113,12 +120,12 @@ module F5
         end
 
         def refresh_all
-          @pools = @client['LocalLB.Pool'].get_list
-                                          .map { |p| F5::LoadBalancer::Ltm::Pools::Pool.new(p) }
+          @pools = @client['LocalLB.Pool'].get_list.map { |p| F5::LoadBalancer::Ltm::Pools::Pool.new(p) }
           return if @pools.empty?
           refresh_members
           refresh_monitors
           refresh_lb_method
+          refresh_description
         end
       end
     end

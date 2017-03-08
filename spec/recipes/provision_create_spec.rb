@@ -1,13 +1,12 @@
 require 'spec_helper'
 
 describe 'f5-bigip::provision_create' do
-  cached(:chef_server) do
+  cached(:chef_run) do
     ChefSpec::ServerRunner.new do |_node, server|
       server.create_data_bag('f5-provisioner',
                              f5_provisioner_databag_data)
-    end
+    end.converge(described_recipe)
   end
-  let(:chef_run) { chef_server.converge(described_recipe) }
 
   let(:f5_provisioner_databag_data) do
     {

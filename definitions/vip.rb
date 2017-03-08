@@ -8,6 +8,9 @@
 define :f5_vip, :member_port => 443, :monitors => [], :lb_method => nil, :vlan_state => nil, :vlans => [],
                 :destination_port => 443, :profiles => [], :snat_type => nil, :snat_pool => nil,
                 :default_persistence_profile => nil, :fallback_persistence_profile => nil,
+                :partition => '/Common',
+                :description => '',
+                :translate_address => false, :translate_port => false,
                 :rules => [] do
   name = params[:name]
   name = params[:virtual_server] unless params[:virtual_server].nil?
@@ -16,7 +19,8 @@ define :f5_vip, :member_port => 443, :monitors => [], :lb_method => nil, :vlan_s
 
   params[:nodes].each do |node|
     f5_ltm_node "#{params[:f5]}-#{node}" do
-      node_name node
+      node_name "#{params[:partition]}/#{node}"
+      address node
       f5 params[:f5]
       notifies :run, "f5_config_sync[#{params[:f5]}]", :delayed
     end
@@ -25,7 +29,7 @@ define :f5_vip, :member_port => 443, :monitors => [], :lb_method => nil, :vlan_s
   pool_members = params[:nodes].map { |n| { 'address' => n, 'port' => params[:member_port], 'enabled' => true } }
 
   f5_ltm_pool "#{params[:f5]}-#{params[:pool]}" do
-    pool_name params[:pool]
+    pool_name "#{params[:partition]}/#{params[:pool]}"
     f5 params[:f5]
     lb_method params[:lb_method] unless params[:lb_method].nil?
     monitors params[:monitors] unless params[:monitors].empty?
@@ -34,7 +38,7 @@ define :f5_vip, :member_port => 443, :monitors => [], :lb_method => nil, :vlan_s
   end
 
   f5_ltm_virtual_server "#{params[:f5]}-#{name}" do
-    vs_name name
+    vs_name "#{params[:partition]}/#{name}"
     f5 params[:f5]
     destination_address params[:destination_address]
     destination_port params[:destination_port]
@@ -47,6 +51,9 @@ define :f5_vip, :member_port => 443, :monitors => [], :lb_method => nil, :vlan_s
     default_persistence_profile params[:default_persistence_profile] unless params[:default_persistence_profile].nil?
     fallback_persistence_profile params[:fallback_persistence_profile] unless params[:fallback_persistence_profile].nil?
     rules params[:rules] unless params[:rules].empty?
+    description params[:description]
+    translate_port params[:translate_port]
+    translate_address params[:translate_address]
     notifies :run, "f5_config_sync[#{params[:f5]}]", :delayed
   end
 end

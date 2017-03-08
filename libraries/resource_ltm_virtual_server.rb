@@ -27,7 +27,7 @@ class Chef
       PORTS_REGEX ||= /^(6553[0-5]|655[0-2]\d|65[0-4]\d\d|6[0-4]\d{3}|[1-5]\d{4}|[1-9]\d{0,3}|0)$/
       IP_REGEX ||= /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
       # rubocop:disable LineLength
-      NM_REGEX ||= /^(((128|192|224|240|248|252|254)\.0\.0\.0)|(255\.(0|128|192|224|240|248|252|254)\.0\.0)|(255\.255\.(0|128|192|224|240|248|252|254)\.0)|(255\.255\.255\.(0|128|192|224|240|248|252|254|255)))$/i
+      NM_REGEX ||= /^(((0|128|192|224|240|248|252|254)\.0\.0\.0)|(255\.(0|128|192|224|240|248|252|254)\.0\.0)|(255\.255\.(0|128|192|224|240|248|252|254)\.0)|(255\.255\.255\.(0|128|192|224|240|248|252|254|255)))$/i
       # rubocop:enable LineLength
       PROTOCOLS ||= %w(
         PROTOCOL_ANY
@@ -55,6 +55,11 @@ class Chef
       ).freeze
 
       VS_VLANS_STATE ||= %w(
+        STATE_ENABLED
+        STATE_DISABLED
+      ).freeze
+
+      VS_TRANSLATE_STATE ||= %w(
         STATE_ENABLED
         STATE_DISABLED
       ).freeze
@@ -98,6 +103,10 @@ class Chef
         set_or_return(:destination_wildmask, arg, :regex => NM_REGEX)
       end
 
+      def source_address(arg = nil)
+        set_or_return(:source_address, arg, :kind_of => String, :required => false)
+      end
+
       def destination_port(arg = nil)
         set_or_return(:destination_port, arg, :regex => PORTS_REGEX, :required => true)
       end
@@ -106,8 +115,12 @@ class Chef
         set_or_return(:type, arg, :equal_to => VS_TYPES)
       end
 
+      def description(arg = nil)
+        set_or_return(:description, arg, :kind_of => String, :required => false)
+      end
+
       def default_pool(arg = nil)
-        set_or_return(:default_pool, arg, :kind_of => String, :required => true)
+        set_or_return(:default_pool, arg, :kind_of => String, :required => false)
       end
 
       def protocol(arg = nil)
@@ -116,6 +129,14 @@ class Chef
 
       def vlan_state(arg = nil)
         set_or_return(:vlan_state, arg, :equal_to => VS_VLANS_STATE)
+      end
+
+      def translate_address(arg = nil)
+        set_or_return(:translate_address, arg, :kind_of => [TrueClass, FalseClass])
+      end
+
+      def translate_port(arg = nil)
+        set_or_return(:translate_port, arg, :kind_of => [TrueClass, FalseClass])
       end
 
       def vlans(arg = nil)
@@ -152,7 +173,7 @@ class Chef
 
       private
 
-      def set_defaults # rubocop:disable MethodLength
+      def set_defaults # rubocop:disable AbcSize, MethodLength
         @destination_wildmask = '255.255.255.255'
         @type = 'RESOURCE_TYPE_POOL'
         @protocol = 'PROTOCOL_TCP'
@@ -168,6 +189,10 @@ class Chef
         @fallback_persistence_profile = ''
         @rules = []
         @enabled = true
+        @description = ''
+        @translate_address = false
+        @translate_port = false
+        @source_address = '0.0.0.0/0'
       end
     end
   end

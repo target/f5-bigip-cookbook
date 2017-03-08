@@ -18,11 +18,24 @@
 #
 
 if defined?(ChefSpec)
+  ChefSpec.define_matcher :f5_ltm_irule
   ChefSpec.define_matcher :f5_ltm_monitor
   ChefSpec.define_matcher :f5_ltm_node
   ChefSpec.define_matcher :f5_ltm_pool
   ChefSpec.define_matcher :f5_ltm_virtual_server
   ChefSpec.define_matcher :f5_config_sync
+
+  def create_f5_ltm_irule(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:f5_ltm_irule, :create, resource_name)
+  end
+
+  def delete_f5_ltm_irule(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:f5_ltm_irule, :delete, resource_name)
+  end
+
+  def update_f5_ltm_irule(resource_name)
+    ChefSpec::Matchers::ResourceMatcher.new(:f5_ltm_irule, :update, resource_name)
+  end
 
   def create_f5_ltm_monitor(resource_name)
     ChefSpec::Matchers::ResourceMatcher.new(:f5_ltm_monitor, :create, resource_name)

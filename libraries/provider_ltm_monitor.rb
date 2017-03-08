@@ -36,7 +36,8 @@ class Chef
         @current_resource.name(@new_resource.name)
         @current_resource.monitor_name(@new_resource.monitor_name)
 
-        monitor = load_balancer.ltm.monitors.find { |m| m.name =~ %r{(^|\/)#{@new_resource.monitor_name}$} }
+        load_balancer.change_folder(@new_resource.monitor_name)
+        monitor = load_balancer.ltm.monitors.find { |m| m.name =~ %r{(^|\/)#{@new_resource.monitor_name}$} || m.name == @new_resource.monitor_name }
         @current_resource.exists = !monitor.nil?
         return @current_resource unless @current_resource.exists
 
@@ -54,6 +55,7 @@ class Chef
         set_template_destination if current_resource.dest_addr_port != new_resource.dest_addr_port
 
         set_template_interval if current_resource.interval != new_resource.interval
+        set_template_description if current_resource.description != new_resource.description
         set_template_timeout if current_resource.timeout != new_resource.timeout
 
         set_template_parent if current_resource.parent != new_resource.parent
@@ -74,7 +76,7 @@ class Chef
       #   f5 monitor object with data loaded from f5 API
       #
       def populate_current_resource(monitor)
-        %w(parent interval timeout dest_addr_type dest_addr_ip dest_addr_port user_values type).each do |item|
+        %w(parent description interval timeout dest_addr_type dest_addr_ip dest_addr_port user_values type).each do |item|
           current_resource.send(item, monitor.send(item))
         end
       end
@@ -106,6 +108,19 @@ class Chef
           Chef::Log.info "Monitor destination for #{new_resource} will fail if monitor is currently associated"
           load_balancer.client['LocalLB.Monitor'].set_template_destination([new_resource.monitor_name], [monitor_ip_port])
           update_current_resource(%w(dest_addr_type dest_addr_ip dest_addr_port))
+
+          new_resource.updated_by_last_action(true)
+        end
+      end
+
+      #
+      # Set monitor description
+      #
+      def set_template_description # rubocop:disable AbcSize
+        converge_by("Update #{new_resource} description") do
+          Chef::Log.info "Update #{new_resource} description"
+          current_resource.description(new_resource.description)
+          load_balancer.client['LocalLB.Monitor'].set_description([new_resource.monitor_name], [new_resource.description])
 
           new_resource.updated_by_last_action(true)
         end
@@ -156,6 +171,42 @@ class Chef
       end
 
       #
+      # Set Username String
+      #
+      def set_template_username_string
+        set_template_string(%w(TTYPE_HTTP TTYPE_HTTPS TTYPE_NNTP TTYPE_FTP TTYPE_POP3 TTYPE_SQL TTYPE_IMAP TTYPE_RADIUS TTYPE_RADIUS_ACCOUNTING TTYPE_LDAP TTYPE_WMI TTYPE_SIPTTYPE_TCP),
+                            'STYPE_USERNAME',
+                            'Username String')
+      end
+
+      #
+      # Set Password String
+      #
+      def set_template_password_string
+        set_template_string(%w(TTYPE_HTTP TTYPE_HTTPS TTYPE_NNTP TTYPE_FTP TTYPE_POP3 TTYPE_SQL TTYPE_IMAP TTYPE_RADIUS TTYPE_LDAP TTYPE_WMI TTYPE_SIPTTYPE_TCP),
+                            'STYPE_PASSWORD',
+                            'Password String')
+      end
+
+      def set_template_dns_query_name
+        set_template_string(%w(TTYPE_DNS),
+                            'STYPE_QUERY_NAME',
+                            'Query name')
+      end
+
+      def set_template_dns_query_type
+        set_template_string(%w(TTYPE_DNS),
+                            'STYPE_QUERY_TYPE',
+                            'Query type')
+      end
+
+      def set_template_dns_query_answer
+        set_template_string(%w(TTYPE_DNS),
+                            'STYPE_ANSWER_CONTAINS',
+                            'Query answer')
+      end
+
+      #
       # Wrapper function for setting string values for an f5 type
       #
       def set_template_string(monitor_types, string_type, type_description)
@@ -172,9 +223,14 @@ class Chef
       #
       #
       #
-      def set_user_values
+      def set_user_values # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
         set_template_send_string unless user_values_match? 'STYPE_SEND'
         set_template_receive_string unless user_values_match? 'STYPE_RECEIVE'
+        set_template_username_string unless user_values_match? 'STYPE_USERNAME'
+        set_template_password_string unless user_values_match? 'STYPE_PASSWORD'
+        set_template_dns_query_name unless user_values_match? 'STYPE_QUERY_NAME'
+        set_template_dns_query_type unless user_values_match? 'STYPE_QUERY_TYPE'
+        set_template_dns_query_answer unless user_values_match? 'STYPE_ANSWER_CONTAINS'
       end
 
       #
@@ -238,8 +294,8 @@ class Chef
       #
       def set_integer_for(type, value)
         load_balancer.client['LocalLB.Monitor']
-          .set_template_integer_property([new_resource.monitor_name],
-                                         [{ 'type' => type, 'value' => value }])
+                     .set_template_integer_property([new_resource.monitor_name],
+                                                    [{ 'type' => type, 'value' => value }])
       end
 
       #
@@ -251,9 +307,9 @@ class Chef
       def set_string_for(type) # rubocop:disable AccessorMethodName, AbcSize
         Chef::Log.info "Update #{new_resource} String '#{type}'"
         load_balancer.client['LocalLB.Monitor']
-          .set_template_string_property([new_resource.monitor_name],
-                                        [{ 'type' => type,
-                                           'value' => new_resource.user_values[type] }])
+                     .set_template_string_property([new_resource.monitor_name],
+                                                   [{ 'type' => type,
+                                                      'value' => new_resource.user_values[type] }])
         current_resource.user_values(current_resource.user_values.merge(type => new_resource.user_values[type]))
       end
 
@@ -277,6 +333,7 @@ class Chef
         [{
           'parent_template' => new_resource.parent,
           'interval' => new_resource.interval,
+          'description' => new_resource.description,
           'timeout' => new_resource.timeout,
           'dest_ipport' => monitor_ip_port,
           'is_read_only' => 'false',
@@ -313,9 +370,9 @@ class Chef
       end
 
       #
-      # Remove /Common from current_resource parent value if new_resource has no partition.
-      # This is because a partition is assumed to be /Common if not present when sent to 11.x
-      # APIs.  Also, on 10.x there are no partitions.
+      # Remove /Common from current_resource parent value if new_resource has no folder.
+      # This is because a folder is assumed to be /Common if not present when sent to 11.x
+      # APIs.  Also, on 10.x there are no folders.
       #
       def fix_parent_template_value
         return if new_resource.parent =~ %r{^/[A-Za-z0-9]+/.*}

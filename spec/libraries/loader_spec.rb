@@ -33,6 +33,7 @@ module F5
 
     let(:wanted_interfaces) do
       [
+        'Management.Partition',
         'LocalLB.Monitor',
         'LocalLB.NodeAddressV2',
         'LocalLB.Pool',

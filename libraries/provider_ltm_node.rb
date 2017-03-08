@@ -36,21 +36,25 @@ class Chef
         @current_resource.name(@new_resource.name)
         @current_resource.node_name(@new_resource.node_name)
 
-        # Check if node exists
-        node = load_balancer.ltm.nodes.find { |n| n['name'] =~ %r{(^|\/)#{@new_resource.node_name}$} }
-        @current_resource.exists = !node.nil?
-
         # If node exists load it's current state
-        @current_resource.enabled(node['enabled']) if @current_resource.exists
+        node = find_match_with_delete
+        @current_resource.enabled(node['enabled']) unless node.nil?
+        @current_resource.description(node['description']) unless node.nil?
+
+        # preserve status
+        if @new_resource.preserve_status
+          @new_resource.enabled(node['enabled']) unless node.nil?
+        end
         @current_resource
       end
 
-      def action_create
+      def action_create # rubocop:disable AbcSize
         # If node doesn't exist
         create_node unless current_resource.exists
 
         # If enable state isn't what we want
         set_enabled unless current_resource.enabled == new_resource.enabled
+        set_description unless current_resource.description == new_resource.description
       end
 
       def action_delete
@@ -60,7 +64,33 @@ class Chef
       private
 
       #
-      # Create a new node from new_resource attribtues
+      # Check if a node already exists, deleting any existing partially matching node
+      #
+      def find_match_with_delete # rubocop:disable AbcSize, MethodLength, CyclomaticComplexity, PerceivedComplexity
+        load_balancer.change_folder(@new_resource.node_name)
+        node = load_balancer.ltm.nodes.find { |n| n['name'] =~ %r{(^|\/)#{@new_resource.node_name}$} || n['name'] == @new_resource.node_name }
+        addr_node = load_balancer.ltm.nodes.find { |n| n['address'] =~ %r{(^|\/)#{@new_resource.address}$} || n['name'] == @new_resource.address }
+        @current_resource.exists = false
+        if !node.nil?
+          if !addr_node.nil?
+            if node['address'] == addr_node['address']
+              @current_resource.exists = true
+            else
+              delete_node(node['name'])
+              delete_node(addr_node['name'])
+            end
+          else
+            delete_node(node['name'])
+          end
+        elsif !addr_node.nil?
+          delete_node(addr_node['name'])
+        end
+
+        node if @current_resource.exists
+      end
+
+      #
+      # Create a new node from new_resource attributes
       #
       def create_node # rubocop:disable AbcSize
         converge_by("Create #{new_resource}") do
@@ -73,6 +103,17 @@ class Chef
       end
 
       #
+      # Set node as description
+      #
+      def set_description # rubocop:disable AbcSize
+        converge_by("#{enabled_msg} #{new_resource}") do
+          Chef::Log.info "#{enabled_msg} #{new_resource}"
+          load_balancer.client['LocalLB.NodeAddressV2'].set_description([new_resource.node_name], [new_resource.description])
+          new_resource.updated_by_last_action(true)
+        end
+      end
+
+      #
       # Set node as enabled or disabled given new_resource enabled attribute
       #
       def set_enabled # rubocop:disable AbcSize
@@ -80,7 +121,6 @@ class Chef
           Chef::Log.info "#{enabled_msg} #{new_resource}"
           load_balancer.client['LocalLB.NodeAddressV2'].set_session_enabled_state([new_resource.node_name], [enabled_state])
           current_resource.enabled(new_resource.enabled)
-          new_resource.updated_by_last_action(true)
 
           new_resource.updated_by_last_action(true)
         end
@@ -117,10 +157,18 @@ class Chef
       #
       # Delete node
       #
-      def delete_node
-        converge_by("Delete #{new_resource}") do
-          Chef::Log.info "Delete #{new_resource}"
-          load_balancer.client['LocalLB.NodeAddressV2'].delete_node_address([new_resource.node_name])
+      def delete_node(address = new_resource.node_name) # rubocop:disable AbcSize, MethodLength
+        converge_by("Delete #{address}") do
+          load_balancer.ltm.pools.all.each do |pool|
+            member = pool.members.find { |m| m.address == address }
+            next if member.nil?
+            members = []
+            members.push member
+            Chef::Log.info "Delete #{address} from #{pool.name}"
+            load_balancer.client['LocalLB.Pool'].remove_member_v2([pool.name], [members])
+          end
+          Chef::Log.info "Delete #{address}"
+          load_balancer.client['LocalLB.NodeAddressV2'].delete_node_address([address])
 
           new_resource.updated_by_last_action(true)
         end

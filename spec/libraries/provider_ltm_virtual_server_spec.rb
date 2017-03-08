@@ -91,7 +91,8 @@ describe Chef::Provider::F5LtmVirtualServer do
           }, {
             'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL',
             'profile_name' => '/Common/http'
-          }])
+          }]
+        )
         provider.new_resource.snat_type('SRC_TRANS_SNATPOOL')
         provider.new_resource.snat_pool('/Common/test_snat_pool')
         provider.new_resource.default_persistence_profile('/Common/test_persistence')
@@ -146,7 +147,8 @@ describe Chef::Provider::F5LtmVirtualServer do
           }, {
             'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL',
             'profile_name' => '/Common/http'
-          }])
+          }]
+        )
         provider.current_resource.snat_type('SRC_TRANS_SNATPOOL')
         provider.current_resource.snat_pool('/Common/test_snat_pool')
         provider.current_resource.default_persistence_profile('/Common/test_persistence')
@@ -365,12 +367,14 @@ describe Chef::Provider::F5LtmVirtualServer do
         provider.current_resource.profiles(lots_profiles)
         provider.new_resource.profiles(default_profiles)
         expect(locallb_virtual_server).to receive(:remove_all_rules).with(['test_virtual_server'])
-        expect(locallb_virtual_server).to receive(:remove_profile)
-          .with(['test_virtual_server'],
-                [[
-                  { 'profile_context' => 'PROFILE_CONTEXT_TYPE_CLIENT', 'profile_name' => '/Common/clientssl-insecure-compatible' },
-                  { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/http' },
-                  { 'profile_context' => 'PROFILE_CONTEXT_TYPE_SERVER', 'profile_name' => '/Common/serverssl-insecure-compatible' }]])
+        expect(locallb_virtual_server).to receive(:remove_profile).with(
+          ['test_virtual_server'],
+          [[
+            { 'profile_context' => 'PROFILE_CONTEXT_TYPE_CLIENT', 'profile_name' => '/Common/clientssl-insecure-compatible' },
+            { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/http' },
+            { 'profile_context' => 'PROFILE_CONTEXT_TYPE_SERVER', 'profile_name' => '/Common/serverssl-insecure-compatible' }
+          ]]
+        )
         provider.action_create
       end
 
