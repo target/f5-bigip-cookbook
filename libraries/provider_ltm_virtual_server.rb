@@ -72,26 +72,26 @@ class Chef
       def action_create # rubocop:disable CyclomaticComplexity, MethodLength, AbcSize, PerceivedComplexity
         create_virtual_server unless current_resource.exists
 
-        set_default_pool unless current_resource.default_pool == new_resource.default_pool
+        set_default_pool unless match?('default_pool')
 
-        set_destination_wildmask unless current_resource.destination_wildmask == new_resource.destination_wildmask
-        set_destination_address_port unless current_resource.destination_address == new_resource.destination_address
-        set_destination_address_port unless current_resource.destination_port == new_resource.destination_port
+        set_destination_wildmask unless match?('destination_wildmask')
+        set_destination_address_port unless match?('destination_address')
+        set_destination_address_port unless match?('destination_port')
 
         remove_all_rules unless match?('rules') && match?('profiles')
         remove_profiles unless match?('profiles')
 
-        set_enabled_state unless current_resource.enabled == new_resource.enabled
+        set_enabled_state unless match?('enabled')
 
-        update_vlans unless current_resource.vlans == new_resource.vlans
-        update_vlans unless current_resource.vlan_state == new_resource.vlan_state
+        update_vlans unless match?('vlans')
+        update_vlans unless match?('vlan_state')
 
-        update_snat unless current_resource.snat_type == new_resource.snat_type
-        update_snat unless current_resource.snat_pool == new_resource.snat_pool
+        update_snat unless match?('snat_type')
+        update_snat unless match?('snat_pool')
 
         update_default_persistence_profile if current_resource.default_persistence_profile_cnt > 1
-        update_default_persistence_profile unless current_resource.default_persistence_profile == new_resource.default_persistence_profile
-        update_fallback_persistence_profile(new_resource.fallback_persistence_profile) unless current_resource.fallback_persistence_profile == new_resource.fallback_persistence_profile
+        update_default_persistence_profile unless match?('default_persistence_profile')
+        update_fallback_persistence_profile(new_resource.fallback_persistence_profile) unless match?('fallback_persistence_profile')
 
         add_profiles unless match?('profiles')
         add_rules unless match?('rules')
@@ -112,7 +112,18 @@ class Chef
       # @return TrueClass, FalseClass
       #
       def match?(attr)
-        current_resource.send(attr) == new_resource.send(attr)
+        current_val = current_resource.send(attr)
+        new_val = new_resource.send(attr)
+
+        return true if current_val == new_val
+
+        # Order matters on rules so we cannot do length or intersection check
+        if current_val.is_a?(Array) && new_val.is_a?(Array) && attr != 'rules'
+          content_match = (current_val & new_val).eql?(current_val)
+          return content_match && current_val.length == new_val.length
+        end
+
+        false
       end
 
       #
