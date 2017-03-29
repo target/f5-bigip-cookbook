@@ -62,6 +62,7 @@ class Chef
           @current_resource.default_persistence_profile(vs.default_persistence_profile.first['profile_name'])
         end
         @current_resource.fallback_persistence_profile(vs.fallback_persistence_profile)
+        @current_resource.rules(vs.rules)
 
         @current_resource
       end
