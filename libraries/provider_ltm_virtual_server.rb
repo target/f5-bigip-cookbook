@@ -115,7 +115,9 @@ class Chef
         current_val = current_resource.send(attr)
         new_val = new_resource.send(attr)
 
-        return true if current_val == new_val
+        # We convert to strings here in case there is a type mismatch
+        # Example: `destination_port` passed as a String but F5 returns FixNum
+        return true if current_val.to_s == new_val.to_s
 
         # Order matters on rules so we cannot do length or intersection check
         if current_val.is_a?(Array) && new_val.is_a?(Array) && attr != 'rules'
