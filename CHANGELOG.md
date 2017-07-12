@@ -1,23 +1,23 @@
-f5-bigip Cookbook CHANGELOG
-==============================
+# f5-bigip Cookbook CHANGELOG
+
 This file is used to list changes made in each version of the f5-bigip cookbook.
 
-v0.5.2
-------
-* Remove subdirs in libraries folder (#9)
+## v0.5.2
 
-v0.5.1
-------
-* Bugfix: Load System.Inet interface (#7)
+- Remove subdirs in libraries folder (#9)
 
-v0.5.0
-------
-* Add support for non-ip node name to f5_ltm_node
+## v0.5.1
 
-v0.4.1
-------
-* Uptick to re-upload to supermarket after encountering CHEF-672 which caused knife to upload with missing library files
+- Bugfix: Load System.Inet interface (#7)
 
-v0.4.0
-------
-* Initial Release
+## v0.5.0
+
+- Add support for non-ip node name to f5_ltm_node
+
+## v0.4.1
+
+- Uptick to re-upload to supermarket after encountering CHEF-672 which caused knife to upload with missing library files
+
+## v0.4.0
+
+- Initial Release
