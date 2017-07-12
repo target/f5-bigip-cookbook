@@ -1,4 +1,4 @@
-source 'https://supermarket.getchef.com'
+source 'https://supermarket.chef.io'
 
 group :unit do
   cookbook 'testing', path: 'test/fixtures/cookbooks/testing'
