@@ -16,17 +16,17 @@ describe 'f5-bigip::provision_configsync' do
         'create' => {
           'monitors' => {
             'one' => {
-              'parent' => nil
+              'parent' => nil,
             },
             'two' => {
-              'parent' => '/Common/https'
-            }
-          }
-        }
+              'parent' => '/Common/https',
+            },
+          },
+        },
       },
       'f5-two' => {
-        'hostname' => 'f5-two'
-      }
+        'hostname' => 'f5-two',
+      },
     }
   end
 

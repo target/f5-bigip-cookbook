@@ -31,7 +31,7 @@ class Chef
         false
       end
 
-      def load_current_resource # rubocop:disable AbcSize
+      def load_current_resource
         @current_resource = Chef::Resource::F5LtmNode.new(@new_resource.name)
         @current_resource.name(@new_resource.name)
         @current_resource.node_name(@new_resource.node_name)
@@ -62,7 +62,7 @@ class Chef
       #
       # Create a new node from new_resource attribtues
       #
-      def create_node # rubocop:disable AbcSize
+      def create_node
         converge_by("Create #{new_resource}") do
           Chef::Log.info "Create #{new_resource}"
           load_balancer.client['LocalLB.NodeAddressV2'].create([new_resource.node_name], [new_resource.address], [0])
@@ -75,7 +75,7 @@ class Chef
       #
       # Set node as enabled or disabled given new_resource enabled attribute
       #
-      def set_enabled # rubocop:disable AbcSize
+      def set_enabled
         converge_by("#{enabled_msg} #{new_resource}") do
           Chef::Log.info "#{enabled_msg} #{new_resource}"
           load_balancer.client['LocalLB.NodeAddressV2'].set_session_enabled_state([new_resource.node_name], [enabled_state])

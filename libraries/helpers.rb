@@ -47,7 +47,7 @@ module F5
     # @param obj [Object] the soap mapping to be processed. While intended for
     #   SOAP::Mapping::Object, this method safely processes arbitrary objects
     # @return [Object] a Hash representing the SOAP::Mapping::Object
-    def self.soap_mapping_to_hash(obj) # rubocop:disable MethodLength
+    def self.soap_mapping_to_hash(obj)
       if obj.is_a?(::SOAP::Mapping::Object)
         h = {}
         obj.__xmlele.each do |ele|

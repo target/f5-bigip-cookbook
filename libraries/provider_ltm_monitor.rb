@@ -31,7 +31,7 @@ class Chef
         false
       end
 
-      def load_current_resource # rubocop:disable AbcSize
+      def load_current_resource
         @current_resource = Chef::Resource::F5LtmMonitor.new(@new_resource.name)
         @current_resource.name(@new_resource.name)
         @current_resource.monitor_name(@new_resource.monitor_name)
@@ -46,7 +46,7 @@ class Chef
         @current_resource
       end
 
-      def action_create # rubocop:disable AbcSize, CyclomaticComplexity, PerceivedComplexity
+      def action_create
         create_template unless current_resource.exists
 
         set_template_destination if current_resource.dest_addr_type != new_resource.dest_addr_type
@@ -82,7 +82,7 @@ class Chef
       #
       # Create a new monitor from new_resource attribtues
       #
-      def create_template # rubocop:disable AbcSize
+      def create_template
         converge_by("Create #{new_resource}") do
           Chef::Log.info "Create #{new_resource}"
           load_balancer.client['LocalLB.Monitor'].create_template(monitor_template, common_attributes)
@@ -100,7 +100,7 @@ class Chef
       #
       # Set monitor destination address
       #
-      def set_template_destination # rubocop:disable AbcSize
+      def set_template_destination
         converge_by("Update #{new_resource} destination") do
           Chef::Log.info "Update #{new_resource} destination"
           Chef::Log.info "Monitor destination for #{new_resource} will fail if monitor is currently associated"
@@ -180,7 +180,7 @@ class Chef
       #
       #
       #
-      def user_values_match?(type) # rubocop:disable AbcSize
+      def user_values_match?(type)
         # 'Skip' by returning true if new_resource is not set with the type
         return true unless new_resource.user_values.key? type
 
@@ -238,7 +238,7 @@ class Chef
       #
       def set_integer_for(type, value)
         load_balancer.client['LocalLB.Monitor']
-          .set_template_integer_property([new_resource.monitor_name],
+                     .set_template_integer_property([new_resource.monitor_name],
                                          [{ 'type' => type, 'value' => value }])
       end
 
@@ -248,10 +248,10 @@ class Chef
       # @param [String] type
       #   the F5 type to set the value for
       #
-      def set_string_for(type) # rubocop:disable AccessorMethodName, AbcSize
+      def set_string_for(type) # rubocop:disable AccessorMethodName
         Chef::Log.info "Update #{new_resource} String '#{type}'"
         load_balancer.client['LocalLB.Monitor']
-          .set_template_string_property([new_resource.monitor_name],
+                     .set_template_string_property([new_resource.monitor_name],
                                         [{ 'type' => type,
                                            'value' => new_resource.user_values[type] }])
         current_resource.user_values(current_resource.user_values.merge(type => new_resource.user_values[type]))
@@ -280,7 +280,7 @@ class Chef
           'timeout' => new_resource.timeout,
           'dest_ipport' => monitor_ip_port,
           'is_read_only' => 'false',
-          'is_directly_usable' => 'true'
+          'is_directly_usable' => 'true',
         }]
       end
 
@@ -295,8 +295,8 @@ class Chef
           'address_type' => new_resource.dest_addr_type,
           'ipport' => {
             'address' => new_resource.dest_addr_ip,
-            'port' => new_resource.dest_addr_port
-          }
+            'port' => new_resource.dest_addr_port,
+          },
         }
       end
 

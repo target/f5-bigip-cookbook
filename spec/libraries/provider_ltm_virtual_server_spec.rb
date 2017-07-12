@@ -16,7 +16,7 @@ describe Chef::Provider::F5LtmVirtualServer do
   let(:load_balancer) { double('F5::LoadBalancer', :client => client) }
   let(:client) do
     {
-      'LocalLB.VirtualServer' => locallb_virtual_server
+      'LocalLB.VirtualServer' => locallb_virtual_server,
     }
   end
   let(:locallb_virtual_server) { double('LocalLB.VirtualServer') }
@@ -87,10 +87,10 @@ describe Chef::Provider::F5LtmVirtualServer do
         provider.new_resource.profiles(
           [{
             'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL',
-            'profile_name' => '/Common/tcp'
+            'profile_name' => '/Common/tcp',
           }, {
             'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL',
-            'profile_name' => '/Common/http'
+            'profile_name' => '/Common/http',
           }])
         provider.new_resource.snat_type('SRC_TRANS_SNATPOOL')
         provider.new_resource.snat_pool('/Common/test_snat_pool')
@@ -142,10 +142,10 @@ describe Chef::Provider::F5LtmVirtualServer do
         provider.current_resource.profiles(
           [{
             'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL',
-            'profile_name' => '/Common/tcp'
+            'profile_name' => '/Common/tcp',
           }, {
             'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL',
-            'profile_name' => '/Common/http'
+            'profile_name' => '/Common/http',
           }])
         provider.current_resource.snat_type('SRC_TRANS_SNATPOOL')
         provider.current_resource.snat_pool('/Common/test_snat_pool')
@@ -333,13 +333,13 @@ describe Chef::Provider::F5LtmVirtualServer do
       let(:default_profiles) do
         [{
           'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL',
-          'profile_name' => '/Common/tcp'
+          'profile_name' => '/Common/tcp',
         }]
       end
       let(:some_profiles) do
         [
           { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/tcp' },
-          { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/http' }
+          { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/http' },
         ]
       end
       let(:lots_profiles) do
@@ -347,7 +347,7 @@ describe Chef::Provider::F5LtmVirtualServer do
           { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/tcp' },
           { 'profile_context' => 'PROFILE_CONTEXT_TYPE_CLIENT', 'profile_name' => '/Common/clientssl-insecure-compatible' },
           { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/http' },
-          { 'profile_context' => 'PROFILE_CONTEXT_TYPE_SERVER', 'profile_name' => '/Common/serverssl-insecure-compatible' }
+          { 'profile_context' => 'PROFILE_CONTEXT_TYPE_SERVER', 'profile_name' => '/Common/serverssl-insecure-compatible' },
         ]
       end
 

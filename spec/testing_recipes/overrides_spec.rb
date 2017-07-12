@@ -19,7 +19,7 @@ describe 'testing::overrides' do
             :vlan_state => 'STATE_ENABLED', :vlans => ['/Common/vlan123', '/Common/vlan234'],
             :profiles => [
               { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/tcp' },
-              { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/http' }
+              { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/http' },
             ],
             :snat_type => 'SRC_TRANS_SNATPOOL', :snat_pool => '/Common/snat_pool',
             :default_persistence_profile => '/Common/test_persistence_profile',

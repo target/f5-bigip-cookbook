@@ -15,7 +15,7 @@ describe_recipe 'f5-bigip::create' do
       'LocalLB.Monitor',
       'LocalLB.NodeAddressV2',
       'LocalLB.Pool',
-      'LocalLB.VirtualServer'
+      'LocalLB.VirtualServer',
     ]
   end
 
@@ -82,7 +82,7 @@ describe_recipe 'f5-bigip::create' do
       refute_kind_of(String, monitors, "Expected pool 'new' health checks to be https and udp")
 
       result = (monitors.size == 2 &&
-               (monitors.uniq.sort == ['/Common/https', '/Common/udp'] || monitors.uniq.sort == %w('https' 'udp')))
+               (monitors.uniq.sort == ['/Common/https', '/Common/udp'] || monitors.uniq.sort == %w(https udp)))
       assert result,
              "Expected pool 'new' health checks to be https and udp"
     end
@@ -91,7 +91,7 @@ describe_recipe 'f5-bigip::create' do
       expecting_members = [
         { 'address' => '/Common/10.10.10.10', 'port' => 80 },
         { 'address' => '/Common/10.10.10.11', 'port' => 80 },
-        { 'address' => '/Common/10.10.10.11', 'port' => 8081 }
+        { 'address' => '/Common/10.10.10.11', 'port' => 8081 },
       ]
 
       check_pool_members(client, 'new', expecting_members)
@@ -134,7 +134,7 @@ describe_recipe 'f5-bigip::create' do
 
     it 'creates a virtual server with default values' do
       exp_profiles = [
-        { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/tcp' }
+        { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/tcp' },
       ]
 
       virtual_servers = F5::LoadBalancer::Ltm::VirtualServers.new(client)
@@ -186,7 +186,7 @@ describe_recipe 'f5-bigip::create' do
         { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/tcp' },
         { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/http' },
         { 'profile_context' => 'PROFILE_CONTEXT_TYPE_CLIENT', 'profile_name' => '/Common/clientssl-insecure-compatible' },
-        { 'profile_context' => 'PROFILE_CONTEXT_TYPE_SERVER', 'profile_name' => '/Common/serverssl-insecure-compatible' }
+        { 'profile_context' => 'PROFILE_CONTEXT_TYPE_SERVER', 'profile_name' => '/Common/serverssl-insecure-compatible' },
       ]
       exp_snat_type = 'SRC_TRANS_AUTOMAP'
       exp_default_persistence_profile = [{ 'profile_name' => '/Common/universal', 'default_profile' => true }]

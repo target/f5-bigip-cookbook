@@ -17,7 +17,7 @@ describe Chef::Provider::F5LtmMonitor do
   let(:ltm) { double('F5::LoadBalancer::Ltm', :monitors => monitors) }
   let(:client) do
     {
-      'LocalLB.Monitor' => locallb_monitor
+      'LocalLB.Monitor' => locallb_monitor,
     }
   end
 
@@ -39,7 +39,7 @@ describe Chef::Provider::F5LtmMonitor do
       { 'template_name' => '/Common/https', 'template_type' => 'TTYPE_HTTPS' },
       { 'template_name' => '/Common/https_443', 'template_type' => 'TTYPE_HTTPS' },
       { 'template_name' => '/Common/mon_new_defaults', 'template_type' => 'TTYPE_HTTP' },
-      { 'template_name' => '/Common/test_monitor', 'template_type' => 'TTYPE_HTTPS' }
+      { 'template_name' => '/Common/test_monitor', 'template_type' => 'TTYPE_HTTPS' },
     ]
   end
   let(:monitor_names) do
@@ -56,7 +56,7 @@ describe Chef::Provider::F5LtmMonitor do
       { 'address_type' => 'ATYPE_STAR_ADDRESS_STAR_PORT', 'ipport' => { 'address' => '0.0.0.0', 'port' => 0 } },
       { 'address_type' => 'ATYPE_STAR_ADDRESS_EXPLICIT_PORT', 'ipport' => { 'address' => '0.0.0.0', 'port' => 443 } },
       { 'address_type' => 'ATYPE_STAR_ADDRESS_EXPLICIT_PORT', 'ipport' => { 'address' => '0.0.0.0', 'port' => 80 } },
-      { 'address_type' => 'ATYPE_STAR_ADDRESS_EXPLICIT_PORT', 'ipport' => { 'address' => '0.0.0.0', 'port' => 443 } }
+      { 'address_type' => 'ATYPE_STAR_ADDRESS_EXPLICIT_PORT', 'ipport' => { 'address' => '0.0.0.0', 'port' => 443 } },
     ]
   end
   let(:template_integer_property) do
@@ -125,7 +125,7 @@ describe Chef::Provider::F5LtmMonitor do
           { 'address_type' => 'ATYPE_STAR_ADDRESS_STAR_PORT', 'ipport' => { 'address' => '0.0.0.0', 'port' => 0 } },
           { 'address_type' => 'ATYPE_STAR_ADDRESS_EXPLICIT_PORT', 'ipport' => { 'address' => '0.0.0.0', 'port' => 443 } },
           { 'address_type' => 'ATYPE_STAR_ADDRESS_EXPLICIT_PORT', 'ipport' => { 'address' => '0.0.0.0', 'port' => 80 } },
-          { 'address_type' => 'ATYPE_EXPLICIT_ADDRESS_EXPLICIT_PORT', 'ipport' => { 'address' => '10.10.10.11', 'port' => 4443 } }
+          { 'address_type' => 'ATYPE_EXPLICIT_ADDRESS_EXPLICIT_PORT', 'ipport' => { 'address' => '10.10.10.11', 'port' => 4443 } },
         ]
       end
       let(:parent_template_list) do

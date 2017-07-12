@@ -17,9 +17,9 @@ describe 'f5-bigip::provision_delete' do
           'virtual_servers' => %w(del_one del_two),
           'pools' => %w(del_one del_two),
           'monitors' => %w(del_one del_two),
-          'nodes' => %w(del_one del_two)
-        }
-      }
+          'nodes' => %w(del_one del_two),
+        },
+      },
     }
   end
 

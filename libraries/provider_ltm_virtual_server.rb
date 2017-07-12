@@ -31,7 +31,7 @@ class Chef
         false
       end
 
-      def load_current_resource # rubocop:disable MethodLength, AbcSize
+      def load_current_resource
         @current_resource = Chef::Resource::F5LtmVirtualServer.new(@new_resource.name)
         @current_resource.name(@new_resource.name)
         @current_resource.vs_name(@new_resource.vs_name)
@@ -69,7 +69,7 @@ class Chef
       #
       # Create action for f5_icontrol_virtual_server provider
       #
-      def action_create # rubocop:disable CyclomaticComplexity, MethodLength, AbcSize, PerceivedComplexity
+      def action_create
         create_virtual_server unless current_resource.exists
 
         set_default_pool unless current_resource.default_pool == new_resource.default_pool
@@ -118,11 +118,11 @@ class Chef
       #
       # Create a new virtual server given new_resource attributes
       #
-      def create_virtual_server # rubocop:disable AbcSize, MethodLength
+      def create_virtual_server
         converge_by("Create #{new_resource}") do
           Chef::Log.info("Create #{new_resource}")
           load_balancer.client['LocalLB.VirtualServer']
-            .create new_virtual_server_defenition, [new_resource.destination_wildmask],
+                       .create new_virtual_server_defenition, [new_resource.destination_wildmask],
                     new_virtual_server_resource, [new_resource.profiles]
           update_current_resource(%w(destination_address destination_port protocol
                                      destination_wildmask type default_pool profiles))
@@ -136,7 +136,7 @@ class Chef
       #
       # Set virtual server default pool based on new_resource default_pool parameter
       #
-      def set_default_pool # rubocop:disable AbcSize
+      def set_default_pool
         converge_by("Updating #{new_resource} default pool to #{new_resource.default_pool}") do
           Chef::Log.info("Updating #{new_resource} default pool to #{new_resource.default_pool}")
           load_balancer.client['LocalLB.VirtualServer'].set_default_pool_name([new_resource.vs_name], [new_resource.default_pool])
@@ -149,7 +149,7 @@ class Chef
       #
       # Set virtual server wildmask based on new_resource wildmask parameter
       #
-      def set_destination_wildmask # rubocop:disable AbcSize
+      def set_destination_wildmask
         converge_by("Updating #{new_resource} destination wildmask to #{new_resource.destination_wildmask}") do
           Chef::Log.info("Updating #{new_resource} destination wildmask to #{new_resource.destination_wildmask}")
           load_balancer.client['LocalLB.VirtualServer'].set_wildmask([new_resource.vs_name], [new_resource.destination_wildmask])
@@ -162,7 +162,7 @@ class Chef
       #
       # Set virtual server destination address/port given new_resource parameters
       #
-      def set_destination_address_port # rubocop:disable AbcSize
+      def set_destination_address_port
         converge_by("Updating #{new_resource} destination address to #{new_resource.destination_address}:#{new_resource.destination_port}") do
           Chef::Log.info("Updating #{new_resource} destination address to #{new_resource.destination_address}:#{new_resource.destination_port}")
           load_balancer.client['LocalLB.VirtualServer'].set_destination_v2(
@@ -190,7 +190,7 @@ class Chef
       #
       # Add any missing profiles associated with current_resource
       #
-      def add_profiles # rubocop:disable AbcSize
+      def add_profiles
         matching_profiles = new_resource.profiles & current_resource.profiles
         missing_profiles = new_resource.profiles - matching_profiles
 
@@ -208,7 +208,7 @@ class Chef
       #
       # Remove any extra profiles associated with current_resource that shouldn't be
       #
-      def remove_profiles # rubocop:disable AbcSize
+      def remove_profiles
         matching_profiles = new_resource.profiles & current_resource.profiles
         extra_profiles = current_resource.profiles - matching_profiles
 
@@ -286,7 +286,7 @@ class Chef
           'name' => new_resource.vs_name,
           'address' => new_resource.destination_address,
           'port' => new_resource.destination_port,
-          'protocol' => new_resource.protocol
+          'protocol' => new_resource.protocol,
         }]
       end
 
@@ -299,18 +299,18 @@ class Chef
       def new_virtual_server_resource
         [{
           'type' => new_resource.type,
-          'default_pool_name' => new_resource.default_pool
+          'default_pool_name' => new_resource.default_pool,
         }]
       end
 
       #
       # Update vlans assigned to virtual server
       #
-      def update_vlans # rubocop:disable AbcSize
+      def update_vlans
         converge_by("Updating #{new_resource} vlans") do
           Chef::Log.info "Updating #{new_resource} vlans"
           load_balancer.client['LocalLB.VirtualServer']
-            .set_vlan([new_resource.vs_name],
+                       .set_vlan([new_resource.vs_name],
                       [{ 'state' => new_resource.vlan_state,
                          'vlans' => new_resource.vlans }])
           current_resource.vlans(new_resource.vlans)
@@ -320,7 +320,7 @@ class Chef
         end
       end
 
-      def update_snat # rubocop:disable AbcSize
+      def update_snat
         converge_by("Updating #{new_resource} snat") do
           Chef::Log.info "Updating #{new_resource} snat"
 
@@ -335,21 +335,21 @@ class Chef
 
       def update_snat_none
         load_balancer.client['LocalLB.VirtualServer']
-          .set_snat_none([new_resource.vs_name])
+                     .set_snat_none([new_resource.vs_name])
 
         new_resource.updated_by_last_action(true)
       end
 
       def update_snat_automap
         load_balancer.client['LocalLB.VirtualServer']
-          .set_snat_automap([new_resource.vs_name])
+                     .set_snat_automap([new_resource.vs_name])
 
         new_resource.updated_by_last_action(true)
       end
 
       def update_snat_pool(pool)
         load_balancer.client['LocalLB.VirtualServer']
-          .set_snat_pool([new_resource.vs_name], [pool])
+                     .set_snat_pool([new_resource.vs_name], [pool])
 
         new_resource.updated_by_last_action(true)
       end
@@ -364,7 +364,7 @@ class Chef
       def default_persistence_profile_hash
         [{
           'profile_name' => new_resource.default_persistence_profile,
-          'default_profile' => 'true'
+          'default_profile' => 'true',
         }]
       end
 
@@ -385,7 +385,7 @@ class Chef
       #
       def remove_all_persistence_profiles
         load_balancer.client['LocalLB.VirtualServer']
-          .remove_all_persistence_profiles [new_resource.vs_name]
+                     .remove_all_persistence_profiles [new_resource.vs_name]
         current_resource.default_persistence_profile('')
 
         new_resource.updated_by_last_action(true)
@@ -396,7 +396,7 @@ class Chef
       #
       def add_persistence_profile
         load_balancer.client['LocalLB.VirtualServer']
-          .add_persistence_profile [new_resource.vs_name],
+                     .add_persistence_profile [new_resource.vs_name],
                                    [default_persistence_profile_hash]
         current_resource.default_persistence_profile(new_resource.default_persistence_profile)
 
@@ -410,7 +410,7 @@ class Chef
         converge_by("Updating #{new_resource} fallback persistence profile") do
           Chef::Log.info("Updating #{new_resource} fallback persistence profile")
           load_balancer.client['LocalLB.VirtualServer']
-            .set_fallback_persistence_profile [new_resource.vs_name],
+                       .set_fallback_persistence_profile [new_resource.vs_name],
                                               [profile_name]
           current_resource.fallback_persistence_profile(profile_name)
 
@@ -440,7 +440,7 @@ class Chef
         converge_by("Removing all rules on #{new_resource}") do
           Chef::Log.info("Removing all rules on #{new_resource}")
           load_balancer.client['LocalLB.VirtualServer']
-            .remove_all_rules [new_resource.vs_name]
+                       .remove_all_rules [new_resource.vs_name]
           current_resource.rules([])
 
           new_resource.updated_by_last_action(true)
@@ -450,11 +450,11 @@ class Chef
       #
       # Add the virtual server rules
       #
-      def add_rules # rubocop:disable AbcSize
+      def add_rules
         converge_by("Adding rules to #{new_resource}") do
           Chef::Log.info("Adding rules to #{new_resource}")
           load_balancer.client['LocalLB.VirtualServer']
-            .add_rule [new_resource.vs_name],
+                       .add_rule [new_resource.vs_name],
                       [rules_datastructure]
           current_resource.rules(new_resource.rules)
 

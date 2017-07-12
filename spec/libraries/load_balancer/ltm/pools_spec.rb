@@ -19,36 +19,36 @@ describe F5::LoadBalancer::Ltm::Pools do
       [
         {
           'address' => '10.10.10.10',
-          'port' => '80'
+          'port' => '80',
         },
         {
           'address' => '10.10.10.11',
-          'port' => '80'
-        }
+          'port' => '80',
+        },
       ],
       [
         {
           'address' => '10.10.10.10',
-          'port' => '443'
+          'port' => '443',
         },
         {
           'address' => '10.10.10.10',
-          'port' => '444'
-        }
-      ]
+          'port' => '444',
+        },
+      ],
     ]
   end
   let(:members_statuses) do
     [
       [
         'availability_status' => 'AVAILABILITY_STATUS_RED', 'enabled_status' => 'ENABLED_STATUS_DISABLED', 'status_description' => 'The pool is down',
-        'availability_status' => 'AVAILABILITY_STATUS_RED', 'enabled_status' => 'ENABLED_STATUS_ENABLED', 'status_description' => 'The pool is down'
+        'availability_status' => 'AVAILABILITY_STATUS_RED', 'enabled_status' => 'ENABLED_STATUS_ENABLED', 'status_description' => 'The pool is down',
       ],
       [
         'availability_status' => 'AVAILABILITY_STATUS_RED', 'enabled_status' => 'ENABLED_STATUS_ENABLED', 'status_description' => 'The pool is down',
-        'availability_status' => 'AVAILABILITY_STATUS_RED', 'enabled_status' => 'ENABLED_STATUS_DISABLED', 'status_description' => 'The pool is down'
+        'availability_status' => 'AVAILABILITY_STATUS_RED', 'enabled_status' => 'ENABLED_STATUS_DISABLED', 'status_description' => 'The pool is down',
 
-      ]
+      ],
     ]
   end
   let(:monitors) do
@@ -58,17 +58,17 @@ describe F5::LoadBalancer::Ltm::Pools do
         'monitor_rule' => {
           'type' => 'MONITOR_RULE_TYPE_AND_LIST',
           'quorum' => 2,
-          'monitor_templates' => ['/Common/tcp', '/Common/https']
-        }
+          'monitor_templates' => ['/Common/tcp', '/Common/https'],
+        },
       },
       {
         'pool_name' => '/Common/pool_test2',
         'monitor_rule' => {
           'type' => 'MONITOR_RULE_TYPE_SINGLE',
           'quorum' => 2,
-          'monitor_templates' => ['/Common/https']
-        }
-      }
+          'monitor_templates' => ['/Common/https'],
+        },
+      },
     ]
   end
   let(:lb_methods) do

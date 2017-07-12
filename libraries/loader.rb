@@ -18,7 +18,7 @@
 #
 
 module F5
-  # rubocop:disable ClassVars, MethodLength
+  # rubocop:disable ClassVars
   # Loader function to load data from f5 to compare resources to
   module Loader
     include F5::Helpers
@@ -56,7 +56,7 @@ module F5
         'Management.DeviceGroup',
         'System.ConfigSync',
         'System.Failover',
-        'System.Inet'
+        'System.Inet',
       ]
     end
 
@@ -65,7 +65,7 @@ module F5
     #
     # @return [F5::LoadBalancer] instance of F5::LoadBalancer matching the resource
     #
-    def load_balancer # rubocop:disable AbcSize
+    def load_balancer
       raise 'Can not determine hostname to load client for' if @new_resource.f5.nil?
       @@load_balancers ||= []
       add_lb(@new_resource.f5) if @@load_balancers.empty?
@@ -89,7 +89,7 @@ module F5
     #
     # @return [Hash] Hash of interfaces from F5::IControl
     #
-    def create_icontrol(hostname) # rubocop:disable AbcSize
+    def create_icontrol(hostname)
       load_dependencies
       f5_creds = chef_vault_item(node['f5-bigip']['credentials']['databag'], node['f5-bigip']['credentials']['item'])
       if node['f5-bigip']['credentials']['host_is_key']

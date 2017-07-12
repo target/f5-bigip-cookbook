@@ -15,7 +15,7 @@ describe_recipe 'f5-bigip::default' do
       'LocalLB.Monitor',
       'LocalLB.NodeAddressV2',
       'LocalLB.Pool',
-      'LocalLB.VirtualServer'
+      'LocalLB.VirtualServer',
     ]
   end
 
@@ -161,7 +161,7 @@ describe_recipe 'f5-bigip::default' do
 
     it 'modifies an existing virtual server' do
       exp_profiles = [
-        { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/tcp' }
+        { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/tcp' },
       ]
 
       virtual_servers = F5::LoadBalancer::Ltm::VirtualServers.new(client)
@@ -183,7 +183,7 @@ describe_recipe 'f5-bigip::default' do
         { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/tcp' },
         { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/http' },
         { 'profile_context' => 'PROFILE_CONTEXT_TYPE_CLIENT', 'profile_name' => '/Common/clientssl-insecure-compatible' },
-        { 'profile_context' => 'PROFILE_CONTEXT_TYPE_SERVER', 'profile_name' => '/Common/serverssl-insecure-compatible' }
+        { 'profile_context' => 'PROFILE_CONTEXT_TYPE_SERVER', 'profile_name' => '/Common/serverssl-insecure-compatible' },
       ]
       exp_snat_type = 'SRC_TRANS_AUTOMAP'
       exp_default_persistence_profile = [{ 'profile_name' => '/Common/ssl', 'default_profile' => true }]
@@ -217,7 +217,7 @@ describe_recipe 'f5-bigip::default' do
       exp_vlans = { 'state' => 'STATE_DISABLED', 'vlans' => [] }
       exp_enabled = true
       exp_profiles = [
-        { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/tcp' }
+        { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/tcp' },
       ]
       exp_snat_type = 'SRC_TRANS_NONE'
       exp_default_persistence_profile = []

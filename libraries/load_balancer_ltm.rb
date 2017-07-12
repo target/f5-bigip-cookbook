@@ -31,7 +31,7 @@ module F5
         @client = client
       end
 
-      def nodes # rubocop:disable AbcSize
+      def nodes
         @nodes ||= begin
           node_list = client['LocalLB.NodeAddressV2'].get_list
 

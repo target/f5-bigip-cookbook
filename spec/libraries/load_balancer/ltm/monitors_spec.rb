@@ -19,7 +19,7 @@ describe F5::LoadBalancer::Ltm::Monitors do
       { 'template_name' => '/Common/https', 'template_type' => 'TTYPE_HTTPS' },
       { 'template_name' => '/Common/https_443', 'template_type' => 'TTYPE_HTTPS' },
       { 'template_name' => '/Common/mon_new_defaults', 'template_type' => 'TTYPE_HTTPS' },
-      { 'template_name' => '/Common/mon_new', 'template_type' => 'TTYPE_HTTP' }
+      { 'template_name' => '/Common/mon_new', 'template_type' => 'TTYPE_HTTP' },
     ]
   end
   let(:monitor_names) do
@@ -36,7 +36,7 @@ describe F5::LoadBalancer::Ltm::Monitors do
       { 'address_type' => 'ATYPE_STAR_ADDRESS_STAR_PORT', 'ipport' => { 'address' => '0.0.0.0', 'port' => 0 } },
       { 'address_type' => 'ATYPE_STAR_ADDRESS_EXPLICIT_PORT', 'ipport' => { 'address' => '0.0.0.0', 'port' => 443 } },
       { 'address_type' => 'ATYPE_STAR_ADDRESS_EXPLICIT_PORT', 'ipport' => { 'address' => '0.0.0.0', 'port' => 443 } },
-      { 'address_type' => 'ATYPE_STAR_ADDRESS_EXPLICIT_PORT', 'ipport' => { 'address' => '0.0.0.0', 'port' => 8081 } }
+      { 'address_type' => 'ATYPE_STAR_ADDRESS_EXPLICIT_PORT', 'ipport' => { 'address' => '0.0.0.0', 'port' => 8081 } },
     ]
   end
   let(:monitors) do

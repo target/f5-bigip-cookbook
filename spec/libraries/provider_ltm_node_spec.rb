@@ -16,7 +16,7 @@ describe Chef::Provider::F5LtmNode do
   let(:load_balancer) { double('F5::LoadBalancer', :client => client) }
   let(:client) do
     {
-      'LocalLB.NodeAddressV2' => locallb_node_address_v2
+      'LocalLB.NodeAddressV2' => locallb_node_address_v2,
     }
   end
   let(:locallb_node_address_v2) { double('LocalLB.NodeAddressV2') }

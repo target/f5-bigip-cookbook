@@ -16,7 +16,7 @@ describe Chef::Provider::F5LtmPool do
   let(:load_balancer) { double('F5::LoadBalancer', :client => client) }
   let(:client) do
     {
-      'LocalLB.Pool' => locallb_pool
+      'LocalLB.Pool' => locallb_pool,
     }
   end
   let(:locallb_pool) { double('LocalLB.Pool') }
@@ -41,7 +41,7 @@ describe Chef::Provider::F5LtmPool do
     [
       { 'address' => '10.10.10.11', 'port' => 80, 'enabled' => true },
       { 'address' => '10.10.10.11', 'port' => 8081, 'enabled' => false },
-      { 'address' => '10.10.10.10', 'port' => 80, 'enabled' => true }
+      { 'address' => '10.10.10.10', 'port' => 80, 'enabled' => true },
     ]
   end
 

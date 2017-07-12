@@ -16,11 +16,11 @@ describe 'f5-bigip::provision_create' do
         'create' => {
           'nodes' => {
             '10.10.10.10' => { 'enabled' => true },
-            '10.10.10.11' => { 'enabled' => false }
+            '10.10.10.11' => { 'enabled' => false },
           },
           'monitors' => {
             'one' => {
-              'parent' => nil
+              'parent' => nil,
             },
             'two' => {
               'parent' => '/Common/http',
@@ -29,34 +29,34 @@ describe 'f5-bigip::provision_create' do
               'dest_addr_type' => 'ATYPE_STAR_ADDRESS',
               'dest_addr_ip' => '12.10.12.10',
               'dest_addr_port' => 1234,
-              'user_values' => { 'test' => 'me' }
-            }
+              'user_values' => { 'test' => 'me' },
+            },
           },
           'pools' => {
             'default' => {
               'lb_method' => 'LB_METHOD_ROUND_ROBIN',
-              'monitors' => %w(http mon_new_defaults)
+              'monitors' => %w(http mon_new_defaults),
             },
             'user' => {
               'lb_method' => 'LB_METHOD_ROUND_ROBIN',
               'monitors' => %w(http https),
               'members' => [
                 { 'address' => '10.10.10.11', 'port' => 80, 'enabled' => true },
-                { 'address' => '10.10.10.12', 'port' => 80, 'enabled' => false }
+                { 'address' => '10.10.10.12', 'port' => 80, 'enabled' => false },
               ],
-              'enabled' => false
-            }
+              'enabled' => false,
+            },
           },
           'virtual_servers' => {
             'default-one' => {
               'destination_address' => '10.10.10.10',
               'destination_port' => 80,
-              'default_pool' => 'test'
+              'default_pool' => 'test',
             },
             'default-two' => {
               'destination_address' => '10.10.10.11',
               'destination_port' => 443,
-              'default_pool' => 'test2'
+              'default_pool' => 'test2',
             },
             'user-one' => {
               'destination_address' => '10.10.10.10',
@@ -66,14 +66,14 @@ describe 'f5-bigip::provision_create' do
               'vlans' => ['/Common/vlan123', '/Common/vlan234'],
               'profiles' => [
                 { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/tcp' },
-                { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/http' }
+                { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/http' },
               ],
               'snat_type' => 'SRC_TRANS_SNATPOOL',
               'snat_pool' => '/Common/snat_pool',
               'default_persistence_profile' => '/Common/test_persistence_profile',
               'fallback_persistence_profile' => '/Common/test2_persistence_profile',
               'rules' => ['/Common/_sys_auth_ldap', '/Common/_sys_auth_radius'],
-              'enabled' => false
+              'enabled' => false,
             },
             'user-two' => {
               'destination_address' => '10.10.10.11',
@@ -82,16 +82,16 @@ describe 'f5-bigip::provision_create' do
               'vlans' => ['/Common/vlan123', '/Common/vlan234'],
               'profiles' => [
                 { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/udp' },
-                { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/http' }
+                { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/http' },
               ],
               'snat_type' => 'SRC_TRANS_AUTOMAP',
               'default_persistence_profile' => '/Common/test2_persistence_profile',
               'fallback_persistence_profile' => '/Common/test_persistence_profile',
-              'rules' => ['/Common/_sys_auth_radius', '/Common/_sys_auth_ldap']
-            }
-          }
-        }
-      }
+              'rules' => ['/Common/_sys_auth_radius', '/Common/_sys_auth_ldap'],
+            },
+          },
+        },
+      },
     }
   end
 
@@ -157,7 +157,7 @@ describe 'f5-bigip::provision_create' do
             :monitors => %w(http https),
             :members => [
               { 'address' => '10.10.10.11', 'port' => 80, 'enabled' => true },
-              { 'address' => '10.10.10.12', 'port' => 80, 'enabled' => false }
+              { 'address' => '10.10.10.12', 'port' => 80, 'enabled' => false },
             ]
     resource = chef_run.f5_ltm_pool('f5-one-user')
     expect(resource).to notify('f5_config_sync[f5-one]').to(:run).delayed
@@ -173,7 +173,7 @@ describe 'f5-bigip::provision_create' do
             :vlan_state => 'STATE_DISABLED', :vlans => [],
             :profiles => [{
               'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL',
-              'profile_name' => '/Common/tcp'
+              'profile_name' => '/Common/tcp',
             }],
             :snat_type => 'SRC_TRANS_NONE', :snat_pool => '',
             :default_persistence_profile => '',
@@ -193,7 +193,7 @@ describe 'f5-bigip::provision_create' do
             :vlan_state => 'STATE_DISABLED', :vlans => [],
             :profiles => [{
               'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL',
-              'profile_name' => '/Common/tcp'
+              'profile_name' => '/Common/tcp',
             }],
             :snat_type => 'SRC_TRANS_NONE', :snat_pool => '',
             :default_persistence_profile => '',
@@ -214,7 +214,7 @@ describe 'f5-bigip::provision_create' do
             :vlans => ['/Common/vlan123', '/Common/vlan234'],
             :profiles => [
               { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/tcp' },
-              { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/http' }
+              { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/http' },
             ],
             :snat_type => 'SRC_TRANS_SNATPOOL', :snat_pool => '/Common/snat_pool',
             :default_persistence_profile => '/Common/test_persistence_profile',
@@ -233,7 +233,7 @@ describe 'f5-bigip::provision_create' do
             :vlans => ['/Common/vlan123', '/Common/vlan234'],
             :profiles => [
               { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/udp' },
-              { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/http' }
+              { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/http' },
             ],
             :snat_type => 'SRC_TRANS_AUTOMAP', :snat_pool => '',
             :default_persistence_profile => '/Common/test2_persistence_profile',

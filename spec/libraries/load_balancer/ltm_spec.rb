@@ -5,7 +5,7 @@ describe F5::LoadBalancer::Ltm do
   let(:nodes) do
     [
       { 'name' => 'node-test1', 'address' => '10.10.10.10', 'enabled' => true },
-      { 'name' => 'node-test2', 'address' => '10.10.10.11', 'enabled' => false }
+      { 'name' => 'node-test2', 'address' => '10.10.10.11', 'enabled' => false },
     ]
   end
   let(:monitors) { instance_double('F5::LoadBalancer::Ltm::Monitors') }

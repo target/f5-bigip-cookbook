@@ -31,7 +31,7 @@ class Chef
         false
       end
 
-      def load_current_resource # rubocop:disable MethodLength, AbcSize
+      def load_current_resource
         @current_resource = Chef::Resource::F5LtmPool.new(@new_resource.name)
         @current_resource.name(@new_resource.name)
         @current_resource.pool_name(@new_resource.pool_name)
@@ -50,7 +50,7 @@ class Chef
         @current_resource
       end
 
-      def action_create # rubocop:disable AbcSize
+      def action_create
         create_pool unless current_resource.exists
 
         set_lb_method unless current_resource.lb_method == new_resource.lb_method
@@ -69,7 +69,7 @@ class Chef
       #
       # Create a new pool given new_resource attributes
       #
-      def create_pool # rubocop:disable MethodLength, AbcSize
+      def create_pool
         converge_by("Create #{new_resource} pool") do
           Chef::Log.info "Create #{new_resource} pool"
           members = new_resource.members.map do |member|
@@ -89,7 +89,7 @@ class Chef
       #
       # Set load balancing method given new_resource lb_method attribute
       #
-      def set_lb_method # rubocop:disable AbcSize
+      def set_lb_method
         converge_by("Update #{new_resource} pool lb method") do
           Chef::Log.info "Update #{new_resource} pool lb method"
           load_balancer.client['LocalLB.Pool'].set_lb_method([new_resource.pool_name], [new_resource.lb_method])
@@ -102,7 +102,7 @@ class Chef
       #
       # Set pool members for pool given new_resource members parameter
       #
-      def set_members # rubocop:disable AbcSize, MethodLength
+      def set_members
         converge_by("Update #{new_resource} with additional members") do
           Chef::Log.info "Update #{new_resource} with additional members"
           members = []
@@ -121,7 +121,7 @@ class Chef
       #
       # Set pool health monitors given new_resource monitors parameter
       #
-      def set_health_monitors # rubocop:disable AbcSize, MethodLength
+      def set_health_monitors
         converge_by("Update #{new_resource} monitors") do
           Chef::Log.info "Update #{new_resource} monitors"
           load_balancer.client['LocalLB.Pool'].set_monitor_association(

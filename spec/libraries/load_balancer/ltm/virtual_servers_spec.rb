@@ -27,7 +27,7 @@ describe F5::LoadBalancer::Ltm::VirtualServers do
   let(:destinations) do
     [
       { 'address' => '10.10.10.10', 'port' => 80 },
-      { 'address' => '10.10.10.11', 'port' => 443 }
+      { 'address' => '10.10.10.11', 'port' => 443 },
     ]
   end
   let(:types) do
@@ -42,19 +42,19 @@ describe F5::LoadBalancer::Ltm::VirtualServers do
   let(:profiles) do
     [
       ['profile_type' => 'PROFILE_TYPE_TCP', 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/tcp'],
-      ['profile_type' => 'PROFILE_TYPE_TCP', 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/tcp']
+      ['profile_type' => 'PROFILE_TYPE_TCP', 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/tcp'],
     ]
   end
   let(:statuses) do
     [
       'availability_status' => 'AVAILABILITY_STATUS_RED', 'enabled_status' => 'ENABLED_STATUS_DISABLED', 'status_description' => 'The children pool member(s) are down',
-      'availability_status' => 'AVAILABILITY_STATUS_RED', 'enabled_status' => 'ENABLED_STATUS_ENABLED', 'status_description' => 'The children pool member(s) are down'
+      'availability_status' => 'AVAILABILITY_STATUS_RED', 'enabled_status' => 'ENABLED_STATUS_ENABLED', 'status_description' => 'The children pool member(s) are down',
     ]
   end
   let(:vlans) do
     [
       'state' => 'STATE_DISABLED', 'vlans' => [],
-      'state' => 'STATE_ENABLED', 'vlans' => ['/Common/vagrant_int']
+      'state' => 'STATE_ENABLED', 'vlans' => ['/Common/vagrant_int'],
     ]
   end
   let(:snat_types) do
@@ -66,7 +66,7 @@ describe F5::LoadBalancer::Ltm::VirtualServers do
   let(:default_persistence_profiles) do
     [
       [{ 'profile_name' => '/Common/cookie', 'default_profile' => true }],
-      [{ 'profile_name' => '/Common/ssl', 'default_profile' => false }]
+      [{ 'profile_name' => '/Common/ssl', 'default_profile' => false }],
     ]
   end
   let(:fallback_persistence_profiles) do
@@ -76,18 +76,18 @@ describe F5::LoadBalancer::Ltm::VirtualServers do
     [
       [
         { 'rule_name' => '/Common/test_rule1', 'priority' => 2 },
-        { 'rule_name' => '/Common/test_rule2', 'priority' => 1 }
+        { 'rule_name' => '/Common/test_rule2', 'priority' => 1 },
       ],
-      []
+      [],
     ]
   end
   let(:exp_rules) do
     [
       [
         '/Common/test_rule2',
-        '/Common/test_rule1'
+        '/Common/test_rule1',
       ],
-      []
+      [],
     ]
   end
   let(:virtual_servers) { F5::LoadBalancer::Ltm::VirtualServers.new(client) }

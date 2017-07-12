@@ -26,7 +26,6 @@ class Chef
     class F5LtmVirtualServer < Chef::Resource
       PORTS_REGEX ||= /^(6553[0-5]|655[0-2]\d|65[0-4]\d\d|6[0-4]\d{3}|[1-5]\d{4}|[1-9]\d{0,3}|0)$/
       IP_REGEX ||= /^(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/
-      # rubocop:disable LineLength
       NM_REGEX ||= /^(((128|192|224|240|248|252|254)\.0\.0\.0)|(255\.(0|128|192|224|240|248|252|254)\.0\.0)|(255\.255\.(0|128|192|224|240|248|252|254)\.0)|(255\.255\.255\.(0|128|192|224|240|248|252|254|255)))$/i
       # rubocop:enable LineLength
       PROTOCOLS ||= %w(
@@ -152,7 +151,7 @@ class Chef
 
       private
 
-      def set_defaults # rubocop:disable MethodLength
+      def set_defaults
         @destination_wildmask = '255.255.255.255'
         @type = 'RESOURCE_TYPE_POOL'
         @protocol = 'PROTOCOL_TCP'
@@ -160,7 +159,7 @@ class Chef
         @vlans = []
         @profiles = [{
           'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL',
-          'profile_name' => '/Common/tcp'
+          'profile_name' => '/Common/tcp',
         }]
         @snat_type = 'SRC_TRANS_NONE'
         @snat_pool = ''
