@@ -33,7 +33,7 @@ module F5
       end
 
       if node['dev_mode']
-        Chef::DataBagItem.load(bag, item)
+        data_bag_item(bag, item)
       else
         ChefVault::Item.load(bag, item)
       end
