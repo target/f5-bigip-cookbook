@@ -10,10 +10,9 @@ addons:
 
 before_install:
   - eval "$(/opt/chefdk/bin/chef shell-init bash)"
+  - /opt/chefdk/bin/chef exec bundle install
 
 install: "bundle install --no-cache"
 
 script:
-  - rubocop
-  - foodcritic -f any -f ~FC015 -X spec .
-  - bundle exec rspec --color --format progress
+  - delivery local all
