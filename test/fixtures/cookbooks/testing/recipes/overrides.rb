@@ -9,7 +9,7 @@ f5_vip 'testing' do
   destination_port 8443
   profiles [
     { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/tcp' },
-    { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/http' }
+    { 'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL', 'profile_name' => '/Common/http' },
   ]
   vlan_state 'STATE_ENABLED'
   vlans ['/Common/vlan123', '/Common/vlan234']

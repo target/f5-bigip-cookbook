@@ -1,7 +1,6 @@
 AllCops:
   Exclude:
     - '.kitchen/**/*'
-    - 'metadata.rb'
     - 'Berksfile'
     - 'test/fixtures/cookbooks/**/*'
     - 'Vagrantfile'
@@ -17,9 +16,6 @@ LineLength:
 
 MethodLength:
   Max: 10
-
-HashSyntax:
-  EnforcedStyle: hash_rockets
 
 TrivialAccessors:
   Enabled: true

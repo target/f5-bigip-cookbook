@@ -13,7 +13,7 @@ describe Chef::Provider::F5LtmPool do
   let(:provider) { Chef::Provider::F5LtmPool.new(new_resource, run_context) }
 
   # LoadBalancer stubbing
-  let(:load_balancer) { double('F5::LoadBalancer', :client => client) }
+  let(:load_balancer) { double('F5::LoadBalancer', client: client) }
   let(:client) do
     {
       'LocalLB.Pool' => locallb_pool,

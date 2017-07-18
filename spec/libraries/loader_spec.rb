@@ -9,7 +9,7 @@ module F5
 
     # LoadBalancer stubbing
     let(:load_balancer) { double('F5::LoadBalancer') }
-    let(:load_balancer_exists) { double('F5::LoadBalancer', :name => 'test.test.com') }
+    let(:load_balancer_exists) { double('F5::LoadBalancer', name: 'test.test.com') }
 
     # Some Chef stubbing
     let(:node) do
@@ -87,7 +87,7 @@ module F5
     end
 
     describe '#create_icontrol' do
-      let(:icontrol) { double('F5::IControl', :get_interfaces => true) }
+      let(:icontrol) { double('F5::IControl', get_interfaces: true) }
       it 'creates a new f5 icontrol interface' do
         expect(F5::IControl).to receive(:new)
           .with('test.test.com', 'test_user', 'test_pass', wanted_interfaces)

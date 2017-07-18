@@ -5,10 +5,10 @@
 # Copyright 2014, Target
 #
 
-define :f5_vip, :member_port => 443, :monitors => [], :lb_method => nil, :vlan_state => nil, :vlans => [],
-                :destination_port => 443, :profiles => [], :snat_type => nil, :snat_pool => nil,
-                :default_persistence_profile => nil, :fallback_persistence_profile => nil,
-                :rules => [] do
+define :f5_vip, member_port: 443, monitors: [], lb_method: nil, vlan_state: nil, vlans: [],
+                destination_port: 443, profiles: [], snat_type: nil, snat_pool: nil,
+                default_persistence_profile: nil, fallback_persistence_profile: nil,
+                rules: [] do
   name = params[:name]
   name = params[:virtual_server] unless params[:virtual_server].nil?
 

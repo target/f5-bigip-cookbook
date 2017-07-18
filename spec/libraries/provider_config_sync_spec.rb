@@ -14,9 +14,9 @@ describe Chef::Provider::F5ConfigSync do
 
   # LoadBalancer stubbing
   let(:load_balancer) do
-    double('F5::LoadBalancer', :client => client, :active? => true,
-                               :system_hostname => 'test.test.com',
-                               :device_groups => %w(dev prod))
+    double('F5::LoadBalancer', client: client, active?: true,
+                               system_hostname: 'test.test.com',
+                               device_groups: %w(dev prod))
   end
   let(:client) { { 'System.ConfigSync' => locallb_config_sync } }
   let(:locallb_config_sync) { double('System.ConfigSync') }

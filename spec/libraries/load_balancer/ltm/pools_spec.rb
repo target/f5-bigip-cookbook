@@ -5,11 +5,11 @@ describe F5::LoadBalancer::Ltm::Pools do
 
   let(:client) { double('F5::IControl') }
   let(:locallb_pool) do
-    double 'LocalLB.Pool', :get_list => pool_names,
-                           :get_member_v2 => members,
-                           :get_member_object_status => members_statuses,
-                           :get_monitor_association => monitors,
-                           :get_lb_method => lb_methods
+    double 'LocalLB.Pool', get_list: pool_names,
+                           get_member_v2: members,
+                           get_member_object_status: members_statuses,
+                           get_monitor_association: monitors,
+                           get_lb_method: lb_methods
   end
   let(:pool_names) do
     ['/Common/pool_test1', '/Common/pool_test2']

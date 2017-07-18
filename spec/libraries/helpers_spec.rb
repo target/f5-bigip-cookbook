@@ -5,9 +5,9 @@ module F5
     include F5::Helpers
 
     describe '#check_key_nil' do
-      let(:passing_test_hash) { { :test_key => 'test_val' } }
-      let(:missing_key_hash) { { :test_key2 => 'test_val' } }
-      let(:nil_value_hash) { { :test_key => nil } }
+      let(:passing_test_hash) { { test_key: 'test_val' } }
+      let(:missing_key_hash) { { test_key2: 'test_val' } }
+      let(:nil_value_hash) { { test_key: nil } }
       it 'pass if key exists in hash and not nil' do
         expect(check_key_nil(passing_test_hash, :test_key)).to eq(true)
       end

@@ -12,9 +12,9 @@ describe F5::LoadBalancer::Ltm do
   let(:pools) { instance_double('F5::LoadBalancer::Ltm::Pools') }
   let(:virtual_servers) { instance_double('F5::LoadBalancer::Ltm::VirtualServers') }
   let(:local_lb_node_address) do
-    double 'LocalLB.NodeAddressV2', :get_list => %w(node-test1 node-test2),
-                                    :get_address => ['10.10.10.10', '10.10.10.11'],
-                                    :get_object_status => [{ 'enabled_status' => 'ENABLED_STATUS_ENABLED' }, { 'enabled_status' => 'ENABLED_STATUS_DISABLED' }]
+    double 'LocalLB.NodeAddressV2', get_list: %w(node-test1 node-test2),
+                                    get_address: ['10.10.10.10', '10.10.10.11'],
+                                    get_object_status: [{ 'enabled_status' => 'ENABLED_STATUS_ENABLED' }, { 'enabled_status' => 'ENABLED_STATUS_DISABLED' }]
   end
 
   let(:ltm) { F5::LoadBalancer::Ltm.new(client) }

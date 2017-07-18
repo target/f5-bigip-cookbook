@@ -4,14 +4,14 @@ module F5
   describe LoadBalancer do
     let(:client) { double('F5::IControl') }
     let(:management_device_group) do
-      double 'Management.DeviceGroup', :get_list => ['/Common/test1', '/Common/device_trust_group',
-                                                     '/Common/test2', '/Common/gtm', '/Common/test3']
+      double 'Management.DeviceGroup', get_list: ['/Common/test1', '/Common/device_trust_group',
+                                                  '/Common/test2', '/Common/gtm', '/Common/test3']
     end
     let(:system_failover) do
-      double 'System.Failover', :get_failover_state => 'FAILOVER_STATE_ACTIVE'
+      double 'System.Failover', get_failover_state: 'FAILOVER_STATE_ACTIVE'
     end
     let(:system_inet) do
-      double 'System.Inet', :get_hostname => 'test-f5.test.com'
+      double 'System.Inet', get_hostname: 'test-f5.test.com'
     end
 
     let(:load_balancer) { F5::LoadBalancer.new('test-f5', client) }

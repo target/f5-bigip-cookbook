@@ -13,7 +13,7 @@ describe Chef::Provider::F5LtmVirtualServer do
   let(:provider) { Chef::Provider::F5LtmVirtualServer.new(new_resource, run_context) }
 
   # LoadBalancer stubbing
-  let(:load_balancer) { double('F5::LoadBalancer', :client => client) }
+  let(:load_balancer) { double('F5::LoadBalancer', client: client) }
   let(:client) do
     {
       'LocalLB.VirtualServer' => locallb_virtual_server,

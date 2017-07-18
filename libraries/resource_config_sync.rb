@@ -35,7 +35,7 @@ class Chef
       end
 
       def f5(arg = nil)
-        set_or_return(:f5, arg, :kind_of => String, :required => true)
+        set_or_return(:f5, arg, kind_of: String, required: true)
       end
     end
   end

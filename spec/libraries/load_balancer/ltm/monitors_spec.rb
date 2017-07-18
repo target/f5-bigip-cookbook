@@ -3,12 +3,12 @@ require 'spec_helper'
 describe F5::LoadBalancer::Ltm::Monitors do
   let(:client) { double('F5::IControl') }
   let(:locallb_monitor) do
-    double 'LocalLB.Monitor', :get_template_list => template_list,
-                              :is_template_root => is_template_root_resp,
-                              :get_parent_template => parent_template_list,
-                              :get_template_destination => template_destination,
-                              :get_template_integer_property => [{ 'type' => 'ITYPE_INTERVAL', 'value' => 10 }],
-                              :get_template_string_property => [{ 'type' => 'STYPE_SEND', 'value' => 'test' }]
+    double 'LocalLB.Monitor', get_template_list: template_list,
+                              is_template_root: is_template_root_resp,
+                              get_parent_template: parent_template_list,
+                              get_template_destination: template_destination,
+                              get_template_integer_property: [{ 'type' => 'ITYPE_INTERVAL', 'value' => 10 }],
+                              get_template_string_property: [{ 'type' => 'STYPE_SEND', 'value' => 'test' }]
   end
   let(:template_list) do
     [

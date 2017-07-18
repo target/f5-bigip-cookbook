@@ -13,7 +13,7 @@ describe Chef::Provider::F5LtmNode do
   let(:provider) { Chef::Provider::F5LtmNode.new(new_resource, run_context) }
 
   # LoadBalancer stubbing
-  let(:load_balancer) { double('F5::LoadBalancer', :client => client) }
+  let(:load_balancer) { double('F5::LoadBalancer', client: client) }
   let(:client) do
     {
       'LocalLB.NodeAddressV2' => locallb_node_address_v2,

@@ -3,20 +3,20 @@ require 'spec_helper'
 describe F5::LoadBalancer::Ltm::VirtualServers do
   let(:client) { double('F5::IControl') }
   let(:locallb_vs) do
-    double 'LocalLB.LtmVirtualServer', :get_list => vs_names,
-                                       :get_wildmask => wildmasks,
-                                       :get_destination_v2 => destinations,
-                                       :get_type => types,
-                                       :get_default_pool_name => default_pools,
-                                       :get_protocol => protocols,
-                                       :get_profile => profiles,
-                                       :get_object_status => statuses,
-                                       :get_vlan => vlans,
-                                       :get_source_address_translation_type => snat_types,
-                                       :get_source_address_translation_snat_pool => snat_pools,
-                                       :get_persistence_profile => default_persistence_profiles,
-                                       :get_fallback_persistence_profile => fallback_persistence_profiles,
-                                       :get_rule => rules
+    double 'LocalLB.LtmVirtualServer', get_list: vs_names,
+                                       get_wildmask: wildmasks,
+                                       get_destination_v2: destinations,
+                                       get_type: types,
+                                       get_default_pool_name: default_pools,
+                                       get_protocol: protocols,
+                                       get_profile: profiles,
+                                       get_object_status: statuses,
+                                       get_vlan: vlans,
+                                       get_source_address_translation_type: snat_types,
+                                       get_source_address_translation_snat_pool: snat_pools,
+                                       get_persistence_profile: default_persistence_profiles,
+                                       get_fallback_persistence_profile: fallback_persistence_profiles,
+                                       get_rule: rules
   end
   let(:vs_names) do
     ['/Common/vs_test1', '/Common/vs_test2']

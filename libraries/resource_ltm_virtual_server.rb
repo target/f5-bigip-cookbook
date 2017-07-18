@@ -82,71 +82,71 @@ class Chef
       end
 
       def vs_name(arg = nil)
-        set_or_return(:vs_name, arg, :kind_of => String, :required => true)
+        set_or_return(:vs_name, arg, kind_of: String, required: true)
       end
 
       def f5(arg = nil)
-        set_or_return(:f5, arg, :kind_of => String, :required => true)
+        set_or_return(:f5, arg, kind_of: String, required: true)
       end
 
       def destination_address(arg = nil)
-        set_or_return(:destination_address, arg, :kind_of => String, :required => true)
+        set_or_return(:destination_address, arg, kind_of: String, required: true)
       end
 
       def destination_wildmask(arg = nil)
-        set_or_return(:destination_wildmask, arg, :regex => NM_REGEX)
+        set_or_return(:destination_wildmask, arg, regex: NM_REGEX)
       end
 
       def destination_port(arg = nil)
-        set_or_return(:destination_port, arg, :regex => PORTS_REGEX, :required => true)
+        set_or_return(:destination_port, arg, regex: PORTS_REGEX, required: true)
       end
 
       def type(arg = nil)
-        set_or_return(:type, arg, :equal_to => VS_TYPES)
+        set_or_return(:type, arg, equal_to: VS_TYPES)
       end
 
       def default_pool(arg = nil)
-        set_or_return(:default_pool, arg, :kind_of => String, :required => true)
+        set_or_return(:default_pool, arg, kind_of: String, required: true)
       end
 
       def protocol(arg = nil)
-        set_or_return(:protocol, arg, :equal_to => PROTOCOLS)
+        set_or_return(:protocol, arg, equal_to: PROTOCOLS)
       end
 
       def vlan_state(arg = nil)
-        set_or_return(:vlan_state, arg, :equal_to => VS_VLANS_STATE)
+        set_or_return(:vlan_state, arg, equal_to: VS_VLANS_STATE)
       end
 
       def vlans(arg = nil)
-        set_or_return(:vlans, arg, :kind_of => Array)
+        set_or_return(:vlans, arg, kind_of: Array)
       end
 
       def profiles(arg = nil)
-        set_or_return(:profiles, arg, :kind_of => Array)
+        set_or_return(:profiles, arg, kind_of: Array)
       end
 
       def snat_type(arg = nil)
-        set_or_return(:snat_type, arg, :equal_to => VS_SNAT_TYPES)
+        set_or_return(:snat_type, arg, equal_to: VS_SNAT_TYPES)
       end
 
       def snat_pool(arg = nil)
-        set_or_return(:snat_pool, arg, :kind_of => String)
+        set_or_return(:snat_pool, arg, kind_of: String)
       end
 
       def default_persistence_profile(arg = nil)
-        set_or_return(:default_persistence_profile, arg, :kind_of => String)
+        set_or_return(:default_persistence_profile, arg, kind_of: String)
       end
 
       def fallback_persistence_profile(arg = nil)
-        set_or_return(:fallback_persistence_profile, arg, :kind_of => String)
+        set_or_return(:fallback_persistence_profile, arg, kind_of: String)
       end
 
       def rules(arg = nil)
-        set_or_return(:rules, arg, :kind_of => Array)
+        set_or_return(:rules, arg, kind_of: Array)
       end
 
       def enabled(arg = nil)
-        set_or_return(:enabled, arg, :kind_of => [TrueClass, FalseClass])
+        set_or_return(:enabled, arg, kind_of: [TrueClass, FalseClass])
       end
 
       private

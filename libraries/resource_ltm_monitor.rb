@@ -52,39 +52,39 @@ class Chef
       end
 
       def monitor_name(arg = nil)
-        set_or_return(:monitor_name, arg, :kind_of => String, :required => true)
+        set_or_return(:monitor_name, arg, kind_of: String, required: true)
       end
 
       def f5(arg = nil)
-        set_or_return(:f5, arg, :kind_of => String, :required => true)
+        set_or_return(:f5, arg, kind_of: String, required: true)
       end
 
       def parent(arg = nil)
-        set_or_return(:parent, arg, :kind_of => String)
+        set_or_return(:parent, arg, kind_of: String)
       end
 
       def interval(arg = nil)
-        set_or_return(:interval, arg, :kind_of => Integer)
+        set_or_return(:interval, arg, kind_of: Integer)
       end
 
       def timeout(arg = nil)
-        set_or_return(:timeout, arg, :kind_of => Integer)
+        set_or_return(:timeout, arg, kind_of: Integer)
       end
 
       def dest_addr_type(arg = nil)
-        set_or_return(:dest_addr_type, arg, :kind_of => String, :equal_to => ADDR_TYPE)
+        set_or_return(:dest_addr_type, arg, kind_of: String, equal_to: ADDR_TYPE)
       end
 
       def dest_addr_ip(arg = nil)
-        set_or_return(:dest_addr_ip, arg, :kind_of => String, :regex => IP_REGEX)
+        set_or_return(:dest_addr_ip, arg, kind_of: String, regex: IP_REGEX)
       end
 
       def dest_addr_port(arg = nil)
-        set_or_return(:dest_addr_port, arg, :kind_of => Integer, :regex => PORTS_REGEX)
+        set_or_return(:dest_addr_port, arg, kind_of: Integer, regex: PORTS_REGEX)
       end
 
       def user_values(arg = nil)
-        set_or_return(:user_values, arg, :kind_of => Hash)
+        set_or_return(:user_values, arg, kind_of: Hash)
       end
 
       # Track value of type but not as an attribute that is user controlled

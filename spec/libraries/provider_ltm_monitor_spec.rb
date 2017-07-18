@@ -13,8 +13,8 @@ describe Chef::Provider::F5LtmMonitor do
   let(:provider) { Chef::Provider::F5LtmMonitor.new(new_resource, run_context) }
 
   # LoadBalancer stubbing
-  let(:load_balancer) { double('F5::LoadBalancer', :client => client, :ltm => ltm) }
-  let(:ltm) { double('F5::LoadBalancer::Ltm', :monitors => monitors) }
+  let(:load_balancer) { double('F5::LoadBalancer', client: client, ltm: ltm) }
+  let(:ltm) { double('F5::LoadBalancer::Ltm', monitors: monitors) }
   let(:client) do
     {
       'LocalLB.Monitor' => locallb_monitor,
@@ -23,12 +23,12 @@ describe Chef::Provider::F5LtmMonitor do
 
   # Lets use a real Monitors object
   let(:locallb_monitor) do
-    double 'LocalLB.Monitor', :get_template_list => template_list,
-                              :is_template_root => is_template_root_resp,
-                              :get_parent_template => parent_template_list,
-                              :get_template_destination => template_destination,
-                              :get_template_integer_property => template_integer_property,
-                              :get_template_string_property => template_string_property
+    double 'LocalLB.Monitor', get_template_list: template_list,
+                              is_template_root: is_template_root_resp,
+                              get_parent_template: parent_template_list,
+                              get_template_destination: template_destination,
+                              get_template_integer_property: template_integer_property,
+                              get_template_string_property: template_string_property
   end
   let(:template_list) do
     [
