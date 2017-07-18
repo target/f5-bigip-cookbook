@@ -2,17 +2,19 @@
 
 [![Build Status](https://travis-ci.org/target/f5-bigip-cookbook.svg)](https://travis-ci.org/target/f5-bigip-cookbook)
 
-Control F5 load balancer config
+This cookbook provides of series of resources for managing the configuration of a F5 load balancer.
 
-# Requirements
+## Requirements
 
-An F5 to manage
+### F5
 
-# Usage
+- F5 that is accessible from a Chef node
 
-You assign this to a node to manage an F5 devices
+### Chef
 
-# Attributes
+- Chef 12.1+
+
+## Attributes
 
 - `node['f5-bigip']['credentials']['databag']` - Databag with credentials
 - `node['f5-bigip']['credentials']['item']` - Databag Item with credentials
@@ -20,13 +22,15 @@ You assign this to a node to manage an F5 devices
 - `node['f5-bigip']['credentials']['host_is_key']` - Set to true to grab specific credentials for each f5 host based on f5 hostname being used as a key in the specified databag::item
 - `node['f5-bigip']['provisioner']['databag']` - Databag that contains an item for each f5 you want to manage with `f5::provisioner`. Check test/integration/data_bags/f5-provisioner-* for sample data bag structures.
 
-# Definitions
+## Resources
 
-## f5_vip
+These resources allow you to idempotently manage various F5 resources. This is accomplished by using a 'proxy' node that manages the F5 through the use of the [F5's APIs](https://devcentral.f5.com/wiki/iControl.LocalLB.ashx).
 
-This definition is a wrapper for the [`f5_ltm_node`](#f5_ltm_node), [`f5_ltm_pool`](#f5_ltm_pool) and [`f5_ltm_virtual_server`](#f5_ltm_virtual_server) LWPRs. It allows you to specify all the required info into the `f5_vip` definition which will then be translated into the necessary LWRP declarations.
+### f5_vip
 
-### Parameters
+This is a wrapper resource for the [`f5_ltm_node`](#f5_ltm_node), [`f5_ltm_pool`](#f5_ltm_pool) and [`f5_ltm_virtual_server`](#f5_ltm_virtual_server) resources. It allows you to specify all the required info into the `f5_vip` resource which will then be translated into the necessary individual resources.
+
+#### Properties
 
 Attr                         | Default/Req?                                                                            | Type          | Description
 ---------------------------- | --------------------------------------------------------------------------------------- | ------------- | ------------------------------------------------------------------------------
@@ -47,9 +51,9 @@ default_persistence_profile  | ''                                               
 fallback_persistence_profile | ''                                                                                      | String        | Fallback persistence profile to associate with virtual server
 rules                        | []                                                                                      | Array[String] | iRules to associate with virtual server
 
-### Example
+#### Example
 
-The simplest VIP declartion that takes as many defaults as possible:
+The simplest VIP declaration that takes as many defaults as possible:
 
 ```ruby
 f5_vip 'testing.test.com' do
@@ -92,15 +96,11 @@ f5_vip 'testing.test.com' do
 end
 ```
 
-# Resources
-
-These LWRPs allow you to idempotently manage various F5 resources. This is accomplished by using a 'proxy' node that manages the F5 through the use of the [F5's APIs](https://devcentral.f5.com/wiki/iControl.LocalLB.ashx).
-
-## f5_ltm_node
+### f5_ltm_node
 
 `f5_ltm_node` - Used to manage [nodes](https://devcentral.f5.com/wiki/iControl.LocalLB__NodeAddressV2.ashx).
 
-### Attributes
+#### Properties
 
 Attr      | Default/Req?      | Type       | Description
 --------- | ----------------- | ---------- | ------------------------------
@@ -111,7 +111,7 @@ enabled   | `true`            | true/false | State node should be in
 
 If the `address` attribute is unset, the `node_name` (which in turn defaults to the resource's name) will be used instead.
 
-### Examples
+#### Examples
 
 The following creates a node with name and address of `10.10.10.10`:
 
@@ -132,11 +132,11 @@ f5_ltm_node 'test-node.test.com' do
 end
 ```
 
-## f5_ltm_pool
+### f5_ltm_pool
 
 `f5_ltm_pool` - Used to manage [pools](https://devcentral.f5.com/wiki/iControl.LocalLB__Pool.ashx)
 
-### Attributes
+#### Properties
 
 Attr      | Default/Req?            | Type          | Description
 --------- | ----------------------- | ------------- | -------------------------------------------------
@@ -168,11 +168,11 @@ f5_ltm_pool 'test' do
 end
 ```
 
-## f5_ltm_monitor
+### f5_ltm_monitor
 
 `f5_ltm_monitor` - Used to manage [monitors](https://devcentral.f5.com/wiki/iControl.LocalLB__Monitor.ashx).
 
-### Attributes
+#### Properties
 
 Attr           | Default/Req?                       | Type    | Description
 -------------- | ---------------------------------- | ------- | ---------------------------------------------------------------------------------------------------------------------------------
@@ -186,7 +186,7 @@ dest_addr_ip   | '0.0.0.0'                          | String  | IP address
 dest_addr_port | 443                                | Integer | Port
 user_values    | {}                                 | Hash    | Hash of user specific values
 
-### Example
+#### Example
 
 ```ruby
 f5_ltm_monitor 'test' do
@@ -197,11 +197,11 @@ f5_ltm_monitor 'test' do
 end
 ```
 
-## f5_ltm_virtual_server
+### f5_ltm_virtual_server
 
 `f5_ltm_virtual_server` - Used to manage [virtual servers](https://devcentral.f5.com/wiki/iControl.LocalLB__VirtualServer.ashx)
 
-### Attributes
+#### Properties
 
 Attr                | Default/Req?                                                                        | Type          | Description
 ------------------- | ----------------------------------------------------------------------------------- | ------------- | ---------------------------------------------------------
@@ -215,7 +215,7 @@ vlans               | []                                                        
 profiles            | [{'profile_context' => 'PROFILE_CONTEXT_TYPE_ALL','profile_name' => '/Common/tcp'}] | Array[Hash]   | Profiles to associate to virtual server
 snat_type           | 'SRC_TRANS_NONE'                                                                    | String        | Snat type to set on virtual server snat_pool              | '' | String | Snat pool to use if `snat_type` set to 'SRC_TRANS_SNATPOOL', otherwise ignored default_persistence_profile | '' | String | Default persistence profile to associate with virtual server fallback_persistence_profile | '' | String | Fallback persistence profile to associate with virtual server rules | [] | Array[String] | iRules to associate with virtual server enabled | true | true/false | Enable or disable the virtual server
 
-### Example
+#### Example
 
 ```ruby
 f5_ltm_virtual_server 'vs_new' do
@@ -227,7 +227,7 @@ f5_ltm_virtual_server 'vs_new' do
 end
 ```
 
-# Recipes
+## Recipes
 
 - `f5-bigip::default` - install the required packages and gems required to interact with the F5 API.
 - `f5-bigip::provisioner` - Make the node that is assigned this recipe an f5 provisioner system. This recipe will dynamically define LWRPs to create the nodes, pools and virtual servers as defined by the databag value `node['f5']['provisioner']['databag']`.
@@ -317,7 +317,7 @@ After the VMs have been created subsequent testing can be done by doing:
 vagrant provision
 ```
 
-# License and Authors
+## License and Authors
 
 Author:: Jacob McCann ([jacob.mccann2@target.com](mailto:jacob.mccann2@target.com))
 
