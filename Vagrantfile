@@ -45,7 +45,7 @@ Vagrant.configure('2') do |config|
 
     # Install Chef
     admin.omnibus.chef_version = :latest
-    admin.omnibus.install_url = 'http://www.opscode.com/chef/install.sh'
+    admin.omnibus.install_url = 'https://www.chef.io/chef/install.sh'
 
     # Enabling the Berkshelf plugin
     admin.berkshelf.enabled = true
