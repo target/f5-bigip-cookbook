@@ -243,7 +243,7 @@ Recipes
 Testing
 =======
 
-Installing gems with bundler is a little different then normal in this case.  The [f5-icontrol gem](https://devcentral.f5.com/d/icontrol-ruby-library) supported by F5 is not on rubygems.org.  There IS an f5-icontrol gem on rubygems.org that is not what we want that someone else created.
+Installing gems with bundler is a little different than normal in this case.  The [f5-icontrol gem](https://devcentral.f5.com/d/icontrol-ruby-library) supported by F5 is not on rubygems.org.  There IS an f5-icontrol gem on rubygems.org that is not what we want that someone else created.
 
 So for convenience the f5-icontrol gem from F5 is included with this cookbook.  For spec testing the Gemfile references f5-icontrol.  Using the `:path` option to reference the local gem does not work per https://github.com/bundler/bundler/issues/2298.  So I used the workaround described in the referenced issue.
 
@@ -268,7 +268,7 @@ This cookbook uses Vagrant combined with Virtualbox and chef-minitest for testin
 * test-kitchen does not support multiple VMs natively
 * test-kitchen does not support multiple converges
 * test-kitchen creates/destroys the environment every run making testing take longer
-  - Testing for this cookbook can be done with Vagrant's 'provision' which leaves the VMs up and running.  test-kitchen was taking about 5min per test run whereas Vagrant takes 45 seconds per test run.
+  - Testing for this cookbook can be done with Vagrant's 'provision' which leaves the VMs up and running.  test-kitchen was taking about 5 minutes per test run whereas Vagrant takes 45 seconds per test run.
 
 ### Using Vagrant with lab F5 hardware
 
