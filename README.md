@@ -2,6 +2,8 @@ f5-bigip cookbook
 =================
 [![Build Status](https://travis-ci.org/target/f5-bigip-cookbook.svg)](https://travis-ci.org/target/f5-bigip-cookbook)
 
+**Note:** No longer active
+
 Control F5 load balancer config
 
 Requirements
